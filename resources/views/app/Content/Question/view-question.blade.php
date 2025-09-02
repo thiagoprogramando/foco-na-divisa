@@ -37,7 +37,7 @@
                     </div>
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="form-floating form-floating-outline mb-2">
-                            <textarea class="form-control h-px-100" name="title" id="question" placeholder="Ex: Qual é o único número primo par?" required>{{ $question->title }}</textarea>
+                            <textarea class="form-control h-px-100 editor" name="title" id="question" placeholder="Ex: Qual é o único número primo par?" required>{{ $question->title }}</textarea>
                         </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-3 mb-3">
@@ -74,7 +74,7 @@
                     </div>
                     <div class="col-12">
                         <div class="form-floating form-floating-outline mb-2">
-                            <textarea class="form-control h-px-100" name="resolution" id="resolution" placeholder="Ex: O número dois é o único PAR primo que existe...">{{ $question->resolution }}</textarea>
+                            <textarea class="form-control h-px-100 editor" name="resolution" id="resolution" placeholder="Ex: O número dois é o único PAR primo que existe...">{{ $question->resolution }}</textarea>
                         </div>
                     </div>
                     <div class="col-12 btn-group">

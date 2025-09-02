@@ -253,42 +253,58 @@
                                                     <div data-i18n="Meus Cadernos">Meus Cadernos</div>
                                                 </a>
                                             </li>
-                                            <li class="menu-item">
-                                                <a href="{{ route('contents') }}" class="menu-link">
-                                                    <div data-i18n="Conteúdos">Conteúdos</div>
-                                                </a>
-                                            </li>
-                                            <li class="menu-item">
-                                                <a href="{{ route('boards') }}" class="menu-link">
-                                                    <div data-i18n="Bancas">Bancas</div>
-                                                </a>
-                                            </li>
                                         </ul>
                                     </li>
 
-                                    <li class="menu-item">
-                                        <a href="javascript:void(0)" class="menu-link menu-toggle">
-                                            <i class="menu-icon tf-icons ri-account-pin-box-fill"></i>
-                                            <div data-i18n="Pessoas">Pessoas</div>
-                                        </a>
-                                        <ul class="menu-sub">
-                                            <li class="menu-item">
-                                                <a href="{{ route('users', ['role' => 'student']) }}" class="menu-link">
-                                                    <div data-i18n="Estudantes">Estudantes</div>
-                                                </a>
-                                            </li>
-                                            <li class="menu-item">
-                                                <a href="{{ route('users', ['role' => 'teacher']) }}" class="menu-link">
-                                                    <div data-i18n="Professores">Professores</div>
-                                                </a>
-                                            </li>
-                                            <li class="menu-item">
-                                                <a href="{{ route('users', ['role' => 'admin']) }}" class="menu-link">
-                                                    <div data-i18n="Administradores">Administradores</div>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
+                                    @if (Auth::user()->role === 'admin')
+                                        <li class="menu-item">
+                                            <a href="javascript:void(0)" class="menu-link menu-toggle">
+                                                <i class="menu-icon tf-icons ri-book-open-fill"></i>
+                                                <div data-i18n="Administração">Administração</div>
+                                            </a>
+                                            <ul class="menu-sub">
+                                                <li class="menu-item">
+                                                    <a href="{{ route('contents') }}" class="menu-link">
+                                                        <div data-i18n="Conteúdos">Conteúdos</div>
+                                                    </a>
+                                                </li>
+                                                <li class="menu-item">
+                                                    <a href="{{ route('boards') }}" class="menu-link">
+                                                        <div data-i18n="Bancas">Bancas</div>
+                                                    </a>
+                                                </li>
+                                                <li class="menu-item">
+                                                    <a href="{{ route('products') }}" class="menu-link">
+                                                        <div data-i18n="Produtos">Produtos</div>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+
+                                        <li class="menu-item">
+                                            <a href="javascript:void(0)" class="menu-link menu-toggle">
+                                                <i class="menu-icon tf-icons ri-account-pin-box-fill"></i>
+                                                <div data-i18n="Pessoas">Pessoas</div>
+                                            </a>
+                                            <ul class="menu-sub">
+                                                <li class="menu-item">
+                                                    <a href="{{ route('users', ['role' => 'student']) }}" class="menu-link">
+                                                        <div data-i18n="Estudantes">Estudantes</div>
+                                                    </a>
+                                                </li>
+                                                <li class="menu-item">
+                                                    <a href="{{ route('users', ['role' => 'teacher']) }}" class="menu-link">
+                                                        <div data-i18n="Professores">Professores</div>
+                                                    </a>
+                                                </li>
+                                                <li class="menu-item">
+                                                    <a href="{{ route('users', ['role' => 'admin']) }}" class="menu-link">
+                                                        <div data-i18n="Administradores">Administradores</div>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    @endif
 
                                     {{-- <li class="menu-item">
                                         <a href="javascript:void(0)" class="menu-link menu-toggle">
@@ -377,7 +393,7 @@
         {{-- <script src="{{ asset('assets/js/charts-apex.js') }}"></script>--}}
         <script src="{{ asset('assets/js/forms-selects.js') }}"></script> 
         
-        <script src="{{ asset('assets/js/forms-tagify.js') }}"></script>
+        {{-- <script src="{{ asset('assets/js/forms-tagify.js') }}"></script> --}}
         <script src="{{ asset('assets/js/forms-typeahead.js') }}"></script>
         <script src="{{ asset('assets/js/ui-popover.js') }}"></script>
         <script>

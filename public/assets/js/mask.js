@@ -76,18 +76,34 @@ function maskPerformance(input) {
     input.value = value;
 }
 
+
 function consultAddress() {
-    var postal_code = $('[name="address_postal_code"]').val();
+    var postal_code = $('[name="postal_code"]').val();
 
     postal_code = postal_code.replace(/\D/g, '');
     if (/^\d{8}$/.test(postal_code)) {
 
         postal_code = postal_code.replace(/(\d{5})(\d{3})/, '$1-$2');
-        $.get(`https://viacep.com.br/ws/${postal_code}/json/`, function (data) {
-            $('[name="address_address"]').val(data.logradouro + ' - ' + data.bairro);
-            $('[name="address_city"]').val(data.localidade);
-            $('[name="address_state"]').val(data.uf);
+        $.get(`https://viapostal_code.com.br/ws/${postal_code}/json/`, function (data) {
+            $('[name="address"]').val(data.logradouro);
+            $('[name="complement"]').val(data.bairro);
+            $('[name="city"]').val(data.localidade);
+            $('[name="state"]').val(data.uf);
         })
-        .fail(function () {});
+        .fail(function () {
+            Swal.fire({
+                title: 'Error!',
+                text: 'CEP não localizado!',
+                icon: 'error',
+                timer: 1500
+            })
+        });
+    } else {
+        Swal.fire({
+            title: 'Error!',
+            text: 'CEP inválido!',
+            icon: 'error',
+            timer: 1500
+        })
     }
 }

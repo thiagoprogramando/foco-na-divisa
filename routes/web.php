@@ -10,6 +10,7 @@ use App\Http\Controllers\Content\QuestionController;
 use App\Http\Controllers\Content\TopicController;
 use App\Http\Controllers\Notebook\AnswerController;
 use App\Http\Controllers\Notebook\NotebookController;
+use App\Http\Controllers\Product\ProductController;
 use App\Http\Controllers\Ticket\TicketController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +30,18 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/created-ticket', [TicketController::class, 'store'])->name('created-ticket');
     Route::post('/updated-ticket/{id}', [TicketController::class, 'update'])->name('updated-ticket');
     Route::post('/deleted-ticket/{id}', [TicketController::class, 'destroy'])->name('deleted-ticket');
+
+    Route::get('/products', [ProductController::class, 'index'])->name('products');
+    Route::get('/product/{uuid}', [ProductController::class, 'show'])->name('product');
+    Route::get('/create-product', [ProductController::class, 'createForm'])->name('create-product');
+    Route::post('/created-product', [ProductController::class, 'store'])->name('created-product');
+    Route::post('/updated-product/{uuid}', [ProductController::class, 'update'])->name('updated-product');
+    Route::post('/deleted-product/{uuid}', [ProductController::class, 'destroy'])->name('deleted-product');
+
+    Route::post('/created-product-item-file/{uuid}', [ProductController::class, 'storeFile'])->name('created-product-item-file');
+    Route::post('/deleted-product-item-file/{uuid}/{id}', [ProductController::class, 'destroyFile'])->name('deleted-product-item-file');
+    Route::post('/created-product-item-post/{uuid}', [ProductController::class, 'storePost'])->name('created-product-item-post');
+    Route::post('/deleted-product-item-post/{uuid}/{id}', [ProductController::class, 'destroyPost'])->name('deleted-product-item-post');
 
     Route::get('/contents', [ContentController::class, 'index'])->name('contents');
     Route::get('/content/{id}', [ContentController::class, 'show'])->name('content');

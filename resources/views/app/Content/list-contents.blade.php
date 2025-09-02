@@ -2,12 +2,15 @@
 @section('content')
 
     <div class="col-12">
-        <div class="kanban-add-new-board">
-            <label class="kanban-add-board-btn" for="kanban-add-board-input" data-bs-toggle="modal" data-bs-target="#createdModal">
-                <i class="ri-add-line"></i>
-                <span class="align-middle">Novo Conteúdo</span>
-            </label>
-        </div>
+        @if (Auth::user()->role === 'admin')
+            <div class="kanban-add-new-board">
+                <label class="kanban-add-board-btn" for="kanban-add-board-input" data-bs-toggle="modal" data-bs-target="#createdModal">
+                    <i class="ri-add-line"></i>
+                    <span class="align-middle">Novo Conteúdo</span>
+                </label>
+            </div>
+        @endif
+        
 
         <div class="modal fade" id="createdModal" tabindex="-1" aria-hidden="true">
             <form action="{{ route('created-content') }}" method="POST" enctype="multipart/form-data">

@@ -1,35 +1,6 @@
 @extends('app.layout')
 @section('content')
 
-    <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/ui-carousel.css') }}" />
-
-    <div class="col-12">
-        <div id="swiper-gallery">
-            <div class="swiper gallery-top">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide" style="background-image: url({{ asset('assets/img/backgrounds/1.jpg') }})">
-                        Slide 1
-                    </div>
-                    <div class="swiper-slide" style="background-image: url({{ asset('assets/img/backgrounds/2.jpg') }})">
-                        Slide 2
-                    </div>
-                </div>
-                <div class="swiper-button-next swiper-button-white"></div>
-                <div class="swiper-button-prev swiper-button-white"></div>
-            </div>
-            <div class="swiper gallery-thumbs">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide" style="background-image: url({{ asset('assets/img/backgrounds/1.jpg') }})">
-                        Slide 1
-                    </div>
-                    <div class="swiper-slide" style="background-image: url({{ asset('assets/img/backgrounds/2.jpg') }})">
-                        Slide 2
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="col-12 col-sm-12 col-md-8 col-lg-6">
         <div class="card mb-3">
             <div class="card-body text-nowrap">
@@ -102,7 +73,4 @@
         </div>
         
     </div>
-
-    <script src="{{ asset('assets/vendor/libs/swiper/swiper.js') }}"></script>
-    <script src="{{ asset('assets/js/ui-carousel.js') }}"></script>
 @endsection
