@@ -1,12 +1,12 @@
 @extends('app.layout')
 @section('content')
 
-    <div class="col-12 col-sm-12 col-md-8 col-lg-6">
+    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-6">
         <div class="card mb-3">
             <div class="card-body text-nowrap">
                 <h5 class="card-title mb-1">Olá, <span class="fw-bold">{{ Auth::user()->maskName() }}!</span> 🎉</h5>
                 <p class="card-subtitle mb-3">Bem-vindo(a) ao {{ env('APP_NAME') }}</p>
-                <h4 class="text-primary mb-0">Plano Atual</h4>
+                <h4 class="text-primary mb-0"><a href="{{ route('plans') }}">{{ Auth::user()->planLabel() }}</a></h4>
                 <p class="mb-3">Aproveite os benefícios da sua conta! 🚀</p>
                 <a href="{{ route('create-notebook') }}" class="btn btn-sm btn-primary waves-effect waves-light">Gerar novo Caderno</a>
             </div>
@@ -28,10 +28,15 @@
                     </div>
                 </div>
                 <div class="d-flex align-items-center card-subtitle">
-                    <div class="me-2">Você alcançou X questões resolvidas!</div>
+                    <div class="me-2">
+                        Você alcançou 
+                        {{ Auth::user()->questions->where('resolved_at', '>=', now()->startOfDay())->count() }} 
+                        questões resolvidas hoje!
+                    </div>
+
                     <div class="d-flex align-items-center text-success">
-                        <p class="mb-0 fw-medium">+18%</p>
-                        <i class="ri-arrow-up-s-line ri-20px"></i>
+                        {{-- <p class="mb-0 fw-medium">+18%</p>
+                        <i class="ri-arrow-up-s-line ri-20px"></i> --}}
                     </div>
                 </div>
             </div>
@@ -46,8 +51,8 @@
                         <h5 class="mb-0">{{ Auth::user()->questions->count() }}</h5>
                         <p class="mb-0">Questões</p>
                     </div>
-                    </div>
-                    <div class="d-flex align-items-center gap-3">
+                </div>
+                <div class="d-flex align-items-center gap-3">
                     <div class="avatar">
                         <div class="avatar-initial bg-label-info rounded">
                         <i class="ri-book-read-line ri-24px"></i>
@@ -57,8 +62,8 @@
                         <h5 class="mb-0">{{ Auth::user()->notebooks->count() }}</h5>
                         <p class="mb-0">Cadernos</p>
                     </div>
-                    </div>
-                    <div class="d-flex align-items-center gap-3">
+                </div>
+                {{-- <div class="d-flex align-items-center gap-3">
                     <div class="avatar">
                         <div class="avatar-initial bg-label-success rounded">
                         <i class="ri-bar-chart-2-line ri-24px"></i>
@@ -68,7 +73,7 @@
                         <h5 class="mb-0">95%</h5>
                         <p class="mb-0">Progresso</p>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
         

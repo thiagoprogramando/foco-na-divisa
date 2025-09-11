@@ -48,9 +48,9 @@
                                     <button class="btn btn-success d-grid w-100" type="submit">Acessar</button>
                                 </div>
                             </form>
-            
-                            <p class="text-center text-white">
-                                <i>V <a href="#" target="_blank" class="text-white">0.0.1</a></i> 
+
+                            <p class="text-center">
+                                <span>Não tem uma conta?</span> <a href="{{ route('register') }}" class="text-success"><span>Cadastre-se aqui!</span></a>
                             </p>
                         </div>
                     </div>

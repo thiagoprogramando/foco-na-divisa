@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Carbon\Carbon;
 
 class User extends Authenticatable {
 
@@ -27,6 +28,28 @@ class User extends Authenticatable {
         'role',
     ];
 
+    public function favoriteQuestions() {
+        return $this->belongsToMany(Question::class, 'favorites');
+    }
+
+    public function notebooks() {
+        return $this->hasMany(Notebook::class, 'created_by');
+    }
+
+    public function questions() {
+        return $this->hasMany(NotebookQuestion::class, 'user_id');
+    }
+
+    public function invoices() {
+        return $this->hasMany(Invoice::class, 'user_id');
+    }
+
+    public function products() {
+        return $this->belongsToMany(
+            Product::class, 'invoices', 'user_id', 'product_id'
+        )->withPivot('id', 'value', 'due_date', 'payment_status', 'payment_token', 'created_at', 'updated_at');
+    }
+
     public function maskName() {
         if (empty($this->name)) {
             return '';
@@ -41,18 +64,6 @@ class User extends Authenticatable {
         return $nameParts[0] . ' ' . $nameParts[1];
     }
 
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
-
-    protected function casts(): array {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
-
     public function maskCpfCnpj() {
 
         $value = preg_replace('/\D/', '', $this->cpfcnpj);
@@ -65,15 +76,53 @@ class User extends Authenticatable {
         return $this->cpfcnpj;
     }
 
-    public function favoriteQuestions() {
-        return $this->belongsToMany(Question::class, 'favorites');
+    public function daysToPlanExpiration(): int {
+        // última fatura de produto tipo plano
+        $invoice = $this->invoices()
+            ->whereHas('product', fn($q) => $q->where('type', 'plan'))
+            ->latest('created_at')
+            ->first();
+
+        if (!$invoice) {
+            return 0; // sem plano ativo/teste
+        }
+
+        // Caso seja a primeira invoice (teste gratuito)
+        $totalInvoices = $this->invoices()
+            ->whereHas('product', fn($q) => $q->where('type', 'plan'))
+            ->count();
+
+        if ($totalInvoices === 1 && $invoice->payment_status !== 1) {
+            $daysUsed   = Carbon::parse($invoice->created_at)->diffInDays(Carbon::now());
+            $daysLeft   = max(0, 7 - $daysUsed); // nunca negativo
+            return $daysLeft;
+        }
+
+        // Demais casos: calcular tempo para vencer a fatura
+        $daysLeft = Carbon::now()->diffInDays(Carbon::parse($invoice->due_date), false);
+        return max(0, $daysLeft);
     }
 
-    public function notebooks() {
-        return $this->hasMany(Notebook::class, 'created_by');
+    public function planLabel(): string {
+        
+        $plan = $this->products()->where('type', 'plan')->latest('pivot_created_at')->first();
+        if ($plan) {
+            return e($plan->name);
+        }
+
+        return 'Escolha um plano';
     }
 
-    public function questions() {
-        return $this->hasMany(NotebookQuestion::class, 'user_id');
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    protected function casts(): array {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
     }
+    
 }

@@ -57,13 +57,18 @@ class ProductController extends Controller {
 
         $product                = new Product();
         $product->uuid          = Str::uuid();
-        $product->image         = $request->file('image')->store('product-images', 'public');
+
+        if (!empty($product->image)) {
+            $product->image         = $request->file('image')->store('product-images', 'public');
+        }
+        
         $product->name          = $request->name;
         $product->description   = $request->description;
         $product->value         = $this->formatValue($request->value);
         $product->status        = $request->status ? 1 : 0;
         $product->type          = $request->type;
         $product->time          = $request->time;
+        
         if ($product->save()) {
             return redirect()->route('product', ['uuid' => $product->uuid])->with('success', 'Produto cadastrado com sucesso!');
         }

@@ -83,28 +83,27 @@
     </div>
 
     <div class="col-12 col-sm-12 col-md-5 col-lg-5">
-        <div class="card card-action mb-6">
+        <div class="card card-action mb-6" id="invoices">
             <div class="card-header align-items-center">
-                <h5 class="card-action-title mb-0">Pagamentos & Planos</h5>
+                <h5 class="card-action-title mb-0">Faturas</h5>
             </div>
             <div class="card-body">
                 <ul class="list-unstyled mb-0">
-                    {{-- <li class="mb-4">
-                        <div class="d-flex align-items-center">
+                    @foreach ($user->invoices->sortBy('payment_status') as $invoice)
+                        <li class="mb-4">
                             <div class="d-flex align-items-center">
-                                <div class="avatar me-2">
-                                    <img src="" alt="Fatura " class="rounded-circle">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-2">
+                                        <h6 class="mb-1">{{ $invoice->product->name }} - R$ {{ number_format($invoice->value, 2, ',', '.') }}</h6>
+                                        <small>{{ \Carbon\Carbon::parse($invoice->due_date)->format('d/m/Y') }}</small> | <small><a href="{{ $invoice->payment_status !== 2 ? $invoice->payment_url : '#invoices' }}" target="_blank" rel="noopener noreferrer">Acessar</a></small>
+                                    </div>
                                 </div>
-                                <div class="me-2">
-                                    <h6 class="mb-1">Título + R$ valor</h6>
-                                    <small>Descrição</small>
+                                <div class="ms-auto">
+                                    <a href="javascript:;">{!! $invoice->statusLabel() !!}</a>
                                 </div>
                             </div>
-                            <div class="ms-auto">
-                                <a href="javascript:;"><span class="badge bg-label-danger rounded-pill">Pendente/Aprovado/Cancelado</span></a>
-                            </div>
-                        </div>
-                    </li> --}}
+                        </li>
+                    @endforeach
                     
                     <li class="text-center">
                         <a href="javascript:;">Não há mais dados.</a>

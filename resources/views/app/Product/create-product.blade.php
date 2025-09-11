@@ -65,7 +65,7 @@
                 </div>
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="form-floating form-floating-outline mb-2">
-                        <textarea class="form-control h-px-100" name="description" id="description" placeholder="Descrição do Produto:"></textarea>
+                        <textarea class="form-control h-px-100 editor" name="description" id="description" placeholder="Descrição do Produto:"></textarea>
                     </div>
                 </div>
                 <div class="col-12 col-sm-12 col-md-6 offset-md-6 col-lg-6 offset-lg-6">

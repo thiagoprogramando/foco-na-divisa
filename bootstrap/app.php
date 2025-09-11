@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Middleware\CheckMonthly;
+use App\Http\Middleware\CheckRole;
 use App\Http\Middleware\ClearAnswerSession;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -14,6 +16,12 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->web( [
             ClearAnswerSession::class,
+        ]);
+        $middleware->appendToGroup('checkMonthly', [
+            CheckMonthly::class,
+        ]);
+        $middleware->appendToGroup('checkRole', [
+            CheckRole::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
