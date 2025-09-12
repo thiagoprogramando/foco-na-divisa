@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Gateway;
 
 use App\Http\Controllers\Controller;
-
+use App\Models\Invoice;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -99,10 +99,67 @@ class AssasController extends Controller {
     }
 
     public function webhook(Request $request) {
+
+        $jsonData   = $request->json()->all();
+        $token      = $jsonData['payment']['id'];
+
+        if ($jsonData['event'] === 'PAYMENT_CONFIRMED' || $jsonData['event'] === 'PAYMENT_RECEIVED') {
+            
+            $invoice = Invoice::where('payment_token', $token)->whereIn('payment_status', [0, 2])->first();
+            if ($invoice) {
+
+                $invoice->payment_status = 1;
+                if ($invoice->save()) {
+                    return response()->json(['message' => 'Fatura Aprovada!'], 200);
+                } else {
+                    return response()->json(['message' => 'Falha o tentar Aprovar Fatura!'], 400);
+                }
+            }
+
+            return response()->json(['message' => 'Nenhuma Fatura para o TOKEN!'], 200);
+        };
+
+        if ($jsonData['event'] === 'PAYMENT_OVERDUE') {
+
+            $invoice = Invoice::where('payment_token', $token)->whereIn('payment_status', [0, 2])->first();
+            if ($invoice) {
+
+                $invoice->payment_status = 2;
+                if ($invoice->save()) {
+                    return response()->json(['message' => 'Fatura Cancelada por vencimento!'], 200);
+                } else {
+                    return response()->json(['message' => 'Falha o tentar Cancelar Fatura!'], 400);
+                }
+            }
+
+            return response()->json(['message' => 'Nenhuma Fatura para o TOKEN!'], 200);
+        };
+
+        if ($jsonData['event'] === 'PAYMENT_DELETED') {
+            
+            $invoice = Invoice::where('payment_token', $token)->first();
+            if ($invoice && $invoice->delete()) {
+                return response()->json(['message' => 'Fatura deletada via Assas e espelhada no app!'], 200);
+            }
+
+            return response()->json(['message' => 'Nenhuma Fatura para o TOKEN!'], 200);
+        };
+
+        if ($jsonData['event'] === 'PAYMENT_RESTORED') {
+
+            $invoice = Invoice::withTrashed()->where('payment_token', $token)->first();
+            if ($invoice) {
+                if ($invoice->trashed()) {
+                    $invoice->restore();
+                    return response()->json(['message' => 'Fatura restaurada via Assas e espelhada no app!'], 200);
+                }
+
+                return response()->json(['message' => 'Fatura já está ativa, nenhuma ação necessária!'], 200);
+            }
+
+            return response()->json(['message' => 'Nenhuma Fatura para o TOKEN!'], 200);
+        };
         
-        //Recebe os dados do webhook
-        //Validar invoice
-        //Se invoice for de um plano elimina às demais invoices de outros planos
-        
+        return response()->json(['message' => 'Nenhum Evento disponível!'], 200);
     }
 }
