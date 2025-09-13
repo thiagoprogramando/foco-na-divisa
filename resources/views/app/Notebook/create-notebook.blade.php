@@ -87,10 +87,10 @@
                                 <input name="filter" class="form-check-input" type="radio" value="filter_failer" id="filter_failer">
                                 <label class="form-check-label" for="filter_failer">Mostrar apenas as que eu já Errei</label>
                             </div>
-                            <div class="form-check">
+                            {{-- <div class="form-check">
                                 <input name="filter" class="form-check-input" type="radio" value="filter_favorites" id="filter_favorites">
                                 <label class="form-check-label" for="filter_favorites">Mostrar apenas as questões Favoritas</label>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
 
@@ -120,7 +120,6 @@
     </div>
 
     <script>
-
         document.querySelectorAll('input[name="filter"]').forEach(radio => {
             radio.addEventListener('click', function () {
                 if (this.checked && this.dataset.checked === 'true') {

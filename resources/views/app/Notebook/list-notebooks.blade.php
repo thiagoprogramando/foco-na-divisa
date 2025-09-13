@@ -14,11 +14,11 @@
         <div class="card demo-inline-spacing">
             <div class="list-group p-0 m-0">
                 @foreach ($notebooks as $notebook)
-                    <div onclick="window.location.href='{{ route('notebook', ['id' => $notebook->id]) }}'" class="list-group-item list-group-item-action d-flex align-items-center cursor-pointer waves-effect waves-light mb-2">
-                        <img src="{{ $notebook->cover_image ? asset($notebook->cover_image) : asset('assets/img/avatars/man.png') }}" alt="Conteúdo Imagem" class="rounded-circle me-3" width="40">
+                    <div class="list-group-item list-group-item-action d-flex align-items-center cursor-pointer waves-effect waves-light mb-2">
+                        <img onclick="window.location.href='{{ route('notebook', ['id' => $notebook->id]) }}'" src="{{ $notebook->cover_image ? asset($notebook->cover_image) : asset('assets/img/avatars/man.png') }}" alt="Conteúdo Imagem" class="rounded-circle me-3" width="40">
                         <div class="w-100">
                             <div class="d-flex justify-content-between align-items-center">
-                                <div class="user-info">
+                                <div class="user-info" onclick="window.location.href='{{ route('notebook', ['id' => $notebook->id]) }}'">
                                     <h6 class="mb-1 fw-normal">{{ $notebook->title }}</h6>
                                     <div class="d-flex align-items-center">
                                         <div class="user-status me-2 d-flex align-items-center">

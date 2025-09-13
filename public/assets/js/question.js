@@ -50,10 +50,12 @@ document.addEventListener('change', function (e) {
 });
 
 document.getElementById('question-form').addEventListener('submit', function (e) {
+
+    tinymce.triggerSave();
     
     const alternatives  = document.querySelectorAll('input[name="alternative[]"]');
     const corrects      = document.querySelectorAll('.correct-switch:checked');
-    const title         = document.getElementById('question').value.trim();
+    const title         = document.getElementById('question').value;
 
     if (title === '') {
         e.preventDefault();

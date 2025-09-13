@@ -73,7 +73,7 @@ class AssasController extends Controller {
                     'description'       => $description,
                     'isAddressRequired' => false,
                     'split'             => $commissions,
-                    'callback'          => ['successUrl'    => env('APP_URL') . '/app']
+                    'callback'          => ['successUrl'    => env('APP_URL') . 'app']
                 ],
                 'verify' => false
             ];
