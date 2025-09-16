@@ -77,6 +77,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::middleware(['checkMonthly'])->group(function () {    
+
         Route::get('/notebooks', [NotebookController::class, 'index'])->name('notebooks');
         Route::get('/notebook/{id}', [NotebookController::class, 'show'])->name('notebook');
         Route::get('/create-notebook', [NotebookController::class, 'create'])->name('create-notebook');
@@ -97,6 +98,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/deleted-question/{id}', [QuestionController::class, 'destroy'])->name('deleted-question');
         Route::post('/created-comment', [QuestionCommentController::class, 'store'])->name('created-comment');
         Route::post('/updated-comment/{id}', [QuestionCommentController::class, 'update'])->name('updated-comment');
+        
     });
 
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');

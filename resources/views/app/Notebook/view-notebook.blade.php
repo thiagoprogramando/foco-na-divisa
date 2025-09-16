@@ -89,7 +89,7 @@
                             <small class="text-light fw-medium">+Filtros</small>
                             <div class="form-check mt-4">
                                 <input name="filter" class="form-check-input" type="radio" value="filter_resolved" id="filter_resolved">
-                                <label class="form-check-label" for="filter_resolved">Eliminar questões já Resolvidas</label>
+                                <label class="form-check-label" for="filter_resolved">Eliminar questões que acertei</label>
                             </div>
                             <div class="form-check">
                                 <input name="filter" class="form-check-input" type="radio" value="filter_failer" id="filter_failer">

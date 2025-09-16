@@ -81,7 +81,7 @@
         </div>
     </div>
 
-    <div class="col-12 col-sm-12 col-md-7 col-lg-7">
+    <div class="col-12 col-sm-12 col-md-12 col-lg-12">
         <div class="card mb-3">
             <div class="card-header">
                 <div class="d-flex justify-content-between">

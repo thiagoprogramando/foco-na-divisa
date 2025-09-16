@@ -19,8 +19,10 @@ class LoginController extends Controller {
     public function logon(Request $request) {
 
         $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
+            'email'     => 'required|email|exists:users,email',
+            'password'  => 'required',
+        ], [
+            'email.exists' => 'Você ainda não possui cadastro! <a href="'.route('register').'">Cadastre-se aqui</a> para ter sua Conta.',
         ]);
 
         $credentials = $request->only(['email', 'password']);

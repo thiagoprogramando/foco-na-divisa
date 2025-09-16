@@ -137,9 +137,12 @@
 
                             <div class="col-12 col-sm-12 col-md-12 col-lg-12 bg-light p-3 rounded mt-2 mb-2">
                                 @foreach ($question->question->alternatives as $alternative)
-                                    <div class="form-check mt-4">
+                                    <div class="form-check mt-4 alternative-item" data-alternative-id="{{ $alternative->id }}">
                                         <input class="form-check-input" type="radio" name="answer_id" value="{{ $alternative->id }}" id="answer_id{{ $alternative->id }}">
-                                        <label class="form-check-label" for="answer_id{{ $alternative->id }}"> {{ $alternative->label.') '.$alternative->text }}  </label>
+                                        <i class="ri-scissors-line text-danger ms-2 scissors-icon" style="cursor:pointer;" title="Eliminar alternativa"></i>
+                                        <label class="form-check-label alternative-label" for="answer_id{{ $alternative->id }}"> 
+                                            {{ $alternative->label.') '.$alternative->text }}  
+                                        </label>
                                     </div>
                                 @endforeach
                             </div>
@@ -178,5 +181,20 @@
             deleteForm.action = `/delete-question/${questionId}`;
             deleteForm.submit();
         }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll(".scissors-icon").forEach(icon => {
+                icon.addEventListener("click", function() {
+                    const alt = this.closest(".alternative-item").querySelector(".alternative-label");
+                    alt.classList.toggle("eliminado");
+                });
+            });
+
+            document.querySelectorAll(".alternative-label").forEach(label => {
+                label.addEventListener("dblclick", function() {
+                    this.classList.toggle("eliminado");
+                });
+            });
+        });
     </script>
 @endsection

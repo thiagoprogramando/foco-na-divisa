@@ -109,3 +109,8 @@
   text-align: center;
   margin-top: 1.25rem;
 }
+
+.eliminado {
+    text-decoration: line-through;
+    opacity: 0.6;
+}

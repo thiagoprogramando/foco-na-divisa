@@ -15,10 +15,10 @@
             <div class="list-group p-0 m-0">
                 @foreach ($notebooks as $notebook)
                     <div class="list-group-item list-group-item-action d-flex align-items-center cursor-pointer waves-effect waves-light mb-2">
-                        <img onclick="window.location.href='{{ route('notebook', ['id' => $notebook->id]) }}'" src="{{ $notebook->cover_image ? asset($notebook->cover_image) : asset('assets/img/avatars/man.png') }}" alt="Conteúdo Imagem" class="rounded-circle me-3" width="40">
+                        <img onclick="window.location.href='{{ route('answer', ['notebook' => $notebook->id]) }}'" src="{{ $notebook->cover_image ? asset($notebook->cover_image) : asset('assets/img/avatars/man.png') }}" alt="Conteúdo Imagem" class="rounded-circle me-3" width="40">
                         <div class="w-100">
                             <div class="d-flex justify-content-between align-items-center">
-                                <div class="user-info" onclick="window.location.href='{{ route('notebook', ['id' => $notebook->id]) }}'">
+                                <div class="user-info" onclick="window.location.href='{{ route('answer', ['notebook' => $notebook->id]) }}'">
                                     <h6 class="mb-1 fw-normal">{{ $notebook->title }}</h6>
                                     <div class="d-flex align-items-center">
                                         <div class="user-status me-2 d-flex align-items-center">
@@ -33,7 +33,8 @@
                                 </div>
                                 <form action="{{ route('deleted-notebook', ['id' => $notebook->id]) }}" method="POST" class="add-btn delete">
                                     @csrf
-                                    <a href="{{ route('notebook', ['id' => $notebook->id]) }}" title="Editar Caderno" class="btn btn-warning text-white btn-sm"><i class="ri-menu-search-line"></i></a>
+                                    <a href="{{ route('answer', ['notebook' => $notebook->id]) }}" title="Responder Caderno" class="btn btn-success text-white btn-sm"><i class="ri-menu-search-line"></i></a>
+                                    <a href="{{ route('notebook', ['id' => $notebook->id]) }}" title="Editar Caderno" class="btn btn-warning text-white btn-sm"><i class="ri-edit-box-line"></i></a>
                                     <button type="submit" class="btn btn-danger btn-sm" title="Excluir Caderno"><i class="ri-delete-bin-line"></i></button>
                                 </form>
                             </div>

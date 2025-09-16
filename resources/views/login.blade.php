@@ -15,6 +15,14 @@
                         <div class="card-body mt-1">
                             <h4 class="mb-1 text-white text-center">Bem-vindo(a)! 👋</h4>
                             <p class="mb-5 text-white text-center">Faça login na sua conta para ter acesso aos benefícios.</p>
+                            @if ($errors->any())
+                                @foreach ($errors->all() as $error)
+                                    <div class="alert alert-danger alert-dismissible" role="alert">
+                                        {!! $error !!}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                @endforeach
+                            @endif
             
                             <form id="formAuthentication" class="mb-5" action="{{ route('logon') }}" method="POST">
                                 @csrf

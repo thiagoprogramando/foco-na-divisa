@@ -40,7 +40,7 @@ class CheckMonthly {
             ->exists();
 
         if (!$hasUsedTrial) {
-            if (now()->lessThanOrEqualTo($invoice->created_at->addDays(7))) {
+            if (now()->lessThanOrEqualTo($invoice->created_at->addDays())) {
                 return $next($request);
             }
         }
