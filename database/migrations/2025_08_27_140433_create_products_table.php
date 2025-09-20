@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->string('uuid')->unique();
             $table->string('image')->nullable();
             $table->text('name');
+            $table->string('caption')->nullable();
             $table->text('description')->nullable();
             $table->decimal('value', 10, 2)->default(0);
             $table->boolean('status')->default(false);

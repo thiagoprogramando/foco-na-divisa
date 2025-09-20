@@ -5,10 +5,16 @@
         <div class="card p-5">
             <form action="{{ route('created-product') }}" method="POST" class="row" enctype="multipart/form-data">
                 @csrf
-                <div class="col-12 col-sm-12 col-md-9 col-lg-9 mb-3">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-3">
                     <div class="form-floating form-floating-outline mb-2">
                         <input type="text" class="form-control" name="name" placeholder="Ex: Semestral, Ebook: Mais um Ebook, " required>
                         <label>Título:</label>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-12 col-md-3 col-lg-3 mb-3">
+                    <div class="form-floating form-floating-outline mb-2">
+                        <input type="text" class="form-control" name="caption" placeholder="Ex: 5% de desconto no PIX">
+                        <label>Legenda:</label>
                     </div>
                 </div>
                 <div class="col-12 col-sm-12 col-md-3 col-lg-3 mb-3">
@@ -65,7 +71,8 @@
                 </div>
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="form-floating form-floating-outline mb-2">
-                        <textarea class="form-control h-px-100 editor" name="description" id="description" placeholder="Descrição do Produto:"></textarea>
+                        <textarea class="form-control h-px-100" name="description" id="description" placeholder="Descrição do Produto:"></textarea>
+                        <label for="description">Descrição do Produto</label>
                     </div>
                 </div>
                 <div class="col-12 col-sm-12 col-md-6 offset-md-6 col-lg-6 offset-lg-6">

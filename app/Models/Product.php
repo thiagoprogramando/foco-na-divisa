@@ -16,6 +16,7 @@ class Product extends Model {
         'uuid',
         'image',
         'name',
+        'caption',
         'description',
         'value',
         'status',
