@@ -40,6 +40,10 @@ class User extends Authenticatable {
         return $this->hasMany(NotebookQuestion::class, 'user_id');
     }
 
+    public function questionsWithTrashed() {
+        return $this->hasMany(NotebookQuestion::class)->withTrashed();
+    }
+
     public function invoices() {
         return $this->hasMany(Invoice::class, 'user_id');
     }

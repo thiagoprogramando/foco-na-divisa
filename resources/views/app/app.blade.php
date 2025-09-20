@@ -30,7 +30,7 @@
                 <div class="d-flex align-items-center card-subtitle">
                     <div class="me-2">
                         Você alcançou 
-                        {{ Auth::user()->questions->where('resolved_at', '>=', now()->startOfDay())->count() }} 
+                        {{ Auth::user()->questionsWithTrashed->where('resolved_at', '>=', now()->startOfDay())->count() }} 
                         questões resolvidas hoje!
                     </div>
 
@@ -48,7 +48,7 @@
                         </div>
                     </div>
                     <div class="card-info">
-                        <h5 class="mb-0">{{ Auth::user()->questions->count() }}</h5>
+                        <h5 class="mb-0">{{ Auth::user()->questionsWithTrashed->count() }}</h5>
                         <p class="mb-0">Questões</p>
                     </div>
                 </div>

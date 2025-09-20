@@ -22,7 +22,7 @@ class BuyController extends Controller {
         }
 
         if ($product->hasInvoice(Auth::id(), 0)) {
-            return redirect()->route('plans')->with('infor', 'Você já assinou o produto!');   
+            return redirect()->route('invoices')->with('infor', 'Você já assinou o produto!');   
         }
 
         $assasController    = new AssasController();

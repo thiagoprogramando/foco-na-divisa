@@ -114,3 +114,69 @@
     text-decoration: line-through;
     opacity: 0.6;
 }
+/* container principal em linha */
+.alternative-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+/* radio fixo (não cresce) */
+.alternative-item .form-check-input {
+    flex: 0 0 auto;
+    margin-top: 0.25rem;
+}
+
+/* área que contém tesoura + label curto + texto */
+.alt-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    flex: 1 1 auto;
+    min-width: 0; /* CRUCIAL para permitir que alt-long encolha */
+}
+
+/* bloco que não deve quebrar (tesoura + A)) */
+.non-break {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    white-space: nowrap; /* impede quebra entre tesoura e A) */
+    flex: 0 0 auto;
+}
+
+/* A) - nunca quebra */
+.alt-short {
+    white-space: nowrap;
+    margin: 0;
+    cursor: pointer;
+}
+
+/* tesoura, fixa antes do label curto */
+.scissors-icon {
+    flex: 0 0 auto;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    padding: 0;
+    color: #dc3545;
+}
+
+/* texto longo — é o único que pode quebrar e ocupar o resto */
+.alt-long {
+    flex: 1 1 auto; /* ocupa o restante do espaço */
+    min-width: 0;   /* CRUCIAL para quebrar corretamente dentro do flex */
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    margin: 0;
+    cursor: pointer;
+}
+
+/* estilo visual para 'eliminado' */
+.eliminado {
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+

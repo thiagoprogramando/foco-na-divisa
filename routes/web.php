@@ -10,6 +10,7 @@ use App\Http\Controllers\Content\QuestionCommentController;
 use App\Http\Controllers\Content\QuestionController;
 use App\Http\Controllers\Content\TopicController;
 use App\Http\Controllers\Finance\BuyController;
+use App\Http\Controllers\Finance\InvoiceController;
 use App\Http\Controllers\Notebook\AnswerController;
 use App\Http\Controllers\Notebook\NotebookController;
 use App\Http\Controllers\Product\PlanController;
@@ -41,6 +42,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/products', [ProductController::class, 'index'])->name('products');
     Route::get('/plans', [PlanController::class, 'index'])->name('plans');
     Route::post('buy-product/{product}', [BuyController::class, 'store'])->name('buy-product');
+
+    Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices');
 
     Route::middleware(['checkRole'])->group(function () {    
 
@@ -86,6 +89,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/deleted-notebook/{id}', [NotebookController::class, 'destroy'])->name('deleted-notebook');
 
         Route::get('/answer/{notebook}/{question?}', [AnswerController::class, 'index'])->name('answer');
+        Route::get('/review/{question}', [AnswerController::class, 'review'])->name('review');
         Route::post('/answer-question', [AnswerController::class, 'update'])->name('answer-question');
         Route::post('/delete-question/{id}', [AnswerController::class, 'destroy'])->name('delete-question');
 

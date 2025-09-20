@@ -46,8 +46,7 @@ class CheckMonthly {
         }
 
         if ($invoice->payment_status !== 1) {
-            return redirect()->to(route('user', ['uuid' => $user->uuid]) . '#invoices')
-                ->with('infor', 'O Período de teste do seu plano expirou. É hora de pagar sua Fatura!');
+            return redirect()->route('invoices')->with('infor', 'O Período de teste do seu plano expirou. É hora de pagar sua Fatura!');
         }
 
         if ($invoice->due_date < now()->toDateString() && $invoice->payment_status == 1) {
@@ -82,8 +81,7 @@ class CheckMonthly {
                 return redirect($charge['invoiceUrl']);
             }
 
-            return redirect()->route('user', ['uuid' => $user->uuid])
-                ->with('infor', 'Sua assinatura precisa ser renovada. Geramos uma nova fatura.');
+            return redirect()->route('invoices')->with('infor', 'Sua assinatura precisa ser renovada. Geramos uma nova fatura.');
         }
 
         return $next($request);

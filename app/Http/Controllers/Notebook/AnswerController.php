@@ -47,18 +47,17 @@ class AnswerController extends Controller {
             return redirect()->back()->with('infor', 'Questão não encontrada!');
         }
 
-         $answer_id = $request->input('answer_id');
+        $answer_id = $request->input('answer_id');
         if (!$answer_id) {
             return redirect()->back()->with('infor', 'Você precisa selecionar uma alternativa.');
         }
-
         
         $isCorrect = $question->alternatives()->where('id', $answer_id)->where('is_correct', true)->exists();
 
         $notebookQuestion->answer_id        = $answer_id;
         $notebookQuestion->answer_result    = $isCorrect ? 1 : 2;
         if ($notebookQuestion->save()) {
-            return redirect()->route('answer', ['notebook' => $notebookQuestion->notebook_id])->with('success', 'Resposta salva com sucesso!');
+            return redirect()->route('review', ['question' => $notebookQuestion->id])->with('success', 'Resposta salva com sucesso!');
         }
 
         return redirect()->back()->with('infor', 'Erro ao salvar a resposta. Tente novamente!');
@@ -78,4 +77,33 @@ class AnswerController extends Controller {
         return redirect()->back()->with('infor', 'Erro ao deletar a questão. Tente novamente!');
     }
 
+    public function review($questionId) {
+
+        $question = NotebookQuestion::with(['notebook', 'question.alternatives'])->find($questionId);
+        if (!$question) {
+            return redirect()->back()->with('infor', 'Revisão indisponível para a Questão!');
+        }
+
+        $chosenId           = $question->answer_id;
+        $chosenAlternative  = $chosenId
+            ? $question->question->alternatives->firstWhere('id', $chosenId)
+            : null;
+        $answeredCorrect    = $chosenAlternative ? (bool) $chosenAlternative->is_correct : false;
+
+        if (is_null($chosenId)) {
+            $feedback = ['message' => 'Você não respondeu esta questão.', 'type' => 'secondary'];
+        } elseif ($answeredCorrect) {
+            $feedback = ['message' => '🎉 Você acertou, parabéns!', 'type' => 'success'];
+        } else {
+            $feedback = ['message' => '❌ Você errou! Mas isso é normal, siga focado nos estudos.!', 'type' => 'warning'];
+        }
+
+        return view('app.Notebook.review', [
+            'notebook'        => $question->notebook,
+            'question'        => $question,
+            'chosenId'        => $chosenId,
+            'answeredCorrect' => $answeredCorrect,
+            'feedback'        => $feedback,
+        ]);
+    }
 }

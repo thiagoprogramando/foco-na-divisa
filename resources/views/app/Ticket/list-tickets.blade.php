@@ -119,7 +119,7 @@
                                     @if ($ticket->question)
                                         <div class="mt-3">
                                             <h6>Questão Associada:</h6>
-                                            <a href="{{ route('question', ['id' => $ticket->question_id]) }}" target="_blank">{{ $ticket->question->title }}</a>
+                                            <a href="{{ route('question', ['id' => $ticket->question_id]) }}" target="_blank">{!! $ticket->question->title !!}</a>
                                         </div>
                                     @endif
 
