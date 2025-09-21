@@ -33,7 +33,7 @@ class BuyController extends Controller {
             return redirect()->route('plans')->with('error', 'Verfique seus dados e tente novamente!');   
         }
 
-        $charge = $assasController->createdCharge($customer, 'UNDEFINED', $value = $product->value, $description = 'Compra do Produto: ' . $product->name, now()->addDays(8), $commissions = null);
+        $charge = $assasController->createdCharge($customer, $request->payment_method, $request->payment_installments, $value = $product->value, $description = 'Compra do Produto: ' . $product->name, now()->addDays(8), $commissions = null);
         if ($charge === false) {
             return redirect()->route('plans')->with('error', 'Erro ao gerar a cobrança, tente novamente!');   
         }

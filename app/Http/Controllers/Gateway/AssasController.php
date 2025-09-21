@@ -55,7 +55,7 @@ class AssasController extends Controller {
         }
     }
     
-    public function createdCharge ($customer, $billingType, $value, $description, $dueDate = null, $commissions = null) {
+    public function createdCharge ($customer, $billingType, $installments = null, $value, $description, $dueDate = null, $commissions = null) {
         try {
             $client = new Client();
     
@@ -68,6 +68,8 @@ class AssasController extends Controller {
                 'json' => [
                     'customer'          => $customer,
                     'billingType'       => $billingType,
+                    'installmentCount'  => $installments ?? 1,
+                    'installmentValue'  => number_format(($value / $installments), 2, '.', ''),
                     'value'             => number_format($value, 2, '.', ''),
                     'dueDate'           => isset($dueDate) ? Carbon::parse($dueDate)->toIso8601String() : now()->addDays(7),
                     'description'       => $description,
