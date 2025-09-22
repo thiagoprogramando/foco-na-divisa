@@ -9,7 +9,7 @@
             <div class="container py-8">
                 <h2 class="text-center mb-2">Planos</h2>
                 <p class="text-center px-sm-12 mb-5">
-                    Todos os planos disponíveis para você escolher o melhor para sua necessidade!
+                    Selecione o plano ideal para você, lembrando que em qualquer deles terá 01 dia de acesso gratuito!
                 </p>
 
                 <div class="pricing-plans row mx-4 gy-3 px-lg-12">

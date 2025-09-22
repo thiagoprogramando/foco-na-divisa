@@ -56,8 +56,9 @@ class AnswerController extends Controller {
 
         $notebookQuestion->answer_id        = $answer_id;
         $notebookQuestion->answer_result    = $isCorrect ? 1 : 2;
+        $notebookQuestion->resolved_at      = now();
         if ($notebookQuestion->save()) {
-            return redirect()->route('review', ['question' => $notebookQuestion->id])->with('success', 'Resposta salva com sucesso!');
+            return redirect()->route('review', ['question' => $notebookQuestion->id]);
         }
 
         return redirect()->back()->with('infor', 'Erro ao salvar a resposta. Tente novamente!');

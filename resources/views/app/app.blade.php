@@ -8,7 +8,7 @@
                 <p class="card-subtitle mb-3">Bem-vindo(a) ao {{ env('APP_NAME') }}</p>
                 <h4 class="text-primary mb-0"><a href="{{ route('plans') }}">{{ Auth::user()->planLabel() }}</a></h4>
                 <p class="mb-3">Aproveite os benefícios da sua conta! 🚀</p>
-                <a href="{{ route('create-notebook') }}" class="btn btn-sm btn-primary waves-effect waves-light">Gerar novo Caderno</a>
+                <a href="{{ route('create-notebook') }}" class="btn btn-sm btn-primary waves-effect waves-light">CRIAR CADERNO DE QUESTÕES</a>
             </div>
             <img src="{{ asset('assets/img/illustrations/trophy.png') }}" class="position-absolute bottom-0 end-0 me-4" height="140" alt="view sales">
         </div>
@@ -43,13 +43,13 @@
             <div class="card-body d-flex justify-content-between flex-wrap gap-4">
                 <div class="d-flex align-items-center gap-3">
                     <div class="avatar">
-                        <div class="avatar-initial bg-label-primary rounded">
+                        <div class="avatar-initial bg-label-info rounded">
                         <i class="ri-question-line ri-24px"></i>
                         </div>
                     </div>
                     <div class="card-info">
-                        <h5 class="mb-0">{{ Auth::user()->questionsWithTrashed->count() }}</h5>
-                        <p class="mb-0">Questões</p>
+                        <h5 class="mb-0">{{ Auth::user()->questionsWithTrashed->where('answer_result', '!==', 0)->count() }}</h5>
+                        <p class="mb-0 text-success">Questões</p>
                     </div>
                 </div>
                 <div class="d-flex align-items-center gap-3">
@@ -59,8 +59,10 @@
                         </div>
                     </div>
                     <div class="card-info">
-                        <h5 class="mb-0">{{ Auth::user()->notebooks->count() }}</h5>
-                        <p class="mb-0">Cadernos</p>
+                        <a href="{{ route('notebooks') }}">
+                            <h5 class="mb-0">{{ Auth::user()->notebooks->count() }}</h5>
+                            <p class="mb-0 text-success">Cadernos</p>
+                        </a>
                     </div>
                 </div>
                 {{-- <div class="d-flex align-items-center gap-3">
