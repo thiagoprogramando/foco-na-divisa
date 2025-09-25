@@ -3,9 +3,9 @@
 
     <div class="col-12">
         <div class="kanban-add-new-board">
-            <a href="{{ route('create-notebook') }}" class="kanban-add-board-btn" for="kanban-add-board-input">
+            <a href="{{ route('create-notebook') }}" class="btn btn-sm btn-primary waves-effect waves-light">
                 <i class="ri-add-line"></i>
-                <span class="align-middle">Novo Caderno</span>
+                <span class="align-middle">CRIAR CADERNO DE QUESTÕES</span>
             </a>
         </div>
     </div>
@@ -34,6 +34,7 @@
                                 <form action="{{ route('deleted-notebook', ['id' => $notebook->id]) }}" method="POST" class="add-btn delete">
                                     @csrf
                                     <a href="{{ route('answer', ['notebook' => $notebook->id]) }}" title="Responder Caderno" class="btn btn-success text-white btn-sm"><i class="ri-menu-search-line"></i></a>
+                                    <a href="{{ route('review-notebook', ['id' => $notebook->id]) }}" title="Estatísticas do Caderno" class="btn btn-info text-white btn-sm"><i class="tf-icons ri-pie-chart-line"></i></a>
                                     <a href="{{ route('notebook', ['id' => $notebook->id]) }}" title="Editar Caderno" class="btn btn-warning text-white btn-sm"><i class="ri-edit-box-line"></i></a>
                                     <button type="submit" class="btn btn-danger btn-sm" title="Excluir Caderno"><i class="ri-delete-bin-line"></i></button>
                                 </form>

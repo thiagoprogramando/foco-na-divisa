@@ -86,6 +86,19 @@ class NotebookController extends Controller {
         return view('app.Notebook.create-notebook', compact('contents'));
     }
 
+    public function review(Request $request, $id) {
+        
+        $notebook = Notebook::find($id);
+        if (!$notebook) {
+            return redirect()->back()->with('infor', 'Caderno não encontrado, verique os dados e tente novamente!');
+        }
+
+        return view('app.Notebook.review-notebook', [
+            'notebook'  => $notebook,
+            'charts'    => true
+        ]);
+    }
+
     public function store(Request $request) {
 
         $request->validate([
@@ -117,12 +130,13 @@ class NotebookController extends Controller {
                 'status'        => 'draft',
             ]);
 
-            $allSelectedQuestions = [];
-            $position = 1;
+            $allSelectedQuestions   = [];
+            $position               = 1;
+            $remainingQuestions     = $totalQuestions;
 
             foreach ($topicIds as $index => $topicId) {
                 
-                $limit = $questionsPerTopic + ($remaining-- > 0 ? 1 : 0);
+                $limit = min($questionsPerTopic + ($remaining-- > 0 ? 1 : 0), $remainingQuestions);
 
                 $query = Question::where('topic_id', $topicId);
 
@@ -147,6 +161,25 @@ class NotebookController extends Controller {
                 $questions = $query->inRandomOrder()->limit($limit)->get();
 
                 foreach ($questions as $question) {
+                    $allSelectedQuestions[] = [
+                        'notebook_id'       => $notebook->id,
+                        'user_id'           => $user_id,
+                        'question_id'       => $question->id,
+                        'question_position' => $position++,
+                        'created_at'        => now(),
+                        'updated_at'        => now(),
+                    ];
+                }
+            }
+
+            if ($remainingQuestions > 0) {
+                $extraQuestions = Question::whereIn('topic_id', $topicIds)
+                    ->whereNotIn('id', collect($allSelectedQuestions)->pluck('question_id'))
+                    ->inRandomOrder()
+                    ->limit($remainingQuestions)
+                    ->get();
+
+                foreach ($extraQuestions as $question) {
                     $allSelectedQuestions[] = [
                         'notebook_id'       => $notebook->id,
                         'user_id'           => $user_id,

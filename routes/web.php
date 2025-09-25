@@ -84,14 +84,15 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/notebooks', [NotebookController::class, 'index'])->name('notebooks');
         Route::get('/notebook/{id}', [NotebookController::class, 'show'])->name('notebook');
         Route::get('/create-notebook', [NotebookController::class, 'create'])->name('create-notebook');
+        Route::get('/review-notebook/{id}', [NotebookController::class, 'review'])->name('review-notebook');
         Route::post('/created-notebook', [NotebookController::class, 'store'])->name('created-notebook');
         Route::post('/updated-notebook/{id}', [NotebookController::class, 'update'])->name('updated-notebook');
         Route::post('/deleted-notebook/{id}', [NotebookController::class, 'destroy'])->name('deleted-notebook');
 
         Route::get('/answer/{notebook}/{question?}', [AnswerController::class, 'index'])->name('answer');
-        Route::get('/review/{question}', [AnswerController::class, 'review'])->name('review');
+        Route::get('/review-question/{question}/{charts?}', [AnswerController::class, 'review'])->name('review-question');
         Route::post('/answer-question', [AnswerController::class, 'update'])->name('answer-question');
-        Route::post('/delete-question/{id}', [AnswerController::class, 'destroy'])->name('delete-question');
+        Route::post('/deleted-question/{id}', [AnswerController::class, 'destroy'])->name('deleted-question');
 
         Route::get('/questions/{topic}', [QuestionController::class, 'index'])->name('questions');
         Route::get('/question/{id}', [QuestionController::class, 'show'])->name('question');

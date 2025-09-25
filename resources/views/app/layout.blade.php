@@ -388,6 +388,12 @@
         {{-- <script src="{{ asset('assets/js/forms-tagify.js') }}"></script> --}}
         <script src="{{ asset('assets/js/forms-typeahead.js') }}"></script>
         <script src="{{ asset('assets/js/ui-popover.js') }}"></script>
+        
+        @if (!empty($charts))
+            <script src="{{ asset('assets/vendor/libs/chartjs/chartjs.js') }}"></script>
+            <script src="{{ asset('assets/js/charts-chartjs.js') }}"></script>
+        @endif
+        
         <script>
             @if(session('error'))
                 Swal.fire({

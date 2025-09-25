@@ -7,6 +7,7 @@ use App\Models\Notebook;
 use App\Models\NotebookQuestion;
 use App\Models\Question;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AnswerController extends Controller {
     
@@ -58,7 +59,7 @@ class AnswerController extends Controller {
         $notebookQuestion->answer_result    = $isCorrect ? 1 : 2;
         $notebookQuestion->resolved_at      = now();
         if ($notebookQuestion->save()) {
-            return redirect()->route('review', ['question' => $notebookQuestion->id]);
+            return redirect()->route('review-question', ['question' => $notebookQuestion->id]);
         }
 
         return redirect()->back()->with('infor', 'Erro ao salvar a resposta. Tente novamente!');
@@ -71,14 +72,18 @@ class AnswerController extends Controller {
             return redirect()->back()->with('infor', 'Questão não encontrada!');
         }
 
+        $notebookId         = $notebookQuestion->notebook_id;
+        $deletedPosition    = $notebookQuestion->question_position;
+
         if ($notebookQuestion->delete()) {
+            NotebookQuestion::where('notebook_id', $notebookId)->where('question_position', '>', $deletedPosition)->orderBy('question_position')->decrement('question_position');
             return redirect()->back()->with('success', 'Questão deletada com sucesso!');
         }
 
         return redirect()->back()->with('infor', 'Erro ao deletar a questão. Tente novamente!');
     }
 
-    public function review($questionId) {
+    public function review($questionId, $charts = null) {
 
         $question = NotebookQuestion::with(['notebook', 'question.alternatives'])->find($questionId);
         if (!$question) {
@@ -99,12 +104,46 @@ class AnswerController extends Controller {
             $feedback = ['message' => '❌ Você errou! Mas isso é normal, siga focado nos estudos.!', 'type' => 'warning'];
         }
 
-        return view('app.Notebook.review', [
+       if ($charts) {
+            $userId = Auth::id();
+
+            // Geral
+            $totalSuccess = NotebookQuestion::countByResult(null, 1);
+            $totalError   = NotebookQuestion::countByResult(null, 2);
+            $total        = NotebookQuestion::countByResult();
+
+            $general = [
+                'success' => $totalSuccess,
+                'error'   => $totalError,
+                'percent_success' => $total > 0 ? round(($totalSuccess / $total) * 100, 2) : 0,
+                'percent_error'   => $total > 0 ? round(($totalError / $total) * 100, 2) : 0,
+            ];
+
+            // Pessoal
+            $userSuccess = NotebookQuestion::countByResult($userId, 1);
+            $userError   = NotebookQuestion::countByResult($userId, 2);
+            $userTotal   = NotebookQuestion::countByResult($userId);
+
+            $personal = [
+                'success' => $userSuccess,
+                'error'   => $userError,
+                'percent_success' => $userTotal > 0 ? round(($userSuccess / $userTotal) * 100, 2) : 0,
+                'percent_error'   => $userTotal > 0 ? round(($userError / $userTotal) * 100, 2) : 0,
+            ];
+
+            $charts = [
+                'general'  => $general,
+                'personal' => $personal,
+            ];
+       }
+
+        return view('app.Notebook.review-question', [
             'notebook'        => $question->notebook,
             'question'        => $question,
             'chosenId'        => $chosenId,
             'answeredCorrect' => $answeredCorrect,
             'feedback'        => $feedback,
+            'charts'          => $charts
         ]);
     }
 }

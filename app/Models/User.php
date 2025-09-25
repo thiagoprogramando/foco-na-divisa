@@ -14,6 +14,7 @@ class User extends Authenticatable {
     use SoftDeletes;
 
     protected $fillable = [
+        'id',
         'uuid',
         'photo',
         'name',
@@ -42,6 +43,40 @@ class User extends Authenticatable {
 
     public function questionsWithTrashed() {
         return $this->hasMany(NotebookQuestion::class)->withTrashed();
+    }
+
+    public function countForQuestion(int $questionId) {
+        return $this->questionsWithTrashed()
+            ->where('question_id', $questionId)
+            ->where('user_id', $this->id)->orderBy('answer_result', 'asc')
+            ->get();
+    }
+
+    public function successCountForQuestion(int $questionId): int {
+        return $this->questionsWithTrashed()
+            ->where('question_id', $questionId)
+            ->where('user_id', $this->id)
+            ->where('answer_result', 1)
+            ->count();
+    }
+
+    public function errorCountForQuestion(int $questionId): int {
+        return $this->questionsWithTrashed()
+            ->where('question_id', $questionId)
+            ->where('user_id', $this->id)
+            ->where('answer_result', 2)
+            ->count();
+    }
+
+    public function pendingCountForQuestion(int $questionId): int {
+        return $this->questionsWithTrashed()
+            ->where('question_id', $questionId)
+            ->where('user_id', $this->id)
+            ->where(function ($q) {
+                $q->where('answer_result', 0)
+                  ->orWhereNull('answer_result');
+            })
+            ->count();
     }
 
     public function invoices() {
@@ -81,28 +116,26 @@ class User extends Authenticatable {
     }
 
     public function daysToPlanExpiration(): int {
-        // última fatura de produto tipo plano
+        
         $invoice = $this->invoices()
             ->whereHas('product', fn($q) => $q->where('type', 'plan'))
             ->latest('created_at')
             ->first();
 
         if (!$invoice) {
-            return 0; // sem plano ativo/teste
+            return 0;
         }
 
-        // Caso seja a primeira invoice (teste gratuito)
         $totalInvoices = $this->invoices()
             ->whereHas('product', fn($q) => $q->where('type', 'plan'))
             ->count();
 
         if ($totalInvoices === 1 && $invoice->payment_status !== 1) {
             $daysUsed   = Carbon::parse($invoice->created_at)->diffInDays(Carbon::now());
-            $daysLeft   = max(0, 7 - $daysUsed); // nunca negativo
+            $daysLeft   = max(0, 7 - $daysUsed);
             return $daysLeft;
         }
 
-        // Demais casos: calcular tempo para vencer a fatura
         $daysLeft = Carbon::now()->diffInDays(Carbon::parse($invoice->due_date), false);
         return max(0, $daysLeft);
     }

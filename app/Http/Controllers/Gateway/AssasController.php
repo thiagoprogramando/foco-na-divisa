@@ -69,16 +69,19 @@ class AssasController extends Controller {
                     'customer'          => $customer,
                     'billingType'       => $billingType,
                     'installmentCount'  => $installments ?? 1,
-                    'installmentValue'  => number_format(($value / $installments), 2, '.', ''),
+                    'installmentValue'  => number_format(($value / ($installments ?? 1)), 2, '.', ''),
                     'value'             => number_format($value, 2, '.', ''),
                     'dueDate'           => isset($dueDate) ? Carbon::parse($dueDate)->toIso8601String() : now()->addDays(7),
                     'description'       => $description,
                     'isAddressRequired' => false,
                     'split'             => $commissions,
-                    'callback'          => ['successUrl'    => env('APP_URL') . 'app']
                 ],
                 'verify' => false
             ];
+
+            if (env('APP_ENV') !== 'local') {
+                $options['json']['callback'] =  ['successUrl' => env('APP_URL') . 'app'];
+            }
     
             $response = $client->post(env('API_URL_ASSAS') . 'v3/payments', $options);
             $body = (string) $response->getBody();
