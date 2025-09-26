@@ -91,8 +91,8 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/answer/{notebook}/{question?}', [AnswerController::class, 'index'])->name('answer');
         Route::get('/review-question/{question}/{charts?}', [AnswerController::class, 'review'])->name('review-question');
+        Route::get('/deleted-question/{id}', [AnswerController::class, 'destroy'])->name('deleted-question');
         Route::post('/answer-question', [AnswerController::class, 'update'])->name('answer-question');
-        Route::post('/deleted-question/{id}', [AnswerController::class, 'destroy'])->name('deleted-question');
 
         Route::get('/questions/{topic}', [QuestionController::class, 'index'])->name('questions');
         Route::get('/question/{id}', [QuestionController::class, 'show'])->name('question');

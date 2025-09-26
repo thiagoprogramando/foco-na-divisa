@@ -65,7 +65,7 @@ class AnswerController extends Controller {
         return redirect()->back()->with('infor', 'Erro ao salvar a resposta. Tente novamente!');
     }
 
-    public function destroy(Request $request, $id) {
+    public function destroy($id) {
         
         $notebookQuestion = NotebookQuestion::find($id);
         if (!$notebookQuestion) {

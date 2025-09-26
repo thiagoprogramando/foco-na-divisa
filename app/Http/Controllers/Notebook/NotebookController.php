@@ -170,6 +170,8 @@ class NotebookController extends Controller {
                         'updated_at'        => now(),
                     ];
                 }
+
+                $remainingQuestions -= $questions->count();
             }
 
             if ($remainingQuestions > 0) {
@@ -229,21 +231,22 @@ class NotebookController extends Controller {
             $notebook = Notebook::findOrFail($id);
 
             $notebook->update([
-                'title'         => $request->title,
-                'filters'       => json_encode($filters),
-                'status'        => 'draft',
+                'title'   => $request->title,
+                'filters' => json_encode($filters),
+                'status'  => 'draft',
             ]);
 
             NotebookQuestion::where('notebook_id', $notebook->id)->delete();
 
             $allSelectedQuestions = [];
-            $position = 1;
+            $position             = 1;
+            $remainingQuestions   = $totalQuestions;
 
             foreach ($topicIds as $index => $topicId) {
-                
-                $limit = $questionsPerTopic + ($remaining-- > 0 ? 1 : 0);
-                
+                $limit = min($questionsPerTopic + ($remaining-- > 0 ? 1 : 0), $remainingQuestions);
+
                 $query = Question::where('topic_id', $topicId);
+
                 if ($request->has('filter_resolved')) {
                     $query->whereDoesntHave('notebookQuestions', function ($q) use ($user_id) {
                         $q->where('user_id', $user_id)->where('answer_result', 1);
@@ -256,15 +259,30 @@ class NotebookController extends Controller {
                     });
                 }
 
-                // if ($request->has('filter_favorites')) {
-                //     $query->whereHas('favorites', function ($q) use ($user_id) {
-                //         $q->where('user_id', $user_id);
-                //     });
-                // }
-
                 $questions = $query->inRandomOrder()->limit($limit)->get();
 
                 foreach ($questions as $question) {
+                    $allSelectedQuestions[] = [
+                        'notebook_id'       => $notebook->id,
+                        'user_id'           => $user_id,
+                        'question_id'       => $question->id,
+                        'question_position' => $position++,
+                        'created_at'        => now(),
+                        'updated_at'        => now(),
+                    ];
+                }
+
+                $remainingQuestions -= $questions->count();
+            }
+
+            if ($remainingQuestions > 0) {
+                $extraQuestions = Question::whereIn('topic_id', $topicIds)
+                    ->whereNotIn('id', collect($allSelectedQuestions)->pluck('question_id'))
+                    ->inRandomOrder()
+                    ->limit($remainingQuestions)
+                    ->get();
+
+                foreach ($extraQuestions as $question) {
                     $allSelectedQuestions[] = [
                         'notebook_id'       => $notebook->id,
                         'user_id'           => $user_id,
@@ -279,13 +297,14 @@ class NotebookController extends Controller {
             NotebookQuestion::insert($allSelectedQuestions);
             DB::commit();
 
-            return redirect()->route('answer', ['notebook' => $notebook->id])->with('success', count($allSelectedQuestions) . ' questões adicionadas ao caderno com sucesso!');
+            return redirect()
+                ->route('answer', ['notebook' => $notebook->id])
+                ->with('success', count($allSelectedQuestions) . ' questões adicionadas ao caderno com sucesso!');
         } catch (\Exception $e) {
             DB::rollBack();
             report($e);
-            return back()->withErrors('Erro ao criar caderno: ' . $e->getMessage());
+            return back()->withErrors('Erro ao atualizar caderno: ' . $e->getMessage());
         }
-        
     }
 
     public function destroy($id) {

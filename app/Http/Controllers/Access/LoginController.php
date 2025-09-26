@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Access;
 
 use App\Http\Controllers\Controller;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 
 class LoginController extends Controller {
     public function login() {
@@ -27,6 +30,10 @@ class LoginController extends Controller {
 
         $credentials = $request->only(['email', 'password']);
         if (Auth::attempt($credentials)) {
+
+            DB::table('sessions')->where('user_id', Auth::id())->delete();
+            $request->session()->regenerate();
+
             return redirect()->route('app');
         } else {
             return redirect()->back()->withInput($request->only('email'))->with('error', 'Credenciais inválidas!');

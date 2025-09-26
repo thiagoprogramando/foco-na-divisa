@@ -3,7 +3,7 @@
     <div class="flex justify-between flex-1 sm:hidden">
         @if ($paginator->previousPageUrl())
             <button type="button" onclick="window.location.href='{{ $paginator->previousPageUrl() }}'" class="relative inline-flex items-center px-4 py-2 text-sm font-medium bg-dark text-white">
-                {!! __('pagination.previous') !!}
+                Anterior
             </button>
         @endif
 
@@ -18,7 +18,7 @@
 
         @if ($paginator->hasMorePages())
             <button type="button" onclick="window.location.href='{{ $paginator->nextPageUrl() }}'" class="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium bg-dark text-white">
-                {!! __('pagination.next') !!}
+                Próxima
             </button>
         @endif
     </div>
