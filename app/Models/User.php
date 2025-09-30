@@ -46,7 +46,7 @@ class User extends Authenticatable {
     }
 
     public function countForQuestion(int $questionId) {
-        return $this->questionsWithTrashed()
+        return $this->questions()
             ->where('question_id', $questionId)
             ->where('user_id', $this->id)->orderBy('answer_result', 'asc')
             ->get();

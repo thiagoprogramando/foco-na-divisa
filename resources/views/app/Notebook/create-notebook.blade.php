@@ -46,7 +46,14 @@
                                             [Todo] {{ $content->title }}
                                         </option>
                                         @foreach($content->topics as $topic)
-                                            <option value="topic:{{ $topic->id }}" data-content-id="{{ $content->id }}" data-total="{{ $topic->questions->count() }}" data-filter-resolved="{{ $topic->resolved_count ?? 0 }}" data-filter-failer="{{ $topic->failer_count ?? 0 }}">
+                                            <option 
+                                                value="topic:{{ $topic->id }}" 
+                                                data-content-id="{{ $content->id }}" 
+                                                data-total="{{ $topic->questions->count() }}" 
+                                                data-filter-resolved="{{ $topic->resolved_count ?? 0 }}" 
+                                                data-filter-failer="{{ $topic->failer_count ?? 0 }}" 
+                                                data-filter-eliminated="{{ $topic->eliminated_count ?? 0 }}" 
+                                                data-filter-favorited="{{ $topic->favorited_count ?? 0 }}">
                                                 {{ $topic->title }}
                                             </option>
                                         @endforeach
@@ -79,18 +86,26 @@
                     <div class="col-12 col-sm-12 col-md-5 col-lg-5">
                         <div class="p-6">
                             <small class="text-light fw-medium">+Filtros</small>
+
                             <div class="form-check mt-4">
-                                <input name="filter" class="form-check-input" type="radio" value="filter_resolved" id="filter_resolved">
-                                <label class="form-check-label" for="filter_resolved">Eliminar questões que acertei</label>
+                                <input name="filter" class="form-check-input" type="radio" value="filter_success" id="filter_success">
+                                <label class="form-check-label" for="filter_success">Eliminar questões que acertei</label>
                             </div>
+
                             <div class="form-check">
                                 <input name="filter" class="form-check-input" type="radio" value="filter_failer" id="filter_failer">
-                                <label class="form-check-label" for="filter_failer">Mostrar apenas as que eu já Errei</label>
+                                <label class="form-check-label" for="filter_failer">Eliminar questões que errei</label>
                             </div>
-                            {{-- <div class="form-check">
-                                <input name="filter" class="form-check-input" type="radio" value="filter_favorites" id="filter_favorites">
-                                <label class="form-check-label" for="filter_favorites">Mostrar apenas as questões Favoritas</label>
-                            </div> --}}
+
+                            <div class="form-check">
+                                <input name="filter" class="form-check-input" type="radio" value="filter_eliminated" id="filter_eliminated">
+                                <label class="form-check-label" for="filter_eliminated">Eliminar questões já resolvidas (acerto ou erro)</label>
+                            </div>
+
+                            <div class="form-check">
+                                <input name="filter" class="form-check-input" type="radio" value="filter_favorited" id="filter_favorited">
+                                <label class="form-check-label" for="filter_favorited">Mostrar apenas as que eu Favoritei</label>
+                            </div>
                         </div>
                     </div>
 
@@ -134,22 +149,52 @@
             });
         });
 
+        function toInt(v) {
+            const n = Number(v);
+            return Number.isFinite(n) ? n : 0;
+        }
+
         function updateQuestionCount() {
-            const selectedTopics    = document.querySelectorAll('#selected-topics option');
-            const activeFilter      = document.querySelector('input[name="filter"]:checked');
-            const inputElement      = document.querySelector('#quanty_questions');
-            const infoElement       = document.querySelector('#total-questions-info');
+            const selectedTopics = document.querySelectorAll('#selected-topics option');
+            const activeFilter = document.querySelector('input[name="filter"]:checked');
+            const inputElement = document.querySelector('#quanty_questions');
+            const infoElement = document.querySelector('#total-questions-info');
+
             let total = 0;
 
             selectedTopics.forEach(option => {
+            
+                const totalQuestions = toInt(option.dataset.total);
+                const resolvedCount  = toInt(option.dataset.filterResolved);
+                const failerCount    = toInt(option.dataset.filterFailer);
+                const eliminatedCount= toInt(option.dataset.filterEliminated);
+                const favoritedCount = toInt(option.dataset.filterFavorited);
+
                 if (!activeFilter) {
-                    total += parseInt(option.dataset.total || 0);
-                } else {
-                    if (activeFilter.value === 'filter_resolved') {
-                        total += (parseInt(option.dataset.total || 0) - parseInt(option.dataset.filterResolved || 0));
-                    } else if (activeFilter.value === 'filter_failer') {
-                        total += parseInt(option.dataset.filterFailer || 0);
-                    }
+                    total += totalQuestions;
+                    return;
+                }
+
+                switch (activeFilter.value) {
+                    case 'filter_success':
+                        total += Math.max(0, totalQuestions - resolvedCount);
+                        break;
+
+                    case 'filter_failer':
+                        total += Math.max(0, totalQuestions - failerCount);
+                        break;
+
+                    case 'filter_eliminated':
+                        total += Math.max(0, totalQuestions - eliminatedCount);
+                        break;
+
+                    case 'filter_favorited':
+                        total += favoritedCount;
+                        break;
+
+                    default:
+                        total += totalQuestions;
+                        break;
                 }
             });
 
@@ -159,11 +204,12 @@
 
             if (inputElement) {
                 inputElement.max = total;
-                if (parseInt(inputElement.value) > total) {
+                if (toInt(inputElement.value) > total) {
                     inputElement.value = total;
                 }
             }
         }
+
 
         document.getElementById('quanty_questions').addEventListener('input', function () {
             const max = parseInt(this.max, 10);

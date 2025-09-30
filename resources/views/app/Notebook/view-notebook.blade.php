@@ -42,7 +42,14 @@
                                             [Todo] {{ $content->title }}
                                         </option>
                                         @foreach($content->topics as $topic)
-                                            <option value="topic:{{ $topic->id }}" data-content-id="{{ $content->id }}" data-total="{{ $topic->questions->count() }}" data-filter-resolved="{{ $topic->resolved_count ?? 0 }}" data-filter-failer="{{ $topic->failer_count ?? 0 }}">
+                                            <option 
+                                                value="topic:{{ $topic->id }}" 
+                                                data-content-id="{{ $content->id }}" 
+                                                data-total="{{ $topic->questions->count() }}" 
+                                                data-filter-resolved="{{ $topic->resolved_count ?? 0 }}" 
+                                                data-filter-failer="{{ $topic->failer_count ?? 0 }}" 
+                                                data-filter-eliminated="{{ $topic->eliminated_count ?? 0 }}" 
+                                                data-filter-favorited="{{ $topic->favorited_count ?? 0 }}">
                                                 {{ $topic->title }}
                                             </option>
                                         @endforeach
@@ -87,18 +94,26 @@
                     <div class="col-12 col-sm-12 col-md-5 col-lg-5">
                         <div class="p-6">
                             <small class="text-light fw-medium">+Filtros</small>
+
                             <div class="form-check mt-4">
-                                <input name="filter" class="form-check-input" type="radio" value="filter_resolved" id="filter_resolved">
-                                <label class="form-check-label" for="filter_resolved">Eliminar questões que acertei</label>
+                                <input name="filter" class="form-check-input" type="radio" value="filter_success" id="filter_success">
+                                <label class="form-check-label" for="filter_success">Eliminar questões que acertei</label>
                             </div>
+
                             <div class="form-check">
                                 <input name="filter" class="form-check-input" type="radio" value="filter_failer" id="filter_failer">
-                                <label class="form-check-label" for="filter_failer">Mostrar apenas as que eu já Errei</label>
+                                <label class="form-check-label" for="filter_failer">Eliminar questões que errei</label>
                             </div>
-                            {{-- <div class="form-check">
-                                <input name="filter" class="form-check-input" type="radio" value="filter_favorites" id="filter_favorites">
-                                <label class="form-check-label" for="filter_favorites">Mostrar apenas as questões Favoritas</label>
-                            </div> --}}
+
+                            <div class="form-check">
+                                <input name="filter" class="form-check-input" type="radio" value="filter_eliminated" id="filter_eliminated">
+                                <label class="form-check-label" for="filter_eliminated">Eliminar questões já resolvidas (acerto ou erro)</label>
+                            </div>
+
+                            <div class="form-check">
+                                <input name="filter" class="form-check-input" type="radio" value="filter_favorited" id="filter_favorited">
+                                <label class="form-check-label" for="filter_favorited">Mostrar apenas as que eu Favoritei</label>
+                            </div>
                         </div>
                     </div>
 
@@ -133,7 +148,9 @@
                 'totals' => $c->topics->mapWithKeys(fn($t) => [$t->id => [
                     'total' => $t->questions_count ?? 0,
                     'filterResolved' => $t->resolved_count ?? 0,
-                    'filterFailer' => $t->failer_count ?? 0
+                    'filterFailer' => $t->failer_count ?? 0,
+                    'filterEliminated' => $t->eliminated_count ?? 0,
+                    'filterFavorited' => $t->favorited_count ?? 0
                 ]])
             ]
         ])) !!}`);
@@ -161,22 +178,27 @@
 
             selectedTopics.each(function () {
                 const val = $(this).val();
-
                 if (val.startsWith('topic:')) {
                     const topicId = val.split(':')[1];
                     const contentId = $(this).data('content-id');
                     const stats = contentTopicsMap[contentId]?.totals?.[topicId] ?? {
                         total: 0,
                         filterResolved: 0,
-                        filterFailer: 0
+                        filterFailer: 0,
+                        filterEliminated: 0,
+                        filterFavorited: 0
                     };
 
                     if (!activeFilter) {
                         total += stats.total;
-                    } else if (activeFilter.value === 'filter_resolved') {
+                    } else if (activeFilter.value === 'filter_success') {
                         total += (stats.total - stats.filterResolved);
                     } else if (activeFilter.value === 'filter_failer') {
-                        total += stats.filterFailer;
+                        total += (stats.total - stats.filterFailer - stats.filterResolved); // descontar resolvidas
+                    } else if (activeFilter.value === 'filter_eliminated') {
+                        total += stats.filterEliminated;
+                    } else if (activeFilter.value === 'filter_favorited') {
+                        total += stats.filterFavorited;
                     }
                 }
             });

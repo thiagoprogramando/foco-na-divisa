@@ -34,7 +34,7 @@ class Question extends Model {
     }
 
     public function favorites() {
-        return $this->hasMany(Favorites::class);
+        return $this->hasMany(Favorite::class);
     }
 
     public function isFavorited(): bool {

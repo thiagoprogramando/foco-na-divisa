@@ -181,10 +181,11 @@
                             </ul>
                         </div>
 
-                        <div class="navbar-search-wrapper search-input-wrapper container-xxl d-none">
-                            <input type="text" class="form-control search-input border-0" placeholder="Pesquisar..." aria-label="Pesquisar..." />
+                        <form action="{{ route('search') }}" method="GET" class="navbar-search-wrapper search-input-wrapper container-xxl d-none">
+                            @csrf
+                            <input type="text" name="search" class="form-control search-input border-0" placeholder="Pesquisar..." aria-label="Pesquisar..." />
                             <i class="ri-close-fill search-toggler cursor-pointer"></i>
-                        </div>
+                        </form>
                     </div>
                 </nav>
 
@@ -206,12 +207,12 @@
                                                     <div data-i18n="Início">Início</div>
                                                 </a>
                                             </li>
-                                            {{-- <li class="menu-item">
-                                                <a href="{{ route('app') }}" class="menu-link">
-                                                    <i class="menu-icon tf-icons ri-calendar-event-fill"></i>
-                                                    <div data-i18n="Agenda">Agenda</div>
+                                            <li class="menu-item">
+                                                <a href="{{ route('search') }}" class="menu-link">
+                                                    <i class="menu-icon ri-search-line ri-22px scaleX-n1-rtl"></i>
+                                                    <div data-i18n="Pesquisar">Pesquisar</div>
                                                 </a>
-                                            </li> --}}
+                                            </li>
                                         </ul>
                                     </li>
 

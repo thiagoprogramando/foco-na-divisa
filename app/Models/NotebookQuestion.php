@@ -18,16 +18,16 @@ class NotebookQuestion extends Model {
         'answer_result',
     ];
 
-    public function notebook() {
-        return $this->belongsTo(Notebook::class);
+    public function user() {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function user() {
-        return $this->belongsTo(User::class);
+    public function notebook() {
+        return $this->belongsTo(Notebook::class, 'notebook_id');
     }
 
     public function question() {
-        return $this->belongsTo(Question::class);
+        return $this->belongsTo(Question::class, 'question_id');
     }
 
     public function labelResult() {
@@ -61,20 +61,5 @@ class NotebookQuestion extends Model {
         }
 
         return $result;
-    }
-
-    public static function countByResult(?int $userId = null, ?int $answerResult = null): int {
-        
-        $query = self::query();
-
-        if (!is_null($userId)) {
-            $query->where('user_id', $userId);
-        }
-
-        if (!is_null($answerResult)) {
-            $query->where('answer_result', $answerResult);
-        }
-
-        return $query->count();
     }
 }

@@ -32,7 +32,7 @@
                                     @foreach ($notebook->questions as $question)
                                         <tr>
                                             <td>
-                                                <a href="{{ route('review-question', ['question' => $question->id]) }}" target="_blank">
+                                                <a href="{{ route('review-question', ['question' => $question->id, 'charts' => true]) }}" target="_blank">
                                                     {{ \Illuminate\Support\Str::limit(preg_replace('/[^A-Za-z0-9 ]/', '', strip_tags($question->question->title)), 70) }}
                                                 </a>
                                             </td>

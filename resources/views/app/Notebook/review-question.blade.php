@@ -32,6 +32,7 @@
                     <div class="col-12 d-flex justify-content-center flex-wrap gap-4">
                         <div class="btn-toolbar demo-inline-spacing gap-2">
                             <div class="btn-group" role="group" aria-label="First group">
+                                <a href="javascript:window.history.back()" class="btn btn-outline-secondary" title="Voltar"> <i class="tf-icons ri-arrow-left-line"></i></a>
                                 <a href="{{ route('review-question', ['question' => $question->id, 'charts' => true]) }}" class="btn btn-outline-secondary" title="Estátisticas da Questão"> <i class="tf-icons ri-pie-chart-line"></i></a>
                                 <a href="{{ route('notebook', ['id' => $notebook->id]) }}" title="Editar Caderno" class="btn btn-outline-secondary"> <i class="tf-icons ri-filter-3-line"></i> </a>
                                 <button type="button" class="btn btn-outline-secondary" title="Alertar Problema" data-bs-toggle="modal" data-bs-target="#createdTicketModal"> <i class="tf-icons ri-alarm-warning-line"></i></button>
@@ -163,7 +164,7 @@
                             <div class="col-12 col-sm-12 col-md-4 col-lg-4">
                                 <div class="text-center">
                                     <h5>Evolução Geral</h5>
-                                    <p>✅ Acertos: {{ $charts['general']['percent_success'] }}%  x ❌ Erros: {{ $charts['general']['percent_error'] }}%</p>
+                                    <p>❌ Erros: {{ $charts['general']['percent_error'] }}% x  ✅ Acertos: {{ $charts['general']['percent_success'] }}%</p>
                                 </div>
                                 <div style="width: 250px; height: 250px; margin: 0 auto;">
                                     <canvas id="generalChart"></canvas>
@@ -172,7 +173,7 @@
                             <div class="col-12 col-sm-12 col-md-4 col-lg-4">
                                 <div class="text-center">
                                     <h5>Sua Evolução</h5>
-                                    <p>✅ Acertos: {{ $charts['personal']['percent_success'] }}% x ❌ Erros: {{ $charts['personal']['percent_error'] }}%</p>
+                                    <p>❌ Erros: {{ $charts['personal']['percent_error'] }}% x ✅ Acertos: {{ $charts['personal']['percent_success'] }}%</p>
                                 </div>
                                 <div style="width: 250px; height: 250px; margin: 0 auto;">
                                     <canvas id="personalChart"></canvas>

@@ -15,6 +15,7 @@ use App\Http\Controllers\Notebook\AnswerController;
 use App\Http\Controllers\Notebook\NotebookController;
 use App\Http\Controllers\Product\PlanController;
 use App\Http\Controllers\Product\ProductController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Ticket\TicketController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +33,8 @@ Route::post('/recover-password/{code}', [ForgoutController::class, 'recoverPassw
 Route::middleware(['auth'])->group(function () {
 
     Route::get('/app', [AppController::class, 'index'])->name('app');
+    Route::get('/search', [SearchController::class, 'index'])->name('search');
+    Route::post('/created-question-search', [SearchController::class, 'store'])->name('created-question-search');
 
     Route::get('/tickets', [TicketController::class, 'index'])->name('tickets');
     Route::post('/created-ticket', [TicketController::class, 'store'])->name('created-ticket');

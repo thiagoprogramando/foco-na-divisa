@@ -107,10 +107,9 @@ class AnswerController extends Controller {
        if ($charts) {
             $userId = Auth::id();
 
-            // Geral
-            $totalSuccess = NotebookQuestion::countByResult(null, 1);
-            $totalError   = NotebookQuestion::countByResult(null, 2);
-            $total        = NotebookQuestion::countByResult();
+            $totalSuccess = NotebookQuestion::where('question_id', $question->question->id)->where('answer_result', 1)->count();
+            $totalError   = NotebookQuestion::where('question_id', $question->question->id)->where('answer_result', 2)->count();
+            $total        = $totalSuccess + $totalError;
 
             $general = [
                 'success' => $totalSuccess,
@@ -119,10 +118,9 @@ class AnswerController extends Controller {
                 'percent_error'   => $total > 0 ? round(($totalError / $total) * 100, 2) : 0,
             ];
 
-            // Pessoal
-            $userSuccess = NotebookQuestion::countByResult($userId, 1);
-            $userError   = NotebookQuestion::countByResult($userId, 2);
-            $userTotal   = NotebookQuestion::countByResult($userId);
+            $userSuccess = NotebookQuestion::where('question_id', $question->question->id)->where('user_id', $userId)->where('answer_result', 1)->count();
+            $userError   = NotebookQuestion::where('question_id', $question->question->id)->where('user_id', $userId)->where('answer_result', 2)->count();
+            $userTotal   = $userSuccess + $userError;
 
             $personal = [
                 'success' => $userSuccess,

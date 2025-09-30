@@ -32,7 +32,7 @@
                     <div class="col-12 d-flex justify-content-center flex-wrap gap-4">
                         <div class="btn-toolbar demo-inline-spacing gap-2">
                             <div class="btn-group" role="group" aria-label="First group">
-                                <a href="{{ route('review-notebook', ['id' => $notebook->id]) }}" class="btn btn-outline-secondary" title="Estátisticas"> <i class="tf-icons ri-pie-chart-line"></i></a>
+                                <a href="{{ route('review-question', ['question' => $question->id, 'charts' => true]) }}" class="btn btn-outline-secondary" title="Estátisticas"> <i class="tf-icons ri-pie-chart-line"></i></a>
                                 <a href="{{ route('notebook', ['id' => $notebook->id]) }}" title="Editar Caderno" class="btn btn-outline-secondary"> <i class="tf-icons ri-filter-3-line"></i> </a>
                                 <button type="button" class="btn btn-outline-secondary" title="Alertar Problema" data-bs-toggle="modal" data-bs-target="#createdTicketModal"> <i class="tf-icons ri-alarm-warning-line"></i></button>
                                 <button type="button" class="btn btn-outline-secondary" title="Comentários do Professor" data-bs-toggle="collapse" href="#collapseTeacher" role="button" aria-expanded="false" aria-controls="collapseTeacher">

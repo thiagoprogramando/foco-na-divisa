@@ -4,7 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Favorites extends Model {
+class Favorite extends Model {
+
+    protected $table = 'favorites';
     
    protected $fillable = [
         'user_id',
@@ -12,10 +14,10 @@ class Favorites extends Model {
     ];
 
     public function user() {
-        return $this->hasMany(User::class);
-    } 
+        return $this->belongsTo(User::class);
+    }
 
     public function question() {
-        return $this->hasMany(Question::class);
-    } 
+        return $this->belongsTo(Question::class);
+    }
 }
