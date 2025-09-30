@@ -10,7 +10,7 @@ return new class extends Migration {
         Schema::create('notebook_questions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('notebook_id')->nullable()->constrained('notebooks')->nullOnDelete(); // não excluir o registro
+            $table->foreignId('notebook_id')->nullable()->constrained('notebooks')->nullOnDelete();
             $table->foreignId('question_id')->constrained('questions')->onDelete('cascade');
             $table->tinyInteger('question_position')->default(1);
             $table->foreignId('answer_id')->nullable()->constrained('question_alternatives')->nullOnDelete();
