@@ -45,11 +45,16 @@ class User extends Authenticatable {
         return $this->hasMany(NotebookQuestion::class)->withTrashed();
     }
 
-    public function countForQuestion(int $questionId) {
-        return $this->questions()
+    public function countForQuestion(int $questionId, $answer_result = null) {
+        $query = $this->questionsWithTrashed()
             ->where('question_id', $questionId)
-            ->where('user_id', $this->id)->orderBy('answer_result', 'asc')
-            ->get();
+            ->where('user_id', $this->id);
+
+        if (!is_null($answer_result)) {
+            $query->whereIn('answer_result', $answer_result);
+        }
+
+        return $query->orderBy('answer_result', 'asc')->get();
     }
 
     public function successCountForQuestion(int $questionId): int {

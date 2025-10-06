@@ -23,7 +23,7 @@ class NotebookQuestion extends Model {
     }
 
     public function notebook() {
-        return $this->belongsTo(Notebook::class, 'notebook_id');
+        return $this->belongsTo(Notebook::class, 'notebook_id')->withTrashed();
     }
 
     public function question() {

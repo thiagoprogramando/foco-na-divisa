@@ -142,7 +142,7 @@
                                             </tr>
                                         </thead>
                                         <tbody class="table-border-bottom-0">
-                                            @foreach (Auth::user()->countForQuestion($question->question->id) as $notebookQuestion)
+                                            @foreach (Auth::user()->countForQuestion($question->question->id, [1, 2]) as $notebookQuestion)
                                                 <tr>
                                                     <td class="text-center">
                                                         <div class="badge bg-label-{{ $notebookQuestion->labelResult()['color'] }} rounded-pill">{{ $notebookQuestion->labelResult()['message'] }}</div>
@@ -163,8 +163,9 @@
                             </div>
                             <div class="col-12 col-sm-12 col-md-4 col-lg-4">
                                 <div class="text-center">
-                                    <h5>Evolução Geral</h5>
-                                    <p>❌ Erros: {{ $charts['general']['percent_error'] }}% x  ✅ Acertos: {{ $charts['general']['percent_success'] }}%</p>
+                                    <h5>Geral</h5>
+                                    <small>{{ $charts['general']['success'] + $charts['general']['error'] }} Resoluções</small>
+                                    <p>✅ Acertos: {{ $charts['general']['success'] }} x  ❌ Erros: {{ $charts['general']['error'] }}</p>
                                 </div>
                                 <div style="width: 250px; height: 250px; margin: 0 auto;">
                                     <canvas id="generalChart"></canvas>
@@ -172,8 +173,9 @@
                             </div>
                             <div class="col-12 col-sm-12 col-md-4 col-lg-4">
                                 <div class="text-center">
-                                    <h5>Sua Evolução</h5>
-                                    <p>❌ Erros: {{ $charts['personal']['percent_error'] }}% x ✅ Acertos: {{ $charts['personal']['percent_success'] }}%</p>
+                                    <h5>Individual</h5>
+                                    <small>{{ $charts['personal']['success'] + $charts['personal']['error'] }} Resoluções</small>
+                                    <p>✅ Acertos: {{ $charts['personal']['success'] }} x ❌ Erros: {{ $charts['personal']['error'] }}</p>
                                 </div>
                                 <div style="width: 250px; height: 250px; margin: 0 auto;">
                                     <canvas id="personalChart"></canvas>

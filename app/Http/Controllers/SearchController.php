@@ -14,7 +14,8 @@ class SearchController extends Controller {
     
     public function index(Request $request) {
         
-        $questions = Question::query();
+        $userId     = Auth::id();
+        $questions  = Question::query();
 
        if (!empty($request->search)) {
             $search = trim(strip_tags($request->search));
@@ -29,6 +30,37 @@ class SearchController extends Controller {
 
         if (!empty($request->topic_id) && $request->topic_id !== 'all') {
             $questions->where('topic_id', $request->topic_id);
+        }
+
+         if (!empty($request->filter) && $request->filter !== 'all') {
+            switch ($request->filter) {
+                case 'filter_favorited':
+                    $questions->whereHas('favorites', function ($q) use ($userId) {
+                        $q->where('user_id', $userId);
+                    });
+                    break;
+
+                case 'filter_eliminated':
+                    $questions->whereHas('notebookQuestions', function ($q) use ($userId) {
+                        $q->where('user_id', $userId)
+                        ->whereIn('answer_result', [1, 2]);
+                    });
+                    break;
+
+                case 'filter_failer':
+                    $questions->whereHas('notebookQuestions', function ($q) use ($userId) {
+                        $q->where('user_id', $userId)
+                        ->where('answer_result', 2);
+                    });
+                    break;
+
+                case 'filter_success':
+                    $questions->whereHas('notebookQuestions', function ($q) use ($userId) {
+                        $q->where('user_id', $userId)
+                        ->where('answer_result', 1);
+                    });
+                    break;
+            }
         }
 
         return view('app.search', [

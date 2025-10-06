@@ -5,19 +5,34 @@
         <div class="card mb-3">
             <div class="card-header">
                 <div class="d-flex justify-content-between">
-                    <h5 class="mb-1">Questões</h5>
+                    <h5 class="mb-1">Questões na Base de Dados</h5>
                 </div>
-                <form action="{{ route('search') }}" method="GET" class="col-12 col-sm-12 col-md-8 col-lg-8 mb-3 g-3">
+                <form action="{{ route('search') }}" method="GET" class="col-12 col-sm-12 col-md-10 col-lg-10 mb-3 g-3">
                     @csrf
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" name="search" placeholder="Pesquisar..." value="{{ request('search') }}">
-                        <select name="topic_id" id="" class="select2 form-select">
-                            <option value="all">Tópicos</option>
-                            @foreach ($topics as $topic)
-                                <option value="{{ $topic->id }}" @selected(request('topic_id') == $topic->id)>{{ $topic->title }}</option>
-                            @endforeach
-                        </select>
-                        <button class="btn btn-dark" type="submit">Pesquisar</button>
+                    <div class="row mb-3">
+                        <div class="col-sm-12 col-md-6 col-lg-6 mb-2">
+                            <input type="text" class="form-control" name="search" placeholder="Pesquisar..." value="{{ request('search') }}">
+                        </div>
+                         <div class="col-sm-6 col-md-2 col-lg-2 mb-2">
+                            <select name="topic_id" id="" class="select2 form-select">
+                                <option value="all">Tópicos</option>
+                                @foreach ($topics as $topic)
+                                    <option value="{{ $topic->id }}" @selected(request('topic_id') == $topic->id)>{{ $topic->title }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-sm-6 col-md-2 col-lg-2 mb-2">
+                            <select name="filter" id="" class="select2 form-select">
+                                <option value="all">Filtros</option>
+                                <option value="filter_favorited" @selected(request('filter') == 'filter_favorited')>Favoritas</option>
+                                <option value="filter_eliminated" @selected(request('filter') == 'filter_eliminated')>Resolvidas</option>
+                                <option value="filter_failer" @selected(request('filter') == 'filter_failer')>Apenas que Errei</option>
+                                <option value="filter_success" @selected(request('filter') == 'filter_success')>Apenas que Acertei</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-12 col-md-1 col-lg-1 mb-2 d-grid">
+                            <button class="btn btn-lg btn-dark" type="submit"><i class="ri-search-line ri-22px scaleX-n1-rtl"></i></button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -50,7 +65,7 @@
                                             <div class="row">
                                                 <div class="col-12 mb-2">
                                                     <div class="form-floating form-floating-outline">
-                                                        <teaxtarea class="form-control h-px-100" placeholder="Descrição" id="description">{{ strip_tags($question->title) }}</textarea>
+                                                        <teaxtarea class="form-control h-px-100" placeholder="Descrição" id="description">{!! strip_tags($question->title) !!}</textarea>
                                                         <label for="description">Descrição</label>
                                                     </div>
                                                 </div>
