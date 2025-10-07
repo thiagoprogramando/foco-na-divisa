@@ -15360,7 +15360,8 @@ button.list-group-item-gray.active {
 
 .bg-warning {
   --bs-bg-opacity: 1;
-  background-color: rgba(var(--bs-warning-rgb), var(--bs-bg-opacity)) !important;
+  /* background-color: rgba(var(--bs-warning-rgb), var(--bs-bg-opacity)) !important; */
+  background-color: #ffd950 !important;
 }
 
 .bg-danger {

@@ -18,7 +18,7 @@
                             <div class="card border shadow-none">
                                 <div class="card-body pt-12">
                                     <div class="mt-3 mb-5 text-center">
-                                        <img src="{{ $product->image ? asset('storage/'.$product->image) : asset('assets/img/illustrations/pricing-basic.png') }}" alt="CAPA DO PRODUTO" style="height: 120px; max-width: 320px;"/>
+                                        <img src="{{ $product->image ? asset('storage/'.$product->image) : asset('assets/img/illustrations/pricing-basic.png') }}" class="img-fluid" alt="CAPA DO PRODUTO"/>
                                     </div>
                                     <h4 class="card-title text-center text-capitalize mb-2">{{ $product->name }}</h4>
                                     <p class="text-center mb-5">{{ $product->caption }}</p>

@@ -3,11 +3,11 @@ body {
   padding: 0;
   min-height: 100vh;
 
-  background-image: linear-gradient(rgba(1, 0, 0, 0.7), rgba(1, 0, 0, 0.7)), url('../../../img/backgrounds/2.jpg');
+  background-image: linear-gradient(rgba(1, 0, 0, 0.7), rgba(1, 0, 0, 0.7)), url('../../../img/backgrounds/5.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-attachment: fixed;
+  /* background-attachment: fixed; */
 }
 
 

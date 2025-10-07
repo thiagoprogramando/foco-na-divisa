@@ -6,9 +6,9 @@
             <div class="card-body text-nowrap">
                 <h5 class="card-title mb-1">Olá, <span class="fw-bold">{{ Auth::user()->maskName() }}!</span> 🎉</h5>
                 <p class="card-subtitle mb-3">Bem-vindo(a) ao {{ env('APP_NAME') }}</p>
-                <h4 class="text-primary mb-0"><a href="{{ route('plans') }}">{{ Auth::user()->planLabel() }}</a></h4>
+                <h4 class="text-primary mb-0"><a href="{{ route('plans') }}" class="text-success">{{ Auth::user()->planLabel() }}</a></h4>
                 <p class="mb-3">Aproveite os benefícios da sua conta! 🚀</p>
-                <a href="{{ route('create-notebook') }}" class="btn btn-sm btn-primary waves-effect waves-light">CRIAR CADERNO DE QUESTÕES</a>
+                <a href="{{ route('create-notebook') }}" class="btn btn-sm btn-warning waves-effect waves-light">CRIAR CADERNO DE QUESTÕES</a>
             </div>
             <img src="{{ asset('assets/img/illustrations/trophy.png') }}" class="position-absolute bottom-0 end-0 me-4" height="140" alt="view sales">
         </div>

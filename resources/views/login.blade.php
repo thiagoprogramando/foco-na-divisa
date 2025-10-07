@@ -53,12 +53,12 @@
                                     </a>
                                 </div>
                                 <div class="mb-5">
-                                    <button class="btn btn-success d-grid w-100" type="submit">Acessar</button>
+                                    <button class="btn btn-warning d-grid w-100" type="submit">Acessar</button>
                                 </div>
                             </form>
 
                             <p class="text-center">
-                                <span>Não tem uma conta?</span> <a href="{{ route('register') }}" class="text-success"><span>Cadastre-se aqui!</span></a>
+                                <span>Não tem uma conta?</span> <a href="{{ route('register') }}" class="text-warning"><span>Cadastre-se aqui!</span></a>
                             </p>
                         </div>
                     </div>

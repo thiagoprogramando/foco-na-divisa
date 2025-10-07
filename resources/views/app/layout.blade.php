@@ -47,7 +47,7 @@
                         <div class="navbar-brand app-brand demo d-none d-xl-flex py-0 me-6">
                             <a href="{{ route('app') }}" class="app-brand-link gap-2">
                                 <span class="app-brand-logo demo">
-                                    <img src="{{ asset('assets/img/logo.png') }}">
+                                    <img src="{{ asset('assets/img/logo_preta.png') }}">
                                 </span>
                             </a>
 
