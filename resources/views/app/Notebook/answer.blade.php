@@ -32,16 +32,16 @@
                     <div class="col-12 d-flex justify-content-center flex-wrap gap-4">
                         <div class="btn-toolbar demo-inline-spacing gap-2">
                             <div class="btn-group" role="group" aria-label="First group">
-                                <a href="{{ route('review-question', ['question' => $question->id, 'charts' => true]) }}" class="btn btn-outline-secondary" title="Estátisticas"> <i class="tf-icons ri-pie-chart-line"></i></a>
-                                <a href="{{ route('notebook', ['id' => $notebook->id]) }}" title="Editar Caderno" class="btn btn-outline-secondary"> <i class="tf-icons ri-filter-3-line"></i> </a>
-                                <button type="button" class="btn btn-outline-secondary" title="Alertar Problema" data-bs-toggle="modal" data-bs-target="#createdTicketModal"> <i class="tf-icons ri-alarm-warning-line"></i></button>
-                                <button type="button" class="btn btn-outline-secondary" title="Comentários do Professor" data-bs-toggle="collapse" href="#collapseTeacher" role="button" aria-expanded="false" aria-controls="collapseTeacher">
+                                <a href="{{ route('review-question', ['question' => $question->id, 'charts' => true]) }}" class="btn btn-lg btn-outline-info" title="Estátisticas"> <i class="tf-icons ri-pie-chart-line"></i></a>
+                                <a href="{{ route('notebook', ['id' => $notebook->id]) }}" title="Editar Caderno" class="btn btn-lg btn-outline-secondary"> <i class="tf-icons ri-filter-3-line"></i> </a>
+                                <button type="button" class="btn btn-lg btn-outline-danger" title="Alertar Problema" data-bs-toggle="modal" data-bs-target="#createdTicketModal"> <i class="tf-icons ri-alarm-warning-line"></i></button>
+                                <button type="button" class="btn btn-lg btn-outline-info" title="Comentários do Professor" data-bs-toggle="collapse" href="#collapseTeacher" role="button" aria-expanded="false" aria-controls="collapseTeacher">
                                     <i class="tf-icons ri-chat-quote-line"></i>
                                 </button>
-                                <button type="button" class="btn btn-outline-secondary" title="Comentários da Questão" data-bs-toggle="collapse" href="#collapseComments" role="button" aria-expanded="false" aria-controls="collapseComments">
+                                <button type="button" class="btn btn-lg btn-outline-success" title="Comentários da Questão" data-bs-toggle="collapse" href="#collapseComments" role="button" aria-expanded="false" aria-controls="collapseComments">
                                     <i class="tf-icons ri-chat-1-line"></i>
                                 </button>
-                                <a href="{{ route('favorited-question', ['id' => $questions->first()->question->id]) }}" class="btn btn-outline-secondary" title="Favoritar"> <i class="tf-icons {{ $questions->first()->question->isFavorited() ? 'ri-heart-fill text-danger' : 'ri-heart-line' }}"></i> </a>
+                                <a href="{{ route('favorited-question', ['id' => $questions->first()->question->id]) }}" class="btn btn-lg btn-outline-secondary" title="Favoritar"> <i class="tf-icons {{ $questions->first()->question->isFavorited() ? 'ri-heart-fill text-danger' : 'ri-heart-line' }}"></i> </a>
                             </div>
                         </div>
                     </div>
@@ -54,12 +54,11 @@
 
                     <div class="collapse mt-2 mb-3" id="collapseComments">
                         <div class="row p-4 border">
-                            <form action="{{ route('created-comment') }}" method="POST" class="col-12 col-sm-12 col-md-4 col-lg-4">
+                            <form action="{{ route('created-comment') }}" method="POST" class="col-12 col-sm-12 col-md-6 col-lg-6">
                                 @csrf
                                 <input type="hidden" name="question_id" value="{{ $questions->first()->question->id }}">
                                 <div class="form-floating form-floating-outline mb-2">
-                                    <textarea class="form-control h-px-100" name="comment" id="comment" placeholder="Deixe seu comentário:" required></textarea>
-                                    <label for="comment">Deixe seu comentário:</label>
+                                    <textarea class="form-control h-px-100 editor-simple" name="comment" id="comment" placeholder="Deixe seu comentário:" required></textarea>
                                 </div>
                                 <div class="d-flex justify-content-end">
                                     <button type="submit" class="btn btn-outline-dark">Comentar</button>
@@ -217,4 +216,6 @@
             });
         });
     </script>
+    <script src="https://cdn.tiny.cloud/1/tgezwiu6jalnw1mma8qnoanlxhumuabgmtavb8vap7357t22/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="{{ asset('assets/js/tinymce.js') }}"></script>
 @endsection

@@ -115,9 +115,11 @@ class AssasController extends Controller {
 
                 $invoice->payment_status = 1;
                 if ($invoice->save()) {
+                    
+                    Invoice::where('user_id', $invoice->user_id)->where('reference', $invoice->reference)->where('id', '!=', $invoice->id)->whereIn('payment_status', [0, 2])->delete();
                     return response()->json(['message' => 'Fatura Aprovada!'], 200);
                 } else {
-                    return response()->json(['message' => 'Falha o tentar Aprovar Fatura!'], 400);
+                    return response()->json(['message' => 'Falha ao tentar Aprovar Fatura!'], 400);
                 }
             }
 
