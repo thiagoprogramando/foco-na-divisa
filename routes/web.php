@@ -80,6 +80,13 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/created-user/{role}', [UserController::class, 'store'])->name('created-user');
         Route::post('/updated-user/{uuid}', [UserController::class, 'update'])->name('updated-user');
         Route::post('/deleted-user/{uuid}', [UserController::class, 'destroy'])->name('deleted-user');
+
+        Route::get('/questions/{topic}', [QuestionController::class, 'index'])->name('questions');
+        Route::get('/question/{id}', [QuestionController::class, 'show'])->name('question');
+        Route::get('/create-question/{topic}', [QuestionController::class, 'createForm'])->name('create-question');
+        Route::post('/created-question/{topic}', [QuestionController::class, 'store'])->name('created-question');
+        Route::post('/updated-question/{id}', [QuestionController::class, 'update'])->name('updated-question');
+        Route::post('/deleted-question/{id}', [QuestionController::class, 'destroy'])->name('deleted-question');
     });
 
     Route::middleware(['checkMonthly'])->group(function () {    
@@ -97,16 +104,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/deleted-question/{id}', [AnswerController::class, 'destroy'])->name('deleted-question');
         Route::post('/answer-question', [AnswerController::class, 'update'])->name('answer-question');
 
-        Route::get('/questions/{topic}', [QuestionController::class, 'index'])->name('questions');
-        Route::get('/question/{id}', [QuestionController::class, 'show'])->name('question');
         Route::get('/favorited-question/{id}', [QuestionController::class, 'favorited'])->name('favorited-question');
-        Route::get('/create-question/{topic}', [QuestionController::class, 'createForm'])->name('create-question');
-        Route::post('/created-question/{topic}', [QuestionController::class, 'store'])->name('created-question');
-        Route::post('/updated-question/{id}', [QuestionController::class, 'update'])->name('updated-question');
-        Route::post('/deleted-question/{id}', [QuestionController::class, 'destroy'])->name('deleted-question');
         Route::post('/created-comment', [QuestionCommentController::class, 'store'])->name('created-comment');
         Route::post('/updated-comment/{id}', [QuestionCommentController::class, 'update'])->name('updated-comment');
-        
     });
 
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');

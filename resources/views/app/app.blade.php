@@ -43,10 +43,11 @@
             <div class="card-body d-flex justify-content-between flex-wrap gap-4">
                 <div class="d-flex align-items-center gap-3">
                     <div class="avatar">
-                        <div class="avatar-initial bg-label-info rounded">
-                        <i class="ri-question-line ri-24px"></i>
+                        <div onclick="window.location.href='{{ route('search') }}?filter=filter_eliminated'" class="avatar-initial bg-label-info rounded">
+                            <i class="ri-question-line ri-24px"></i>
                         </div>
                     </div>
+                
                     <div class="card-info">
                         <a href="{{ route('search') }}?filter=filter_eliminated">
                             <h5 class="mb-0">{{ Auth::user()->questionsWithTrashed->where('answer_result', '!==', 0)->count() }}</h5>
@@ -56,8 +57,8 @@
                 </div>
                 <div class="d-flex align-items-center gap-3">
                     <div class="avatar">
-                        <div class="avatar-initial bg-label-info rounded">
-                        <i class="ri-book-read-line ri-24px"></i>
+                        <div onclick="window.location.href='{{ route('notebooks') }}'" class="avatar-initial bg-label-info rounded">
+                            <i class="ri-book-read-line ri-24px"></i>
                         </div>
                     </div>
                     <div class="card-info">
