@@ -115,9 +115,31 @@ class NotebookController extends Controller {
             return redirect()->back()->with('infor', 'Caderno não encontrado, verique os dados e tente novamente!');
         }
 
+        $successCount = NotebookQuestion::where('notebook_id', $notebook->id)
+            ->where('answer_result', 1)
+            ->count();
+
+        $errorCount = NotebookQuestion::where('notebook_id', $notebook->id)
+            ->where('answer_result', 2)
+            ->count();
+
+        $total = $successCount + $errorCount;
+
+        $percentSuccess = $total > 0 ? round(($successCount / $total) * 100, 2) : 0;
+        $percentError   = $total > 0 ? round(($errorCount / $total) * 100, 2) : 0;
+
+        $charts = [
+            'general' => [
+                'success'         => $successCount,
+                'error'           => $errorCount,
+                'percent_success' => $percentSuccess,
+                'percent_error'   => $percentError,
+            ],
+        ];
+
         return view('app.Notebook.review-notebook', [
             'notebook'  => $notebook,
-            'charts'    => true
+            'charts'    => $charts
         ]);
     }
 

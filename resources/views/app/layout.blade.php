@@ -73,7 +73,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link btn rounded-pill btn-icon text-nowrap d-inline-flex position-relative me-4" href="javascript:void(0);">
                                         <span class="ri-hourglass-2-fill ri-22px text-secondary"></span>
-                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary text-white badge-notifications">{{ Auth::user()->daysToPlanExpiration() }}</span>
+                                        <span title="Sua licença expira em {{ Auth::user()->daysToPlanExpiration() }} dias" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary text-white badge-notifications">{{ Auth::user()->daysToPlanExpiration() }}</span>
                                     </a>
                                 </li>
 
