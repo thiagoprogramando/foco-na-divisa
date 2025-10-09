@@ -5,6 +5,8 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class UserController extends Controller {
     
@@ -32,9 +34,9 @@ class UserController extends Controller {
         ]);
     }
 
-    public function show($id) {
+    public function show($uuid) {
         
-        $user = User::find($id);
+        $user = User::where('uuid', $uuid)->first();
         if (!$user) {
             return redirect()->back()->with('error', 'Perfil não encontrado!');
         }
@@ -53,6 +55,7 @@ class UserController extends Controller {
         ]);
 
         $user = new User();
+        $user->uuid     = Str::uuid();
         $user->name     = $request->name;
         $user->email    = $request->email;
         $user->cpfcnpj  = preg_replace('/[\.\-\/]/', '', $request->cpfcnpj);
@@ -65,22 +68,55 @@ class UserController extends Controller {
         return redirect()->back()->with('error', 'Não foi possível cadastrar o novo Perfil, verifique os dados e tente novamente!');
     }
 
-    public function update(Request $request, $id) {
+    public function update(Request $request, $uuid) {
 
-        $user = User::find($id);
+        $user = User::where('uuid', $uuid)->first();
         if (!$user) {
             return redirect()->back()->with('error', 'Perfil não encontrado!');
         }
 
-        $user->name     = $request->name;
-        $user->email    = $request->email;
-        $user->cpfcnpj  = preg_replace('/[\.\-\/]/', '', $request->cpfcnpj);
-        $user->role     = $request->role;
-        $user->address_postal_code     = $request->address_postal_code;
-        $user->address_num             = $request->address_num;
-        $user->address_address         = $request->address_address;
-        $user->address_city             = $request->address_city;
-        $user->address_state            = $request->address_state;
+        if ($request->has('name')) {
+            $user->name = $request->name;
+        }
+        if ($request->has('email')) {
+            $user->email = $request->email;
+        }
+        if ($request->has('cpfcnpj')) {
+            $user->cpfcnpj = preg_replace('/[\.\-\/]/', '', $request->cpfcnpj);
+        }
+        if ($request->has('role')) {
+            $user->role = $request->role;
+        }
+        if ($request->has('address_postal_code')) {
+            $user->address_postal_code = $request->address_postal_code;
+        }
+        if ($request->has('address_num')) {
+            $user->address_num = $request->address_num;
+        }
+        if ($request->has('address_address')) {
+            $user->address_address = $request->address_address;
+        }
+        if ($request->has('address_city')) {
+            $user->address_city = $request->address_city;
+        }
+        if ($request->has('address_state')) {
+            $user->address_state = $request->address_state;
+        }
+
+        if (!empty($request->photo)) {
+
+            if ($user->photo && Storage::disk('public')->exists($user->photo)) {
+                Storage::disk('public')->delete($user->photo);
+            }
+
+            $file        = $request->file('photo');
+            $filename    = Str::uuid() . '.' . $file->getClientOriginalExtension();
+
+            $file->storeAs('profile-images', $filename, 'public');
+            
+            $user->photo = 'profile-images/' . $filename;
+        }
+
         if ($user->save()) {
             return redirect()->back()->with('success', 'Perfil salvo com sucesso!');
         }
@@ -88,9 +124,9 @@ class UserController extends Controller {
         return redirect()->back()->with('error', 'Não foi possível atualizar o Perfil, verifique os dados e tente novamente!');
     }
 
-    public function destroy($id) {
+    public function destroy($uuid) {
         
-        $user = User::find($id);
+        $user = User::where('uuid', $uuid)->first();
         if ($user && $user->delete()) {
             return redirect()->back()->with('success', 'Perfil excluído com sucesso!');
         }

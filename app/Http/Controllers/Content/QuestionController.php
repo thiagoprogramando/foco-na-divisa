@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Content;
 
 use App\Http\Controllers\Controller;
 use App\Models\Board;
-use App\Models\Favorites;
+use App\Models\Favorite;
 use App\Models\Question;
 use App\Models\Topic;
 use Illuminate\Http\Request;
@@ -32,6 +32,7 @@ class QuestionController extends Controller {
         return view('app.Content.Question.list-questions', [
             'questions' => $query->paginate(30),
             'topic'     => $topic,
+            'boards'    => Board::orderBy('name', 'asc')->get(),
         ]);
     }
 
@@ -200,12 +201,12 @@ class QuestionController extends Controller {
             return redirect()->back()->with('infor', 'Falha ao favoritar a questão, tente novamente!'); 
         }
 
-        $existing = Favorites::where('user_id', Auth::user()->id)->where('question_id', $id)->first();
+        $existing = Favorite::where('user_id', Auth::user()->id)->where('question_id', $id)->first();
         if ($existing &&  $existing->delete()) {
             return redirect()->back()->with('success', 'Questão removida dos favoritos!');
         } 
 
-        $favorite               = new Favorites();
+        $favorite               = new Favorite();
         $favorite->user_id      = Auth::user()->id;
         $favorite->question_id  = $id;
         if ($favorite->save()) {

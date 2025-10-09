@@ -23,8 +23,6 @@
 
         <link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}"/>
         <link rel="stylesheet" href="{{ asset('assets/vendor/libs/typeahead-js/typeahead.css') }}"/>
-        <link rel="stylesheet" href="{{ asset('assets/vendor/libs/apex-charts/apex-charts.css') }}"/>
-        <link rel="stylesheet" href="{{ asset('assets/vendor/libs/swiper/swiper.css') }}"/>
 
         <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/cards-statistics.css') }}"/>
         <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/cards-analytics.css') }}"/>
@@ -46,11 +44,9 @@
         <script src="{{ asset('assets/vendor/libs/i18n/i18n.js') }}"></script>
         <script src="{{ asset('assets/vendor/libs/typeahead-js/typeahead.js') }}"></script>
         <script src="{{ asset('assets/vendor/js/menu.js') }}"></script>
-        <script src="{{ asset('assets/vendor/libs/swiper/swiper.js') }}"></script>
-        <script src="{{ asset('assets/vendor/libs/apex-charts/apexcharts.js') }}"></script>
         <script src="{{ asset('assets/js/main.js') }}"></script>
+        <script src="{{ asset('assets/js/mask.js') }}"></script>
         <script src="{{ asset('assets/js/sweetalert.js') }}"></script>
-        <script src="{{ asset('assets/js/charts-apex.js') }}"></script>
         <script>
             @if(session('error'))
                 Swal.fire({

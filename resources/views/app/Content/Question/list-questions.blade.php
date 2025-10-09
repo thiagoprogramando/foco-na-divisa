@@ -7,10 +7,55 @@
                 <i class="ri-add-line"></i>
                 <span class="align-middle">Nova Questão</span>
             </a>
+            <label class="kanban-add-board-btn" for="kanban-add-board-input" data-bs-toggle="modal" data-bs-target="#filterModal">
+                <i class="ri-filter-line"></i>
+                <span class="align-middle">Filtrar</span>
+            </label>
+        </div>
+
+        <div class="modal fade" id="filterModal" tabindex="-1" aria-hidden="true">
+            <form action="{{ route('questions', ['topic' => $topic]) }}" method="GET">
+                @csrf
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="exampleModalLabel1">Dados da Pesquisa</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-12 mb-2">
+                                    <div class="form-floating form-floating-outline">
+                                        <input type="text" name="title" id="title" class="form-control" placeholder="Trecho da Questão:"/>
+                                        <label for="title">Trecho da Questão:</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-2">
+                                <div class="form-floating form-floating-outline mb-2">
+                                    <div class="select2-primary">
+                                        <select name="board_id" id="board_id" class="select2 form-select" required>
+                                            <option value="  " selected>Opções Disponíveis</option>
+                                            @foreach ($boards as $board)
+                                                <option value="{{ $board->id }}">{{ $board->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <label for="board_id">Bancas</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer btn-group">
+                            <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal"> Fechar </button>
+                            <button type="submit" class="btn btn-success">Filtrar</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 
-    <div class="col-12 col-sm-12 col-md-7 col-lg-7">  
+    <div class="col-12 col-sm-12 col-md-12 col-lg-12">  
         <div class="card demo-inline-spacing">
             <div class="card-header">
                 <div class="d-flex justify-content-between">

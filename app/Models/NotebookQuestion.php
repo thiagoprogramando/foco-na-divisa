@@ -18,15 +18,48 @@ class NotebookQuestion extends Model {
         'answer_result',
     ];
 
-    public function notebook() {
-        return $this->belongsTo(Notebook::class);
+    public function user() {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function user() {
-        return $this->belongsTo(User::class);
+    public function notebook() {
+        return $this->belongsTo(Notebook::class, 'notebook_id')->withTrashed();
     }
 
     public function question() {
-        return $this->belongsTo(Question::class);
+        return $this->belongsTo(Question::class, 'question_id');
+    }
+
+    public function labelResult() {
+        
+        if ($this->trashed()) {
+            return [
+                'message' => 'Questão Excluída',
+                'color'   => 'secondary'
+            ];
+        }
+
+        switch ($this->answer_result) {
+            case 1:
+                $result = [
+                    'message' => 'Acertou',
+                    'color'   => 'success'
+                ];
+                break;
+            case 2:
+                $result  = [
+                    'message' => 'Errou',
+                    'color'   => 'danger'
+                ];
+                break;
+            default:
+                $result  = [
+                    'message' => 'Aguardando Resposta',
+                    'color'   => 'warning'
+                ];
+                break;
+        }
+
+        return $result;
     }
 }

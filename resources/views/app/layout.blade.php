@@ -47,7 +47,7 @@
                         <div class="navbar-brand app-brand demo d-none d-xl-flex py-0 me-6">
                             <a href="{{ route('app') }}" class="app-brand-link gap-2">
                                 <span class="app-brand-logo demo">
-                                    <img src="{{ asset('assets/img/logo.png') }}">
+                                    <img src="{{ asset('assets/img/logo_branca.png') }}">
                                 </span>
                             </a>
 
@@ -64,46 +64,18 @@
 
                         <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
                             <ul class="navbar-nav flex-row align-items-center ms-auto">
-                                <!-- Search -->
-                                {{-- <li class="nav-item navbar-search-wrapper me-1 me-xl-0">
+                                <li class="nav-item navbar-search-wrapper me-1 me-xl-0">
                                     <a class="nav-link btn btn-text-secondary rounded-pill search-toggler fw-normal" href="javascript:void(0);">
                                         <i class="ri-search-line ri-22px scaleX-n1-rtl"></i>
                                     </a>
-                                </li> --}}
-                                <!-- /Search -->
-
-                                <!-- Language -->
-                                {{-- <li class="nav-item dropdown-language dropdown">
-                                <a
-                                    class="nav-link btn btn-text-secondary rounded-pill btn-icon dropdown-toggle hide-arrow"
-                                    href="javascript:void(0);"
-                                    data-bs-toggle="dropdown">
-                                    <i class="ri-translate-2 ri-22px"></i>
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li>
-                                    <a class="dropdown-item" href="javascript:void(0);" data-language="en" data-text-direction="ltr">
-                                        <span class="align-middle">English</span>
+                                </li>
+                                
+                                <li class="nav-item">
+                                    <a class="nav-link btn rounded-pill btn-icon text-nowrap d-inline-flex position-relative me-4" href="javascript:void(0);">
+                                        <span class="ri-hourglass-2-fill ri-22px text-secondary"></span>
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary text-white badge-notifications">{{ Auth::user()->daysToPlanExpiration() }}</span>
                                     </a>
-                                    </li>
-                                    <li>
-                                    <a class="dropdown-item" href="javascript:void(0);" data-language="fr" data-text-direction="ltr">
-                                        <span class="align-middle">French</span>
-                                    </a>
-                                    </li>
-                                    <li>
-                                    <a class="dropdown-item" href="javascript:void(0);" data-language="ar" data-text-direction="rtl">
-                                        <span class="align-middle">Arabic</span>
-                                    </a>
-                                    </li>
-                                    <li>
-                                    <a class="dropdown-item" href="javascript:void(0);" data-language="de" data-text-direction="ltr">
-                                        <span class="align-middle">German</span>
-                                    </a>
-                                    </li>
-                                </ul>
-                                </li> --}}
-                                <!--/ Language -->
+                                </li>
 
                                 {{-- <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-4 me-xl-1">
                                     <a class="nav-link btn btn-text-secondary rounded-pill btn-icon dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
@@ -160,16 +132,17 @@
                                 <li class="nav-item navbar-dropdown dropdown-user dropdown">
                                     <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                                         <div class="avatar avatar-online">
-                                            <img src="{{ Auth::user()->photo ? Storage::url(Auth::user()->photo) : asset('assets/img/avatars/man.png') }}" alt="Perfil de {{ Auth::user()->name }}" class="rounded-circle"/>
+                                            <img src="{{ Auth::user()->photo ? asset('storage/'.Auth::user()->photo) : asset('assets/img/avatars/man.png') }}" alt="Perfil de {{ Auth::user()->name }}" class="rounded-circle"/>
                                         </div>
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
+                                        
                                         <li>
-                                            <a class="dropdown-item" href="">
+                                            <a class="dropdown-item" href="{{ route('user', ['uuid' => Auth::user()->uuid]) }}">
                                                 <div class="d-flex">
                                                     <div class="flex-shrink-0 me-2">
                                                         <div class="avatar avatar-online">
-                                                            <img src="{{ Auth::user()->photo ? Storage::url(Auth::user()->photo) : asset('assets/img/avatars/man.png') }}" alt="Perfil de {{ Auth::user()->name }}" class="rounded-circle" />
+                                                            <img src="{{ Auth::user()->photo ? asset('storage/'.Auth::user()->photo) : asset('assets/img/avatars/man.png') }}" alt="Perfil de {{ Auth::user()->name }}" class="rounded-circle" />
                                                         </div>
                                                     </div>
                                                     <div class="flex-grow-1">
@@ -183,7 +156,7 @@
                                             <div class="dropdown-divider"></div>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="">
+                                            <a class="dropdown-item" href="{{ route('user', ['uuid' => Auth::user()->uuid]) }}">
                                                 <i class="ri-user-3-line ri-22px me-3"></i>
                                                 <span class="align-middle">Perfil</span>
                                             </a>
@@ -208,10 +181,11 @@
                             </ul>
                         </div>
 
-                        <div class="navbar-search-wrapper search-input-wrapper container-xxl d-none">
-                            <input type="text" class="form-control search-input border-0" placeholder="Pesquisar..." aria-label="Pesquisar..." />
+                        <form action="{{ route('search') }}" method="GET" class="navbar-search-wrapper search-input-wrapper container-xxl d-none">
+                            @csrf
+                            <input type="text" name="search" class="form-control search-input border-0" placeholder="Pesquisar..." aria-label="Pesquisar..." />
                             <i class="ri-close-fill search-toggler cursor-pointer"></i>
-                        </div>
+                        </form>
                     </div>
                 </nav>
 
@@ -233,62 +207,90 @@
                                                     <div data-i18n="Início">Início</div>
                                                 </a>
                                             </li>
-                                            {{-- <li class="menu-item">
-                                                <a href="{{ route('app') }}" class="menu-link">
-                                                    <i class="menu-icon tf-icons ri-calendar-event-fill"></i>
-                                                    <div data-i18n="Agenda">Agenda</div>
+                                            <li class="menu-item">
+                                                <a href="{{ route('search') }}" class="menu-link">
+                                                    <i class="menu-icon ri-search-line ri-22px scaleX-n1-rtl"></i>
+                                                    <div data-i18n="Pesquisar">Pesquisar</div>
                                                 </a>
-                                            </li> --}}
+                                            </li>
                                         </ul>
                                     </li>
 
                                     <li class="menu-item">
                                         <a href="javascript:void(0)" class="menu-link menu-toggle">
+                                            <i class="menu-icon tf-icons ri-shopping-cart-fill"></i>
+                                            <div data-i18n="Produtos & Planos">Produtos & Planos</div>
+                                        </a>
+                                        <ul class="menu-sub">
+                                            <li class="menu-item">
+                                                <a href="{{ route('plans') }}" class="menu-link">
+                                                    <div data-i18n="Planos">Planos</div>
+                                                </a>
+                                            </li>
+                                            <li class="menu-item">
+                                                <a href="{{ route('invoices') }}" class="menu-link">
+                                                    <div data-i18n="Faturas">Faturas</div>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="menu-item">
+                                        <a href="{{ route('notebooks') }}" class="menu-link">
                                             <i class="menu-icon tf-icons ri-book-open-fill"></i>
                                             <div data-i18n="Cadernos">Cadernos</div>
                                         </a>
-                                        <ul class="menu-sub">
-                                            <li class="menu-item">
-                                                <a href="{{ route('notebooks') }}" class="menu-link">
-                                                    <div data-i18n="Meus Cadernos">Meus Cadernos</div>
-                                                </a>
-                                            </li>
-                                            <li class="menu-item">
-                                                <a href="{{ route('contents') }}" class="menu-link">
-                                                    <div data-i18n="Conteúdos">Conteúdos</div>
-                                                </a>
-                                            </li>
-                                            <li class="menu-item">
-                                                <a href="{{ route('boards') }}" class="menu-link">
-                                                    <div data-i18n="Bancas">Bancas</div>
-                                                </a>
-                                            </li>
-                                        </ul>
                                     </li>
 
-                                    <li class="menu-item">
-                                        <a href="javascript:void(0)" class="menu-link menu-toggle">
-                                            <i class="menu-icon tf-icons ri-account-pin-box-fill"></i>
-                                            <div data-i18n="Pessoas">Pessoas</div>
-                                        </a>
-                                        <ul class="menu-sub">
-                                            <li class="menu-item">
-                                                <a href="{{ route('users', ['role' => 'student']) }}" class="menu-link">
-                                                    <div data-i18n="Estudantes">Estudantes</div>
-                                                </a>
-                                            </li>
-                                            <li class="menu-item">
-                                                <a href="{{ route('users', ['role' => 'teacher']) }}" class="menu-link">
-                                                    <div data-i18n="Professores">Professores</div>
-                                                </a>
-                                            </li>
-                                            <li class="menu-item">
-                                                <a href="{{ route('users', ['role' => 'admin']) }}" class="menu-link">
-                                                    <div data-i18n="Administradores">Administradores</div>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
+                                    @if (Auth::user()->role === 'admin')
+                                        <li class="menu-item">
+                                            <a href="javascript:void(0)" class="menu-link menu-toggle">
+                                                <i class="menu-icon tf-icons ri-book-open-fill"></i>
+                                                <div data-i18n="Administração">Administração</div>
+                                            </a>
+                                            <ul class="menu-sub">
+                                                <li class="menu-item">
+                                                    <a href="{{ route('contents') }}" class="menu-link">
+                                                        <div data-i18n="Conteúdos">Conteúdos</div>
+                                                    </a>
+                                                </li>
+                                                <li class="menu-item">
+                                                    <a href="{{ route('boards') }}" class="menu-link">
+                                                        <div data-i18n="Bancas">Bancas</div>
+                                                    </a>
+                                                </li>
+                                                <li class="menu-item">
+                                                    <a href="{{ route('products') }}" class="menu-link">
+                                                        <div data-i18n="Produtos">Produtos</div>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+
+                                        <li class="menu-item">
+                                            <a href="javascript:void(0)" class="menu-link menu-toggle">
+                                                <i class="menu-icon tf-icons ri-account-pin-box-fill"></i>
+                                                <div data-i18n="Pessoas">Pessoas</div>
+                                            </a>
+                                            <ul class="menu-sub">
+                                                <li class="menu-item">
+                                                    <a href="{{ route('users', ['role' => 'student']) }}" class="menu-link">
+                                                        <div data-i18n="Estudantes">Estudantes</div>
+                                                    </a>
+                                                </li>
+                                                <li class="menu-item">
+                                                    <a href="{{ route('users', ['role' => 'teacher']) }}" class="menu-link">
+                                                        <div data-i18n="Professores">Professores</div>
+                                                    </a>
+                                                </li>
+                                                <li class="menu-item">
+                                                    <a href="{{ route('users', ['role' => 'admin']) }}" class="menu-link">
+                                                        <div data-i18n="Administradores">Administradores</div>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    @endif
 
                                     {{-- <li class="menu-item">
                                         <a href="javascript:void(0)" class="menu-link menu-toggle">
@@ -377,9 +379,15 @@
         {{-- <script src="{{ asset('assets/js/charts-apex.js') }}"></script>--}}
         <script src="{{ asset('assets/js/forms-selects.js') }}"></script> 
         
-        <script src="{{ asset('assets/js/forms-tagify.js') }}"></script>
+        {{-- <script src="{{ asset('assets/js/forms-tagify.js') }}"></script> --}}
         <script src="{{ asset('assets/js/forms-typeahead.js') }}"></script>
         <script src="{{ asset('assets/js/ui-popover.js') }}"></script>
+        
+        @if (!empty($charts))
+            <script src="{{ asset('assets/vendor/libs/chartjs/chartjs.js') }}"></script>
+            <script src="{{ asset('assets/js/charts-chartjs.js') }}"></script>
+        @endif
+        
         <script>
             @if(session('error'))
                 Swal.fire({

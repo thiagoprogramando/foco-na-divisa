@@ -127,13 +127,15 @@ class ContentController extends Controller {
         if ($request->hasFile('cover_image')) {
 
             if ($content->cover_image && Storage::exists($content->cover_image)) {
-                Storage::delete($content->cover_image);
+                Storage::disk('public')->delete($content->cover_image);
             }
 
-            $file = $request->file('cover_image');
+            $file     = $request->file('cover_image');
             $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
+
             $file->storeAs('content-images', $filename, 'public');
-            $content->cover_image = 'storage/content-images/' . $filename;
+
+            $content->cover_image = 'content-images/' . $filename;
         }
 
         if ($content->save()) {

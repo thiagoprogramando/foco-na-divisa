@@ -9,7 +9,7 @@ document.getElementById('add-alternative').addEventListener('click', function ()
             icon: 'info',
             title: 'Limite atingido',
             text: 'Você já adicionou todas as 26 alternativas possíveis (A a Z).',
-            confirmButtonText: 'Entendi',
+            confirmButtonText: 'Certo!',
             customClass: {
                 confirmButton: 'btn btn-primary'
             },
@@ -50,17 +50,19 @@ document.addEventListener('change', function (e) {
 });
 
 document.getElementById('question-form').addEventListener('submit', function (e) {
+
+    tinymce.triggerSave();
     
-    const alternatives = document.querySelectorAll('input[name="alternative[]"]');
-    const corrects = document.querySelectorAll('.correct-switch:checked');
-    const title = document.getElementById('question').value.trim();
+    const alternatives  = document.querySelectorAll('input[name="alternative[]"]');
+    const corrects      = document.querySelectorAll('.correct-switch:checked');
+    const title         = document.getElementById('question').value;
 
     if (title === '') {
         e.preventDefault();
         Swal.fire({
             icon: 'warning',
             title: 'Questão obrigatória',
-            text: 'É necessário informar um texto para a questão. (Veja como melhorar)',
+            text: 'É necessário informar um texto para a questão!',
             confirmButtonText: 'Ok',
             customClass: {
                 confirmButton: 'btn btn-warning'
@@ -80,7 +82,7 @@ document.getElementById('question-form').addEventListener('submit', function (e)
         Swal.fire({
             icon: 'info',
             title: 'Poucas alternativas',
-            text: 'Informe no mínimo duas alternativas para a questão.',
+            text: 'Informe no mínimo duas alternativas para a questão!',
             confirmButtonText: 'Ok',
             customClass: {
                 confirmButton: 'btn btn-info'
@@ -95,7 +97,7 @@ document.getElementById('question-form').addEventListener('submit', function (e)
         Swal.fire({
             icon: 'error',
             title: 'Alternativa correta',
-            text: 'Selecione exatamente uma alternativa como correta.',
+            text: 'Selecione exatamente uma alternativa como correta!',
             confirmButtonText: 'Entendi',
             customClass: {
                 confirmButton: 'btn btn-danger'

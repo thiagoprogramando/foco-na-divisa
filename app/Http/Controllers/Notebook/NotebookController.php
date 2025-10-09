@@ -28,9 +28,38 @@ class NotebookController extends Controller {
             return redirect()->back()->with('infor', 'Caderno não encontrado, verique os dados e tente novamente!');
         }
 
-        $contents = Content::with(['topics' => function ($query) {
-            $query->whereNull('deleted_at');
-        }])->where('status', 'active')->get();
+        $userId = Auth::id();
+
+        $contents = Content::with([
+            'topics' => function ($query) use ($userId) {
+                $query->withCount([
+                    'questions',
+                    'questions as resolved_count' => function ($q) use ($userId) {
+                        $q->whereHas('notebookQuestions', function ($nq) use ($userId) {
+                            $nq->where('user_id', $userId)
+                            ->where('answer_result', 1);
+                        });
+                    },
+                    'questions as failer_count' => function ($q) use ($userId) {
+                        $q->whereHas('notebookQuestions', function ($nq) use ($userId) {
+                            $nq->where('user_id', $userId)
+                            ->where('answer_result', 2);
+                        });
+                    },
+                    'questions as eliminated_count' => function ($q) use ($userId) {
+                        $q->whereHas('notebookQuestions', function ($nq) use ($userId) {
+                            $nq->where('user_id', $userId)
+                            ->whereIn('answer_result', [1,2]); 
+                        });
+                    },
+                    'questions as favorited_count' => function ($q) use ($userId) {
+                        $q->whereHas('favorites', function ($fav) use ($userId) {
+                            $fav->where('user_id', $userId);
+                        })->whereNull('questions.deleted_at');
+                    },
+                ]);
+            }
+        ])->orderBy('order', 'asc')->get();
 
         $filters = is_array($notebook->filters) ? $notebook->filters : json_decode($notebook->filters, true);
 
@@ -60,12 +89,36 @@ class NotebookController extends Controller {
                             $nq->where('user_id', $userId)
                             ->where('answer_result', 2);
                         });
-                    }
+                    },
+                    'questions as eliminated_count' => function ($q) use ($userId) {
+                        $q->whereHas('notebookQuestions', function ($nq) use ($userId) {
+                            $nq->where('user_id', $userId)
+                            ->whereIn('answer_result', [1,2]); 
+                        });
+                    },
+                    'questions as favorited_count' => function ($q) use ($userId) {
+                        $q->whereHas('favorites', function ($fav) use ($userId) {
+                            $fav->where('user_id', $userId);
+                        })->whereNull('questions.deleted_at');
+                    },
                 ]);
             }
-        ])->get();
+        ])->orderBy('order', 'asc')->get();
 
         return view('app.Notebook.create-notebook', compact('contents'));
+    }
+
+    public function review(Request $request, $id) {
+        
+        $notebook = Notebook::find($id);
+        if (!$notebook) {
+            return redirect()->back()->with('infor', 'Caderno não encontrado, verique os dados e tente novamente!');
+        }
+
+        return view('app.Notebook.review-notebook', [
+            'notebook'  => $notebook,
+            'charts'    => true
+        ]);
     }
 
     public function store(Request $request) {
@@ -76,8 +129,8 @@ class NotebookController extends Controller {
             'quanty_questions'  => 'required|integer|min:1',
         ]);
 
-        $topicIds       = json_decode($request->input('topics'), true);
-        $totalQuestions = (int) $request->input('quanty_questions');
+        $topicIds        = json_decode($request->input('topics'), true);
+        $totalQuestions  = (int) $request->input('quanty_questions');
         $user_id         = Auth::id();
 
         $topicsCount = count($topicIds);
@@ -99,36 +152,105 @@ class NotebookController extends Controller {
                 'status'        => 'draft',
             ]);
 
-            $allSelectedQuestions = [];
-            $position = 1;
+            $allSelectedQuestions   = [];
+            $position               = 1;
+            $remainingQuestions     = $totalQuestions;
 
             foreach ($topicIds as $index => $topicId) {
                 
-                $limit = $questionsPerTopic + ($remaining-- > 0 ? 1 : 0);
+                $limit = min($questionsPerTopic + ($remaining-- > 0 ? 1 : 0), $remainingQuestions);
 
                 $query = Question::where('topic_id', $topicId);
 
-                if ($request->has('filter_resolved')) {
-                    $query->whereDoesntHave('notebookQuestions', function ($q) use ($user_id) {
-                        $q->where('user_id', $user_id)->where('answer_result', 1);
+                // 🔹 Eliminar questões acertadas
+                if ($request->filter == 'filter_success') {
+                    $query->whereDoesntHave('notebookQuestions', function($q) use ($user_id) {
+                        $q->where('user_id', $user_id)
+                        ->where('answer_result', 1);
+                    });
+                 
+                }
+
+                // 🔹 Eliminar questões já resolvidas (acertos ou erros)
+                if ($request->filter == 'filter_failer') {
+                    $query->whereDoesntHave('notebookQuestions', function($q) use ($user_id) {
+                        $q->where('user_id', $user_id)
+                        ->whereIn('answer_result', [1,2]);
                     });
                 }
 
-                if ($request->has('filter_failer')) {
-                    $query->whereHas('notebookQuestions', function ($q) use ($user_id) {
-                        $q->where('user_id', $user_id)->where('answer_result', 2);
+                // 🔹 Mostrar apenas questões que o usuário errou
+                if ($request->filter == 'filter_eliminated') {
+                    $query->whereHas('notebookQuestions', function($q) use ($user_id) {
+                        $q->where('user_id', $user_id)
+                        ->where('answer_result', 2);
                     });
                 }
 
-                // if ($request->has('filter_favorites')) {
-                //     $query->whereHas('favorites', function ($q) use ($user_id) {
-                //         $q->where('user_id', $user_id);
-                //     });
-                // }
+                // 🔹 Mostrar apenas favoritas
+                if ($request->filter == 'filter_favorited') {
+                    $query->whereHas('favorites', function($q) use ($user_id) {
+                        $q->where('user_id', $user_id);
+                    });
+                }
 
                 $questions = $query->inRandomOrder()->limit($limit)->get();
 
                 foreach ($questions as $question) {
+                    $allSelectedQuestions[] = [
+                        'notebook_id'       => $notebook->id,
+                        'user_id'           => $user_id,
+                        'question_id'       => $question->id,
+                        'question_position' => $position++,
+                        'created_at'        => now(),
+                        'updated_at'        => now(),
+                    ];
+                }
+
+                $remainingQuestions -= $questions->count();
+            }
+
+            if ($remainingQuestions > 0) {
+                
+                $extraQuestionsQuery = Question::whereIn('topic_id', $topicIds)->whereNotIn('id', collect($allSelectedQuestions)->pluck('question_id'));
+
+                 // 🔹 Eliminar questões acertadas
+                if ($request->filter == 'filter_success') {
+                    $query->whereDoesntHave('notebookQuestions', function($q) use ($user_id) {
+                        $q->where('user_id', $user_id)
+                        ->where('answer_result', 1);
+                    });
+                 
+                }
+
+                // 🔹 Eliminar questões já resolvidas (acertos ou erros)
+                if ($request->filter == 'filter_failer') {
+                    $query->whereDoesntHave('notebookQuestions', function($q) use ($user_id) {
+                        $q->where('user_id', $user_id)
+                        ->whereIn('answer_result', [1,2]);
+                    });
+                }
+
+                // 🔹 Mostrar apenas questões que o usuário errou
+                if ($request->filter == 'filter_eliminated') {
+                    $query->whereHas('notebookQuestions', function($q) use ($user_id) {
+                        $q->where('user_id', $user_id)
+                        ->where('answer_result', 2);
+                    });
+                }
+
+                // 🔹 Mostrar apenas favoritas
+                if ($request->filter == 'filter_favorited') {
+                    $query->whereHas('favorites', function($q) use ($user_id) {
+                        $q->where('user_id', $user_id);
+                    });
+                }
+
+                $extraQuestions = $extraQuestionsQuery->inRandomOrder()
+                    ->limit($remainingQuestions)
+                    ->get();
+
+                foreach ($extraQuestions as $question) {
                     $allSelectedQuestions[] = [
                         'notebook_id'       => $notebook->id,
                         'user_id'           => $user_id,
@@ -143,11 +265,157 @@ class NotebookController extends Controller {
             NotebookQuestion::insert($allSelectedQuestions);
             DB::commit();
 
-            return redirect()->route('notebooks')->with('success', count($allSelectedQuestions) . ' questões adicionadas ao caderno com sucesso!');
+            return redirect()->route('answer', ['notebook' => $notebook->id])->with('success', count($allSelectedQuestions) . ' questões adicionadas ao caderno com sucesso!');
         } catch (\Exception $e) {
             DB::rollBack();
             report($e);
             return back()->withErrors('Erro ao criar caderno: ' . $e->getMessage());
+        }
+    }
+
+    public function update(Request $request, $id) {
+
+        $request->validate([
+            'title'             => 'required|string|max:255',
+            'topics'            => 'required|string',
+            'quanty_questions'  => 'required|integer|min:1',
+        ]);
+
+        $topicIds        = json_decode($request->input('topics'), true);
+        $totalQuestions  = (int) $request->input('quanty_questions');
+        $user_id         = Auth::id();
+
+        $topicsCount = count($topicIds);
+        if ($topicsCount === 0) {
+            return redirect()->back()->with('infor', 'Nenhum tópico selecionado. Por favor, selecione pelo menos um tópico!');
+        }
+
+        $questionsPerTopic  = floor($totalQuestions / $topicsCount);
+        $remaining          = $totalQuestions % $topicsCount;
+        $filters            = $request->except(['title']);
+
+        DB::beginTransaction();
+
+        try {
+            $notebook = Notebook::findOrFail($id);
+
+            $notebook->update([
+                'title'   => $request->title,
+                'filters' => json_encode($filters),
+                'status'  => 'draft',
+            ]);
+
+            NotebookQuestion::where('notebook_id', $notebook->id)->delete();
+
+            $allSelectedQuestions = [];
+            $position             = 1;
+            $remainingQuestions   = $totalQuestions;
+
+            foreach ($topicIds as $index => $topicId) {
+                $limit = min($questionsPerTopic + ($remaining-- > 0 ? 1 : 0), $remainingQuestions);
+
+                $query = Question::where('topic_id', $topicId);
+
+               if ($request->filter == 'filter_success') {
+                    $query->whereDoesntHave('notebookQuestions', function($q) use ($user_id) {
+                        $q->where('user_id', $user_id)
+                        ->where('answer_result', 1);
+                    });
+                }
+
+                if ($request->filter == 'filter_failer') {
+                    $query->whereDoesntHave('notebookQuestions', function($q) use ($user_id) {
+                        $q->where('user_id', $user_id)
+                        ->whereIn('answer_result', [1,2]);
+                    });
+                }
+
+                if ($request->filter == 'filter_eliminated') {
+                    $query->whereHas('notebookQuestions', function($q) use ($user_id) {
+                        $q->where('user_id', $user_id)
+                        ->where('answer_result', 2);
+                    });
+                }
+
+                if ($request->filter == 'filter_favorited') {
+                    $query->whereHas('favorites', function($q) use ($user_id) {
+                        $q->where('user_id', $user_id);
+                    });
+                }
+
+                $questions = $query->inRandomOrder()->limit($limit)->get();
+
+                foreach ($questions as $question) {
+                    $allSelectedQuestions[] = [
+                        'notebook_id'       => $notebook->id,
+                        'user_id'           => $user_id,
+                        'question_id'       => $question->id,
+                        'question_position' => $position++,
+                        'created_at'        => now(),
+                        'updated_at'        => now(),
+                    ];
+                }
+
+                $remainingQuestions -= $questions->count();
+            }
+
+            if ($remainingQuestions > 0) {
+
+                $extraQuestionsQuery = Question::whereIn('topic_id', $topicIds)->whereNotIn('id', collect($allSelectedQuestions)->pluck('question_id'));
+
+                if ($request->filter == 'filter_success') {
+                    $extraQuestionsQuery->whereDoesntHave('notebookQuestions', function($q) use ($user_id) {
+                        $q->where('user_id', $user_id)
+                        ->where('answer_result', 1);
+                    });
+                }
+
+                if ($request->filter == 'filter_failer') {
+                    $extraQuestionsQuery->whereDoesntHave('notebookQuestions', function($q) use ($user_id) {
+                        $q->where('user_id', $user_id)
+                        ->whereIn('answer_result', [1,2]);
+                    });
+                }
+
+                if ($request->filter == 'filter_eliminated') {
+                    $extraQuestionsQuery->whereHas('notebookQuestions', function($q) use ($user_id) {
+                        $q->where('user_id', $user_id)
+                        ->where('answer_result', 2);
+                    });
+                }
+
+                if ($request->filter == 'filter_favorited') {
+                    $extraQuestionsQuery->whereHas('favorites', function($q) use ($user_id) {
+                        $q->where('user_id', $user_id);
+                    });
+                }
+
+                $extraQuestions = $extraQuestionsQuery->inRandomOrder()
+                    ->limit($remainingQuestions)
+                    ->get();
+
+                foreach ($extraQuestions as $question) {
+                    $allSelectedQuestions[] = [
+                        'notebook_id'       => $notebook->id,
+                        'user_id'           => $user_id,
+                        'question_id'       => $question->id,
+                        'question_position' => $position++,
+                        'created_at'        => now(),
+                        'updated_at'        => now(),
+                    ];
+                }
+            }
+
+            NotebookQuestion::insert($allSelectedQuestions);
+            DB::commit();
+
+            return redirect()
+                ->route('answer', ['notebook' => $notebook->id])
+                ->with('success', count($allSelectedQuestions) . ' questões adicionadas ao caderno com sucesso!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            report($e);
+            return back()->withErrors('Erro ao atualizar caderno: ' . $e->getMessage());
         }
     }
 

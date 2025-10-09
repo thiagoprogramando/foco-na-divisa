@@ -7,9 +7,9 @@
   // Color Variables
   const purpleColor = '#836AF9',
     yellowColor = '#ffe800',
-    cyanColor = '#28dac6',
-    orangeColor = '#FF8132',
-    orangeLightColor = '#ffcf5c',
+    cyanColor = '#28D094',
+    orangeColor = '#FF4D62',
+    orangeLightColor = '#FDAC34',
     oceanBlueColor = '#299AFF',
     greyColor = '#4F5D70',
     greyLightColor = '#EDF1F4',
@@ -808,7 +808,7 @@
     const doughnutChartVar = new Chart(doughnutChart, {
       type: 'doughnut',
       data: {
-        labels: ['Tablet', 'Mobile', 'Desktop'],
+        labels: ['Erros', 'Pendentes', 'Acertos'],
         datasets: [
           {
             data: [10, 10, 80],

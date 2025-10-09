@@ -110,7 +110,7 @@
             <div class="list-group p-0 m-0">
                 @foreach ($users as $user)
                     <div class="list-group-item list-group-item-action d-flex align-items-center cursor-pointer waves-effect waves-light">
-                        <img src="{{ $user->photo ? asset($user->photo) : asset('assets/img/avatars/man.png') }}" alt="Perfil {{ $user->name }}" class="rounded-circle me-3" width="40">
+                        <img src="{{ $user->photo ? asset('storage/'.$user->photo) : asset('assets/img/avatars/man.png') }}" alt="Perfil {{ $user->name }}" class="rounded-circle me-3" width="40">
                         <div class="w-100">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="user-info">
@@ -127,9 +127,9 @@
                                         <small class="text-muted ms-1" title="">Plano Ativo do User</small>
                                     </div>
                                 </div>
-                                <form action="{{ route('deleted-user', ['id' => $user->id]) }}" method="POST" class="add-btn delete">
+                                <form action="{{ route('deleted-user', ['uuid' => $user->uuid]) }}" method="POST" class="add-btn delete">
                                     @csrf
-                                    <a href="{{ route('user', ['id' => $user->id]) }}" class="btn btn-success text-white btn-sm"><i class="ri-menu-search-line"></i></a>
+                                    <a href="{{ route('user', ['uuid' => $user->uuid]) }}" class="btn btn-success text-white btn-sm"><i class="ri-menu-search-line"></i></a>
                                     <button type="submit" class="btn btn-danger btn-sm"><i class="ri-delete-bin-line"></i></button>
                                 </form>
                             </div>

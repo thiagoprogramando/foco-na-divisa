@@ -66,4 +66,33 @@ class Notebook extends Model {
         return $query->count();
     }
 
+    public function getTopicsAttribute()
+    {
+        // carrega notebook_questions com a relation question.topic
+        $nqs = $this->questions()->with('question.topic')->get();
+
+        $topics = $nqs->map(function ($nq) {
+            return $nq->question?->topic; // pode ser null
+        })->filter()   // remove nulls
+        ->unique('id') // remove duplicados
+        ->values();    // reindex
+
+        return $topics;
+    }
+
+    // Retorna coleção de Content (Collection of Content models)
+    public function getContentsAttribute()
+    {
+        // reutiliza os topics já calculados
+        $topics = $this->topics; // usa o accessor acima
+
+        $contents = $topics->map(function ($topic) {
+            return $topic->content ?? null; // precisa ter relação topic->content definida
+        })->filter()
+        ->unique('id')
+        ->values();
+
+        return $contents;
+    }
+
 }
