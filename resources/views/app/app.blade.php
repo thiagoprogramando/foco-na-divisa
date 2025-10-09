@@ -48,8 +48,10 @@
                         </div>
                     </div>
                     <div class="card-info">
-                        <h5 class="mb-0">{{ Auth::user()->questionsWithTrashed->where('answer_result', '!==', 0)->count() }}</h5>
-                        <p class="mb-0 text-success">Questões</p>
+                        <a href="{{ route('search') }}?filter=filter_eliminated">
+                            <h5 class="mb-0">{{ Auth::user()->questionsWithTrashed->where('answer_result', '!==', 0)->count() }}</h5>
+                            <p class="mb-0 text-success">Questões</p>
+                        </a>
                     </div>
                 </div>
                 <div class="d-flex align-items-center gap-3">

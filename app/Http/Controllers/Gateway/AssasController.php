@@ -71,7 +71,7 @@ class AssasController extends Controller {
                     'installmentCount'  => $installments ?? 1,
                     'installmentValue'  => number_format(($value / ($installments ?? 1)), 2, '.', ''),
                     'value'             => number_format($value, 2, '.', ''),
-                    'dueDate'           => isset($dueDate) ? Carbon::parse($dueDate)->toIso8601String() : now()->addDays(7),
+                    'dueDate'           => isset($dueDate) ? Carbon::parse($dueDate)->toIso8601String() : now()->addDays(1),
                     'description'       => $description,
                     'isAddressRequired' => false,
                     'split'             => $commissions,

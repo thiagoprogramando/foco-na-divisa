@@ -47,7 +47,7 @@
                         <div class="navbar-brand app-brand demo d-none d-xl-flex py-0 me-6">
                             <a href="{{ route('app') }}" class="app-brand-link gap-2">
                                 <span class="app-brand-logo demo">
-                                    <img src="{{ asset('assets/img/logo_preta.png') }}">
+                                    <img src="{{ asset('assets/img/logo_branca.png') }}">
                                 </span>
                             </a>
 
@@ -236,17 +236,10 @@
                                     </li>
 
                                     <li class="menu-item">
-                                        <a href="javascript:void(0)" class="menu-link menu-toggle">
+                                        <a href="{{ route('notebooks') }}" class="menu-link">
                                             <i class="menu-icon tf-icons ri-book-open-fill"></i>
                                             <div data-i18n="Cadernos">Cadernos</div>
                                         </a>
-                                        <ul class="menu-sub">
-                                            <li class="menu-item">
-                                                <a href="{{ route('notebooks') }}" class="menu-link">
-                                                    <div data-i18n="Meus Cadernos">Meus Cadernos</div>
-                                                </a>
-                                            </li>
-                                        </ul>
                                     </li>
 
                                     @if (Auth::user()->role === 'admin')
