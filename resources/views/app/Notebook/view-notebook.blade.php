@@ -140,6 +140,19 @@
     </div>
 
     <script>
+        Swal.fire({
+            title: 'Atenção!',
+            text: 'Ao atualizar o caderno, às questões resolvidas serão perdidas! Deseja continuar?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sim, continuar',
+            cancelButtonText: 'Não, voltar',
+        }).then((result) => {
+            if (result.isConfirmed) {} else {
+                window.history.back();
+            }
+        });
+
         const contentTopicsMap = JSON.parse(`{!! json_encode($contents->mapWithKeys(fn($c) => [
             $c->id => [
                 'title' => $c->title,

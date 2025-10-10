@@ -78,12 +78,14 @@
                                         <figure class="mt-2">
                                             <blockquote class="blockquote">
                                                 <p class="mb-0">{!! $comment->comment !!}</p>
+                                                @if (Auth::user()->role == 'admin' || $comment->user_id == Auth::user()->id)
+                                                    <a href="{{ route('deleted-comment', ['id' => $comment->id]) }}"><i class="tf-icons ri-delete-bin-line text-danger"></i></a>
+                                                @endif
                                             </blockquote>
                                         </figure>
                                     @endforeach
                                 </div>
                             </div>
-
                         </div>
                     </div>
 

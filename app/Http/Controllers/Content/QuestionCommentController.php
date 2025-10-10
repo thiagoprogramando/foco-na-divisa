@@ -22,19 +22,13 @@ class QuestionCommentController extends Controller {
         return redirect()->back()->with('success', 'Falha ao comentar a questão, tente novamente!');
     }
 
-    public function update(Request $request) {
-
-        $comment = Comment::find($request->id);
-        if (!$comment) {
-            return redirect()->back()->with('infor', 'Falha ao comentar a questão, tente novamente!');
+    public function destroy($id) {
+        
+        $comment = Comment::find($id);
+        if ($comment->delete()) {
+            return redirect()->back()->with('success', 'Comentário deletado com sucesso!');
         }
 
-        $comment->user_answer_id    = Auth::user()->id;
-        $comment->comment_answer    = $request->comment_answer;
-        if ($comment->save()) {
-            return redirect()->back()->with('success', 'Comentário feito com sucesso!');
-        }
-
-        return redirect()->back()->with('infor', 'Falha ao comentar a questão, tente novamente!');
+        return redirect()->back()->with('error', 'Falha ao deletar o comentário, tente novamente!');
     }
 }
