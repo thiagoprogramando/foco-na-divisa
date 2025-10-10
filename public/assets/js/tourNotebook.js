@@ -10,8 +10,8 @@
   function setupTour(tour) {
     const backBtnClass = 'btn btn-sm btn-outline-secondary md-btn-flat waves-effect', nextBtnClass = 'btn btn-sm btn-success btn-next waves-effect waves-light';
     tour.addStep({
-      title: 'Criando um Caderno de Questões',
-      text: 'Vamos Aprender a Criar o seu Primeiro Caderno de Questões!',
+      title: 'Criando um caderno de questões',
+      text: 'Vamos aprender a criar o seu primeiro caderno de questões!',
       attachTo: { element: '.dual-listbox', on: 'bottom' },
       buttons: [
         {
@@ -28,7 +28,7 @@
     });
     tour.addStep({
       title: 'Conteúdo e Tópicos',
-      text: 'Primeiro, selecione o Conteúdo (Texto em Negrito) que deseja incluir, agora basta fazer um duplo click no Conteúdo para expandir e ver os Tópicos.',
+      text: 'Primeiro, selecione o conteúdo (texto em negrito) que deseja incluir, agora basta fazer um duplo click no conteúdo para expandir e ver os tópicos.',
       attachTo: { element: '#available-topics', on: 'top' },
       buttons: [
         {
@@ -50,7 +50,7 @@
     });
     tour.addStep({
       title: 'Selecionando Tópicos',
-      text: 'Você pode seleconar Tópicos individuais ou selecionar o Conteúdo inteiro, basta fazer um DUPLO CLICK no Tópico desejado, ou usar a seta Verde!',
+      text: 'Você pode seleconar tópicos individuais ou selecionar o conteúdo inteiro, basta fazer um DUPLO CLICK no tópico desejado, ou usar a seta VERDE!',
       attachTo: { element: '.listbox-controls', on: 'top' },
       buttons: [
         {
@@ -72,7 +72,7 @@
     });
     tour.addStep({
       title: 'Removendo Tópicos',
-      text: 'Também é possível remover Tópicos ou Conteúdos inteiros, basta fazer um DUPLO CLICK no Tópico desejado, ou usar a seta Vermelha!',
+      text: 'Também é possível remover tópicos ou conteúdos inteiros, basta fazer um DUPLO CLICK no tópico desejado, ou usar a seta VERMELHA!',
       attachTo: { element: '.listbox-controls', on: 'top' },
       buttons: [
         {
@@ -94,7 +94,7 @@
     });
     tour.addStep({
       title: 'Filtros',
-      text: 'Agora, você pode filtrar as Questões eliminado, limitando ou atribuindo!',
+      text: 'Agora, você pode filtrar as questões eliminando, limitando ou atribuindo!',
       attachTo: { element: '.filters-section', on: 'top' },
       buttons: [
         {
@@ -116,7 +116,7 @@
     });
     tour.addStep({
       title: 'Revisão Final',
-      text: 'Por último, você deve escolher a quantidade de questões que serão atribuidas ao Caderno e um Título!',
+      text: 'Por último, você deve escolher a quantidade de questões que serão atribuidas ao caderno e um título!',
       attachTo: { element: '.end-section', on: 'top' },
       buttons: [
         {

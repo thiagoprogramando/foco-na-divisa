@@ -103,6 +103,15 @@ class UserController extends Controller {
             $user->address_state = $request->address_state;
         }
 
+        if ($request->has('password')) {
+            
+            if ($request->password !== $request->confirm_password) {
+                return redirect()->back()->with('infor', 'As senhas não conferem, verifique os dados e tente novamente!');
+            }
+
+            $user->password = bcrypt($request->password);
+        }
+
         if (!empty($request->photo)) {
 
             if ($user->photo && Storage::disk('public')->exists($user->photo)) {

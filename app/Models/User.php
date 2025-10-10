@@ -137,7 +137,7 @@ class User extends Authenticatable {
 
         if ($totalInvoices === 1 && $invoice->payment_status !== 1) {
             $daysUsed   = Carbon::parse($invoice->created_at)->diffInDays(Carbon::now());
-            $daysLeft   = max(0, 7 - $daysUsed);
+            $daysLeft   = max(0, 2 - $daysUsed);
             return $daysLeft;
         }
 

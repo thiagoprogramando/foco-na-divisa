@@ -191,7 +191,7 @@
                             <div class="col-12 col-sm-12 col-md-12 col-lg-12 bg-light p-3 rounded mt-1 mb-1">
                                 
                                 <h5>
-                                    #{{ $question->id }} - {!! $question->question->title !!}
+                                    #{{ $question->question->id }} - {!! $question->question->title !!}
                                 </h5>
                             </div>
 
