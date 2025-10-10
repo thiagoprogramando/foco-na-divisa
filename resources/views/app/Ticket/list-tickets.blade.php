@@ -123,6 +123,13 @@
                                         </div>
                                     @endif
 
+                                    @if ($ticket->answer)
+                                        <div class="mt-3">
+                                            <h6>Resposta:</h6>
+                                            <p>{{ $ticket->answer }}</p>
+                                        </div>
+                                    @endif
+
                                     @php $assets = json_decode($ticket->assets, true); @endphp
                                     @if (!empty($assets))
                                         <div class="mt-3">

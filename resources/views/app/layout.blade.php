@@ -30,6 +30,7 @@
         <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/cards-statistics.css') }}"/>
         <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/cards-analytics.css') }}"/>
         <link rel="stylesheet" href="{{ asset('assets/vendor/libs/dropzone/dropzone.css') }}"/>
+        <link rel="stylesheet" href="{{ asset('assets/vendor/libs/shepherd/shepherd.css') }}"/>
 
         <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/core.css') }}" class="template-customizer-core-css"/>
         <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/theme-default.css') }}" class="template-customizer-theme-css"/>
@@ -37,6 +38,8 @@
         <script src="{{ asset('assets/vendor/js/helpers.js') }}"></script>
         <script src="{{ asset('assets/js/config.js') }}"></script>
         <script src="{{ asset('assets/js/jquery.js') }}"></script>
+        <script src="{{ asset('assets/js/sweetalert.js') }}"></script>
+        <script src="{{ asset('assets/js/mask.js') }}"></script>
     </head>
 
     <body>
@@ -71,9 +74,9 @@
                                 </li>
                                 
                                 <li class="nav-item">
-                                    <a class="nav-link btn rounded-pill btn-icon text-nowrap d-inline-flex position-relative me-4" href="javascript:void(0);">
+                                    <a title="Sua licença expira em {{ Auth::user()->daysToPlanExpiration() }} dias" class="nav-link btn rounded-pill btn-icon text-nowrap d-inline-flex position-relative me-4" href="javascript:void(0);">
                                         <span class="ri-hourglass-2-fill ri-22px text-secondary"></span>
-                                        <span title="Sua licença expira em {{ Auth::user()->daysToPlanExpiration() }} dias" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary text-white badge-notifications">{{ Auth::user()->daysToPlanExpiration() }}</span>
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary text-white badge-notifications">{{ Auth::user()->daysToPlanExpiration() }}</span>
                                     </a>
                                 </li>
 
@@ -370,9 +373,6 @@
         <script src="{{ asset('assets/vendor/libs/bootstrap-select/bootstrap-select.js') }}"></script>
         <script src="{{ asset('assets/vendor/libs/typeahead-js/typeahead.js') }}"></script>
         <script src="{{ asset('assets/vendor/libs/bloodhound/bloodhound.js') }}"></script>
-
-        <script src="{{ asset('assets/js/sweetalert.js') }}"></script>
-        <script src="{{ asset('assets/js/mask.js') }}"></script>
         
         {{-- <script src="{{ asset('assets/vendor/libs/apex-charts/apexcharts.js') }}"></script> --}}
         <script src="{{ asset('assets/js/main.js') }}"></script>

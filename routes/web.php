@@ -47,6 +47,26 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices');
 
+    Route::middleware(['checkMonthly'])->group(function () {    
+
+        Route::get('/notebooks', [NotebookController::class, 'index'])->name('notebooks');
+        Route::get('/notebook/{id}', [NotebookController::class, 'show'])->name('notebook');
+        Route::get('/create-notebook', [NotebookController::class, 'create'])->name('create-notebook');
+        Route::get('/review-notebook/{id}', [NotebookController::class, 'review'])->name('review-notebook');
+        Route::post('/created-notebook', [NotebookController::class, 'store'])->name('created-notebook');
+        Route::post('/updated-notebook/{id}', [NotebookController::class, 'update'])->name('updated-notebook');
+        Route::post('/deleted-notebook/{id}', [NotebookController::class, 'destroy'])->name('deleted-notebook');
+
+        Route::get('/answer/{notebook}/{question?}', [AnswerController::class, 'index'])->name('answer');
+        Route::get('/review-question/{question}/{charts?}', [AnswerController::class, 'review'])->name('review-question');
+        Route::get('/deleted-question/{id}', [AnswerController::class, 'destroy'])->name('deleted-question');
+        Route::post('/answer-question', [AnswerController::class, 'update'])->name('answer-question');
+
+        Route::get('/favorited-question/{id}', [QuestionController::class, 'favorited'])->name('favorited-question');
+        Route::get('/deleted-comment/{id}', [QuestionCommentController::class, 'destroy'])->name('deleted-comment');
+        Route::post('/created-comment', [QuestionCommentController::class, 'store'])->name('created-comment');
+    });
+
     Route::middleware(['checkRole'])->group(function () {    
 
         Route::get('/products', [ProductController::class, 'index'])->name('products');
@@ -87,26 +107,6 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/created-question/{topic}', [QuestionController::class, 'store'])->name('created-question');
         Route::post('/updated-question/{id}', [QuestionController::class, 'update'])->name('updated-question');
         Route::post('/deleted-question/{id}', [QuestionController::class, 'destroy'])->name('deleted-question');
-    });
-
-    Route::middleware(['checkMonthly'])->group(function () {    
-
-        Route::get('/notebooks', [NotebookController::class, 'index'])->name('notebooks');
-        Route::get('/notebook/{id}', [NotebookController::class, 'show'])->name('notebook');
-        Route::get('/create-notebook', [NotebookController::class, 'create'])->name('create-notebook');
-        Route::get('/review-notebook/{id}', [NotebookController::class, 'review'])->name('review-notebook');
-        Route::post('/created-notebook', [NotebookController::class, 'store'])->name('created-notebook');
-        Route::post('/updated-notebook/{id}', [NotebookController::class, 'update'])->name('updated-notebook');
-        Route::post('/deleted-notebook/{id}', [NotebookController::class, 'destroy'])->name('deleted-notebook');
-
-        Route::get('/answer/{notebook}/{question?}', [AnswerController::class, 'index'])->name('answer');
-        Route::get('/review-question/{question}/{charts?}', [AnswerController::class, 'review'])->name('review-question');
-        Route::get('/deleted-question/{id}', [AnswerController::class, 'destroy'])->name('deleted-question');
-        Route::post('/answer-question', [AnswerController::class, 'update'])->name('answer-question');
-
-        Route::get('/favorited-question/{id}', [QuestionController::class, 'favorited'])->name('favorited-question');
-        Route::post('/created-comment', [QuestionCommentController::class, 'store'])->name('created-comment');
-        Route::post('/updated-comment/{id}', [QuestionCommentController::class, 'update'])->name('updated-comment');
     });
 
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');

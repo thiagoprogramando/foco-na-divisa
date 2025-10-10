@@ -19,14 +19,7 @@
             <div class="card-header">
                 <div class="d-flex justify-content-between">
                     <h5 class="mb-1">Gerar Caderno</h5>
-                    <div class="dropdown">
-                        <button class="btn btn-text-secondary rounded-pill text-muted border-0 p-1 waves-effect waves-light" type="button" id="salesOverview" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="ri-more-2-line ri-20px"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="salesOverview">
-                            <button type="button" class="dropdown-item waves-effect" onclick="location.reload(true)">Atualizar</button>
-                        </div>
-                    </div>
+                    <button class="btn btn-success" id="shepherd-example" onclick="startShepherdTour()"><i class="ri-graduation-cap-line"></i></button>
                 </div>
                 <div class="d-flex align-items-center card-subtitle">
                     <div class="me-2">Escolha os Filtros para gerar um Caderno de questões.</div>
@@ -41,7 +34,7 @@
                         <div class="scroll-box">
                             <select multiple id="available-topics" class="form-control" size="15">
                                 @foreach($contents as $content)
-                                    <optgroup label="{{ $content->title }}">
+                                    <optgroup label="{{ $content->title }}" data-content-id="{{ $content->id }}">
                                         <option value="content:{{ $content->id }}" data-content-id="{{ $content->id }}" class="content-option">
                                             [Todo] {{ $content->title }}
                                         </option>
@@ -53,7 +46,9 @@
                                                 data-filter-resolved="{{ $topic->resolved_count ?? 0 }}" 
                                                 data-filter-failer="{{ $topic->failer_count ?? 0 }}" 
                                                 data-filter-eliminated="{{ $topic->eliminated_count ?? 0 }}" 
-                                                data-filter-favorited="{{ $topic->favorited_count ?? 0 }}">
+                                                data-filter-favorited="{{ $topic->favorited_count ?? 0 }}"
+                                                style="display:none"
+                                            >
                                                 {{ $topic->title }}
                                             </option>
                                         @endforeach
@@ -84,7 +79,7 @@
                 <form method="POST" action="{{ route('created-notebook') }}" id="create-notebook-form" class="row">
                     @csrf
                     <div class="col-12 col-sm-12 col-md-5 col-lg-5">
-                        <div class="p-6">
+                        <div class="p-6 filters-section">
                             <small class="text-light fw-medium">+Filtros</small>
 
                             <div class="form-check mt-4">
@@ -114,7 +109,7 @@
                      </div>
 
                     <div class="col-12 col-sm-12 col-md-5 col-lg-5">
-                        <div class="p-6">
+                        <div class="p-6 end-section">
                             <small id="total-questions-info" class="text-light fw-medium">Foram encontradas: 0 Questões</small>
                             <div class="form-floating form-floating-outline mt-4">
                                 <input type="number" name="quanty_questions" id="quanty_questions" class="form-control" placeholder="N° de Questões" required min="1"/>
@@ -134,7 +129,34 @@
         </div>      
     </div>
 
+    <script src="{{ asset('assets/vendor/libs/shepherd/shepherd.js') }}"></script>
+    <script src="{{ asset('assets/js/tourNotebook.js') }}"></script>
     <script>
+        $(document).ready(function () {
+            $('#available-topics').on('dblclick', function(e) {
+                if (e.target.tagName === 'OPTGROUP') {
+                    const contentId = $(e.target).data('content-id');
+                    $('#available-topics option[data-content-id="' + contentId + '"]').each(function () {
+                        if ($(this).val().startsWith('topic:')) {
+                            $(this).toggle();
+                        }
+                    });
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            startShepherdTour();
+        });
+
+        function startShepherdTour() {
+            if (typeof window.startNotebookTour === 'function') {
+                window.startNotebookTour();
+            } else {
+                $('#shepherd-example').trigger('click');
+            }
+        }
+
         document.querySelectorAll('input[name="filter"]').forEach(radio => {
             radio.addEventListener('click', function () {
                 if (this.checked && this.dataset.checked === 'true') {
