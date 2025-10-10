@@ -38,7 +38,7 @@
                         </div>
                     </div>
                     <div class="card-info">
-                        <h5 class="mb-0"></h5>
+                        <h5 class="mb-0">{{ $totalViews }}</h5>
                         <p class="mb-0">Visitas</p>
                     </div>
                 </div>
@@ -49,7 +49,7 @@
                         </div>
                     </div>
                     <div class="card-info">
-                        <h5 class="mb-0"></h5>
+                        <h5 class="mb-0">{{ $totalInvoices }}</h5>
                         <p class="mb-0">Compras</p>
                     </div>
                 </div>
@@ -60,7 +60,7 @@
                         </div>
                     </div>
                     <div class="card-info">
-                        <h5 class="mb-0"></h5>
+                        <h5 class="mb-0">{{ $totalProducts }}</h5>
                         <p class="mb-0">Produtos</p>
                     </div>
                 </div>
@@ -79,11 +79,11 @@
                                     <div class="d-flex align-items-center">
                                         <div class="user-status me-2 d-flex align-items-center">
                                             <span class="badge badge-dot bg-dark me-1"></span>
-                                            <small>Vendas: X</small>
+                                            <small>Vendas: {{ $product->invoices->where('payment_status', 1)->count() }}</small>
                                         </div>
                                         <div class="user-status me-2 d-flex align-items-center">
                                             <span class="badge badge-dot bg-info me-1"></span>
-                                            <small>Visitas: Y</small>
+                                            <small>Visitas: {{ $product->views }}</small>
                                         </div>
                                     </div>
                                 </div>

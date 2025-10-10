@@ -80,7 +80,7 @@
                             <div class="w-100">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="user-info">
-                                        <h6 class="mb-1 fw-normal">{{ $question->title }}</h6>
+                                        <h6 class="mb-1 fw-normal">{!! $question->title !!}</h6>
                                         <div class="d-flex align-items-center">
                                             <div class="user-status me-2 d-flex align-items-center">
                                                 <span class="badge badge-dot bg-info me-1"></span>
@@ -94,7 +94,7 @@
                                                 <span class="badge badge-dot bg-danger me-1"></span>
                                                 <small>Erros: 0</small>
                                             </div>
-                                            <small class="text-muted ms-1" title="{{ $question->resolution }}">{{ Str::limit($question->resolution, 50) }}</small>
+                                            <small class="text-muted ms-1" title="{{ Str::limit(strip_tags($question->resolution), 100) }}">{{ Str::limit(strip_tags($question->resolution), 50) }}</small>
                                         </div>
                                     </div>
                                     <form action="{{ route('deleted-question', ['id' => $question->id]) }}" method="POST" class="add-btn delete">

@@ -42,7 +42,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/deleted-ticket/{id}', [TicketController::class, 'destroy'])->name('deleted-ticket');
 
     Route::get('/user/{uuid}', [UserController::class, 'show'])->name('user');
-    Route::get('/products', [ProductController::class, 'index'])->name('products');
     Route::get('/plans', [PlanController::class, 'index'])->name('plans');
     Route::post('buy-product/{product}', [BuyController::class, 'store'])->name('buy-product');
 
@@ -50,6 +49,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['checkRole'])->group(function () {    
 
+        Route::get('/products', [ProductController::class, 'index'])->name('products');
         Route::get('/product/{uuid}', [ProductController::class, 'show'])->name('product');
         Route::get('/create-product', [ProductController::class, 'createForm'])->name('create-product');
         Route::post('/created-product', [ProductController::class, 'store'])->name('created-product');
