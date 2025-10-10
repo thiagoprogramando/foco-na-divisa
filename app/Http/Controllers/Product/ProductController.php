@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
-
+use App\Models\Invoice;
 use App\Models\Product;
 
 use Illuminate\Http\Request;
@@ -31,9 +31,16 @@ class ProductController extends Controller {
         if ($request->time) {
             $query->where('time', $request->time);
         }
+
+        $totalViews     = $query->sum('views');
+        $totalInvoices  = Invoice::whereIn('product_id', $query->pluck('id'))->count();
+        $totalProducts  = $query->count(); 
         
         return view('app.Product.list-products', [
-            'products' => $query->paginate(10),
+            'products'      => $query->paginate(10),
+            'totalViews'    => $totalViews,
+            'totalInvoices' => $totalInvoices,
+            'totalProducts' => $totalProducts,
         ]);
     }
 

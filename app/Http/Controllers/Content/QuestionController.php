@@ -44,9 +44,12 @@ class QuestionController extends Controller {
         }
         
         $boards = Board::orderBy('name', 'asc')->get();
+        $topics = Topic::orderBy('title', 'asc')->get();
+
         return view('app.Content.Question.view-question', [
             'question'  => $question,
              'boards'   => $boards,
+            'topics'    => $topics,
         ]);
     }
 
@@ -128,6 +131,7 @@ class QuestionController extends Controller {
 
         $question->title        = $request->title;
         $question->board_id     = $request->board_id;
+        $question->topic_id     = $request->topic_id;
         $question->resolution   = $request->resolution;
         if ($question->save()) {
 

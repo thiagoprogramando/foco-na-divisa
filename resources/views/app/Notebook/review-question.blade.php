@@ -58,7 +58,7 @@
                             <form action="{{ route('created-comment') }}" method="POST" class="col-12 col-sm-12 col-md-6 col-lg-6">
                                 @csrf
                                 <input type="hidden" name="question_id" value="{{ $question->question->id }}">
-                                <div class="form-floating form-floating-outline mb-2">
+                                <div class="form-floating-outline mb-2">
                                     <textarea class="form-control h-px-100 editor-simple" name="comment" id="comment" placeholder="Deixe seu comentário:" required></textarea>
                                 </div>
                                 <div class="d-flex justify-content-end">
@@ -78,7 +78,7 @@
                                         <small class="text-light fw-medium">{{ $comment->user->name }} <cite title="Comentário feito em {{ $comment->created_at->format('d/m/Y') }}">{{ $comment->created_at->format('d/m/Y') }}</cite></small>
                                         <figure class="mt-2">
                                             <blockquote class="blockquote">
-                                                <p class="mb-0">{{ $comment->comment }}</p>
+                                                <p class="mb-0">{!! $comment->comment !!}</p>
                                             </blockquote>
                                         </figure>
                                     @endforeach

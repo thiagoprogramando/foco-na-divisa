@@ -55,6 +55,9 @@ class BuyController extends Controller {
         $invoice->payment_url     = $charge['invoiceUrl'];
         $invoice->payment_status  = 0;
         if ($invoice->save()) {
+
+            $product->increment('views');
+            $product->save();
             return redirect($charge['invoiceUrl']);
         } else {
             return redirect()->route('plans')->with('error', 'Erro ao gerar a cobrança, tente novamente!');
