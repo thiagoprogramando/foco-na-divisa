@@ -60,6 +60,18 @@
                             <label for="address_state">Estado:</label>
                         </div>
                     </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-3">
+                        <div class="form-floating form-floating-outline">
+                            <input type="text" name="password" id="password" class="form-control" placeholder="Nova senha:"/>
+                            <label for="password">Nova senha:</label>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-3">
+                        <div class="form-floating form-floating-outline">
+                            <input type="password" name="confirm_password" id="confirm_password" class="form-control" placeholder="Confirme a nova senha:"/>
+                            <label for="confirm_password">Confirme a nova senha:</label>
+                        </div>
+                    </div>
                     @if (Auth::user()->role == 'admin')
                         <div class="col-6 col-sm-12 col-md-6 col-lg-6 mb-3">
                             <div class="form-floating form-floating-outline">

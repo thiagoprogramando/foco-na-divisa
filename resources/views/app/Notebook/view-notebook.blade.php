@@ -142,7 +142,7 @@
     <script>
         Swal.fire({
             title: 'Atenção!',
-            text: 'Ao atualizar o caderno, às questões resolvidas serão perdidas! Deseja continuar?',
+            text: 'Ao atualizar o caderno, as questões resolvidas serão perdidas! Deseja continuar?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Sim, continuar',

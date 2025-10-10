@@ -73,12 +73,12 @@
                                     </a>
                                 </li>
                                 
-                                <li class="nav-item">
+                                {{-- <li class="nav-item">
                                     <a title="Sua licença expira em {{ Auth::user()->daysToPlanExpiration() }} dias" class="nav-link btn rounded-pill btn-icon text-nowrap d-inline-flex position-relative me-4" href="javascript:void(0);">
                                         <span class="ri-hourglass-2-fill ri-22px text-secondary"></span>
                                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary text-white badge-notifications">{{ Auth::user()->daysToPlanExpiration() }}</span>
                                     </a>
-                                </li>
+                                </li> --}}
 
                                 {{-- <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-4 me-xl-1">
                                     <a class="nav-link btn btn-text-secondary rounded-pill btn-icon dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">

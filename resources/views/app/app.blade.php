@@ -7,7 +7,7 @@
                 <h5 class="card-title mb-1">Olá, <span class="fw-bold">{{ Auth::user()->maskName() }}!</span> 🎉</h5>
                 <p class="card-subtitle mb-3">Bem-vindo(a) ao {{ env('APP_NAME') }}</p>
                 <h4 class="text-primary mb-0"><a href="{{ route('plans') }}" class="text-success">{{ Auth::user()->planLabel() }}</a></h4>
-                <p class="mb-3">Aproveite os benefícios da sua conta! 🚀</p>
+                <p class="mb-3">{{ Auth::user()->planLabel() !== 'Escolha um plano' ? 'Sua licença expira em '.Auth::user()->daysToPlanExpiration(). ' dias' : 'Escolha um plano para obter benefícios!' }}</p>
                 <a href="{{ route('create-notebook') }}" class="btn btn-sm btn-warning waves-effect waves-light">CRIAR CADERNO DE QUESTÕES</a>
             </div>
             <img src="{{ asset('assets/img/illustrations/trophy.png') }}" class="position-absolute bottom-0 end-0 me-4" height="140" alt="view sales">

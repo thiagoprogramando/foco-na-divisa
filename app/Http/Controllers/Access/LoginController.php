@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 
 class LoginController extends Controller {
+    
     public function login() {
 
         if (Auth::check()) {
