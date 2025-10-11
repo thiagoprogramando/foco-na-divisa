@@ -96,18 +96,6 @@
                         <tbody class="table-border-bottom-0">
                             @foreach ($topics as $topic)
                                 <tr>
-                                    <td>
-                                        <i class="ri-arrow-right-s-fill ri-22px mr-4"></i>
-                                        <span class="fw-medium">{{ $topic->title }}</span>
-                                        <br>
-                                        <span class="badge bg-label-info m-1">{{ \Illuminate\Support\Str::limit($topic->description, 100) }}</span>
-                                    </td>
-                                    <td class="text-center">
-                                        {{ $topic->questions->count() }}
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="fw-medium">{{ $topic->order }}</span>
-                                    </td>
                                     <td class="text-center">
                                         <form action="{{ route('deleted-topic', ['id' => $topic->id]) }}" method="POST" class="demo-inline-spacing delete">
                                             @csrf
@@ -122,6 +110,17 @@
                                                 <span class="tf-icons ri-add-circle-line ri-22px"></span>
                                             </a>
                                         </form>
+                                    </td>
+                                    <td>
+                                        <span class="fw-medium" title="{{ $topic->title }}">{{ Str::limit($topic->title, 50) }}...</span>
+                                        <br>
+                                        <span class="badge bg-label-info m-1">{{ \Illuminate\Support\Str::limit($topic->description, 100) }}</span>
+                                    </td>
+                                    <td class="text-center">
+                                        {{ $topic->questions->count() }}
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="fw-medium">{{ $topic->order }}</span>
                                     </td>
                                 </tr>
 

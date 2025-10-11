@@ -139,12 +139,12 @@
         <div class="card demo-inline-spacing">
             <div class="list-group p-0 m-0">
                 @foreach ($contents as $content)
-                    <div onclick="window.location.href='{{ route('content', ['id' => $content->id]) }}'" class="list-group-item list-group-item-action d-flex align-items-center cursor-pointer waves-effect waves-light">
-                        <img src="{{ $content->cover_image ? asset('storage/'.$content->cover_image) : asset('assets/img/avatars/man.png') }}" alt="Conteúdo Imagem" class="rounded-circle me-3" width="40">
+                    <div class="list-group-item list-group-item-action d-flex align-items-center cursor-pointer waves-effect waves-light">
+                        <img onclick="window.location.href='{{ route('content', ['id' => $content->id]) }}'" src="{{ $content->cover_image ? asset('storage/'.$content->cover_image) : asset('assets/img/avatars/man.png') }}" alt="Conteúdo Imagem" class="rounded-circle me-3" width="40">
                         <div class="w-100">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="user-info">
-                                    <h6 class="mb-1 fw-normal">{{ $content->title }}</h6>
+                                    <h6 class="mb-1 fw-normal" onclick="window.location.href='{{ route('content', ['id' => $content->id]) }}'">{{ $content->title }}</h6>
                                     <div class="d-flex align-items-center">
                                         <div class="user-status me-2 d-flex align-items-center">
                                             <span class="badge badge-dot bg-dark me-1"></span>

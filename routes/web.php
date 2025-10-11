@@ -42,6 +42,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/deleted-ticket/{id}', [TicketController::class, 'destroy'])->name('deleted-ticket');
 
     Route::get('/user/{uuid}', [UserController::class, 'show'])->name('user');
+    Route::post('/updated-user/{uuid}', [UserController::class, 'update'])->name('updated-user');
+    
     Route::get('/plans', [PlanController::class, 'index'])->name('plans');
     Route::post('buy-product/{product}', [BuyController::class, 'store'])->name('buy-product');
 
@@ -98,7 +100,6 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/users/{role}', [UserController::class, 'index'])->name('users');
         Route::post('/created-user/{role}', [UserController::class, 'store'])->name('created-user');
-        Route::post('/updated-user/{uuid}', [UserController::class, 'update'])->name('updated-user');
         Route::post('/deleted-user/{uuid}', [UserController::class, 'destroy'])->name('deleted-user');
 
         Route::get('/questions/{topic}', [QuestionController::class, 'index'])->name('questions');

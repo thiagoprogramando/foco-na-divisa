@@ -28,7 +28,7 @@
                                 <select name="board_id" id="board_id" class="select2 form-select" required>
                                     <option value="Opções Disponíveis" selected>Opções Disponíveis</option>
                                     @foreach ($boards as $board)
-                                        <option value="{{ $board->id }}">{{ $board->name }}</option>
+                                        <option value="{{ $board->id }}" @selected($board->id == 1)>{{ $board->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -81,4 +81,12 @@
     <script src="https://cdn.tiny.cloud/1/tgezwiu6jalnw1mma8qnoanlxhumuabgmtavb8vap7357t22/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
     <script src="{{ asset('assets/js/question.js') }}"></script>
     <script src="{{ asset('assets/js/tinymce.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const btn = document.getElementById('add-alternative');
+            for (let i = 0; i < 5; i++) {
+                btn.click();
+            }
+        });
+    </script>
 @endsection
