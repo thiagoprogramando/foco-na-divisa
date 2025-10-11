@@ -84,7 +84,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const btn = document.getElementById('add-alternative');
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < 4; i++) {
                 btn.click();
             }
         });
