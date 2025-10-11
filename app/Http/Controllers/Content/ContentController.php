@@ -60,7 +60,7 @@ class ContentController extends Controller {
 
         return view('app.Content.view-content', [
             'content' => $content,
-            'topics'  => $query->orderBy('order', 'asc')->paginate(30),
+            'topics'  => $query->orderBy('order', 'desc')->paginate(30),
         ]);
     }
 
