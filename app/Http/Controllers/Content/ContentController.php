@@ -45,7 +45,7 @@ class ContentController extends Controller {
             return redirect()->back()->with('infor', 'Não foi possível encontrar o Conteúdo, verifique os dados e tente novamente!');
         }
 
-        $query = Topic::where('content_id', $content->id)->orderBy('title', 'asc');
+        $query = Topic::where('content_id', $content->id);
         if (!empty($request->input('title'))) {
             $query->where('title', 'like', '%' . $request->input('title') . '%');
         }
