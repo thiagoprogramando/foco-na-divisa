@@ -185,6 +185,10 @@
                             @endforeach
                         </tbody>
                     </table>
+
+                    <div class="text-center">
+                        {{ $topics->links() }}
+                    </div>
                 </div>
             </div>
         </div>
