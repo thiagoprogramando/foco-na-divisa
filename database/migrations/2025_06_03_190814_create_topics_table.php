@@ -13,9 +13,10 @@ return new class extends Migration {
             $table->text('description')->nullable();
             $table->string('status')->default('active');
             $table->json('tags')->nullable();
-            $table->integer('order')->default(0);
+            $table->integer('order')->default(1);
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('content_id')->constrained('contents')->onDelete('cascade');
+            $table->foreignId('group_id')->nullable()->constrained('topic_groups')->after('content_id');
             $table->timestamps();
             $table->softDeletes();
         });
