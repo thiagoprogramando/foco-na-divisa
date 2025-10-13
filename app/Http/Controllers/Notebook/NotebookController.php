@@ -59,7 +59,7 @@ class NotebookController extends Controller {
                     },
                 ]);
             }
-        ])->orderBy('order', 'asc')->get();
+        ])->where('status', 'active')->orderBy('order', 'asc')->get();
 
         $filters = is_array($notebook->filters) ? $notebook->filters : json_decode($notebook->filters, true);
 
@@ -72,73 +72,41 @@ class NotebookController extends Controller {
 
     public function create() {
 
-        $userId = Auth::id();
-
-        // $contents = Content::with([
-        //     'topics' => function ($query) use ($userId) {
-        //         $query->withCount([
-        //             'questions',
-        //             'questions as resolved_count' => function ($q) use ($userId) {
-        //                 $q->whereHas('notebookQuestions', function ($nq) use ($userId) {
-        //                     $nq->where('user_id', $userId)
-        //                     ->where('answer_result', 1);
-        //                 });
-        //             },
-        //             'questions as failer_count' => function ($q) use ($userId) {
-        //                 $q->whereHas('notebookQuestions', function ($nq) use ($userId) {
-        //                     $nq->where('user_id', $userId)
-        //                     ->where('answer_result', 2);
-        //                 });
-        //             },
-        //             'questions as eliminated_count' => function ($q) use ($userId) {
-        //                 $q->whereHas('notebookQuestions', function ($nq) use ($userId) {
-        //                     $nq->where('user_id', $userId)
-        //                     ->whereIn('answer_result', [1,2]); 
-        //                 });
-        //             },
-        //             'questions as favorited_count' => function ($q) use ($userId) {
-        //                 $q->whereHas('favorites', function ($fav) use ($userId) {
-        //                     $fav->where('user_id', $userId);
-        //                 })->whereNull('questions.deleted_at');
-        //             },
-        //         ]);
-        //     }
-        // ])->orderBy('order', 'asc')->get();
-        $contents = Content::with([
+        $userId     = Auth::id();
+        $contents   = Content::with([
         'topics' => function ($query) use ($userId) {
-            // Trazer o grupo para ordenar
-            $query->leftJoin('topic_groups as g', 'topics.group_id', '=', 'g.id')
-                  ->select('topics.*', 'g.order as group_order') // adiciona group_order
-                  ->withCount([
-                      'questions',
-                      'questions as resolved_count' => function ($q) use ($userId) {
-                          $q->whereHas('notebookQuestions', function ($nq) use ($userId) {
-                              $nq->where('user_id', $userId)
-                                 ->where('answer_result', 1);
-                          });
-                      },
-                      'questions as failer_count' => function ($q) use ($userId) {
-                          $q->whereHas('notebookQuestions', function ($nq) use ($userId) {
-                              $nq->where('user_id', $userId)
-                                 ->where('answer_result', 2);
-                          });
-                      },
-                      'questions as eliminated_count' => function ($q) use ($userId) {
-                          $q->whereHas('notebookQuestions', function ($nq) use ($userId) {
-                              $nq->where('user_id', $userId)
-                                 ->whereIn('answer_result', [1,2]); 
-                          });
-                      },
-                      'questions as favorited_count' => function ($q) use ($userId) {
-                          $q->whereHas('favorites', function ($fav) use ($userId) {
-                              $fav->where('user_id', $userId);
-                          })->whereNull('questions.deleted_at');
-                      },
-                  ])
-                  ->orderByRaw('COALESCE(g.order, 0) asc') // grupos sem order ficam no início
-                  ->orderBy('topics.order', 'asc');
-        }
-    ])->orderBy('order', 'asc')->get();
+                $query->leftJoin('topic_groups as g', 'topics.group_id', '=', 'g.id')
+                    ->select('topics.*', 'g.order as group_order')
+                    ->withCount([
+                        'questions',
+                        'questions as resolved_count' => function ($q) use ($userId) {
+                            $q->whereHas('notebookQuestions', function ($nq) use ($userId) {
+                                $nq->where('user_id', $userId)
+                                    ->where('answer_result', 1);
+                            });
+                        },
+                        'questions as failer_count' => function ($q) use ($userId) {
+                            $q->whereHas('notebookQuestions', function ($nq) use ($userId) {
+                                $nq->where('user_id', $userId)
+                                    ->where('answer_result', 2);
+                            });
+                        },
+                        'questions as eliminated_count' => function ($q) use ($userId) {
+                            $q->whereHas('notebookQuestions', function ($nq) use ($userId) {
+                                $nq->where('user_id', $userId)
+                                    ->whereIn('answer_result', [1,2]); 
+                            });
+                        },
+                        'questions as favorited_count' => function ($q) use ($userId) {
+                            $q->whereHas('favorites', function ($fav) use ($userId) {
+                                $fav->where('user_id', $userId);
+                            })->whereNull('questions.deleted_at');
+                        },
+                    ])
+                    ->orderByRaw('COALESCE(g.order, 0) asc')
+                    ->orderBy('topics.order', 'asc');
+            }
+        ])->where('status', 'active')->orderBy('order', 'asc')->get();
 
         return view('app.Notebook.create-notebook', compact('contents'));
     }
@@ -181,9 +149,18 @@ class NotebookController extends Controller {
     public function store(Request $request) {
 
         $request->validate([
-            'title'             => 'required|string|max:255',
-            'topics'            => 'required|string',
-            'quanty_questions'  => 'required|integer|min:1',
+            'title'             => ['required', 'string', 'max:255'],
+            'topics'            => ['required', 'string'],
+            'quanty_questions'  => ['required', 'integer', 'min:1'],
+        ], [
+            'title.required'            => 'O título é obrigatório.',
+            'title.string'              => 'O título deve ser um texto.',
+            'title.max'                 => 'O título não pode ter mais que 255 caracteres.',
+            'topics.required'           => 'Selecione pelo menos um tópico.',
+            'topics.string'             => 'Os tópicos devem ser enviados como texto.',
+            'quanty_questions.required' => 'Informe a quantidade de questões.',
+            'quanty_questions.integer'  => 'A quantidade de questões deve ser um número inteiro.',
+            'quanty_questions.min'      => 'A quantidade mínima de questões é 1.',
         ]);
 
         $topicIds        = json_decode($request->input('topics'), true);

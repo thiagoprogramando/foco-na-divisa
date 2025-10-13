@@ -209,6 +209,10 @@
                     </div>
                 @endforeach
             </div>
+
+            <div class="card-footer d-flex justify-content-center">
+                {{ $boards->links() }}
+            </div>
         </div>
     </div>
 

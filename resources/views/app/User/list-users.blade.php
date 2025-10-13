@@ -137,6 +137,10 @@
                     </div>  
                 @endforeach
             </div>
+
+            <div class="card-footer d-flex justify-content-center">
+                {{ $users->links() }}
+            </div>
         </div>
     </div>
 

@@ -18,18 +18,18 @@
                             <div class="card border shadow-none">
                                 <div class="card-body pt-12">
                                     <div class="mt-3 mb-5 text-center">
-                                        <img src="{{ $product->image ? asset('storage/'.$product->image) : asset('assets/img/illustrations/pricing-basic.png') }}" class="img-fluid" alt="CAPA DO PRODUTO"/>
+                                        <img data-bs-toggle="modal" data-product-time="{{ $product->time }}" data-bs-target="#buyModal{{ $product->uuid }}" data-product-uuid="{{ $product->uuid }}" src="{{ $product->image ? asset('storage/'.$product->image) : asset('assets/img/illustrations/pricing-basic.png') }}" class="img-fluid" alt="CAPA DO PRODUTO"/>
                                     </div>
-                                    <h4 class="card-title text-center text-capitalize mb-2">{{ $product->name }}</h4>
+                                    <h4 class="card-title text-center text-capitalize mb-2" data-bs-toggle="modal" data-product-time="{{ $product->time }}" data-bs-target="#buyModal{{ $product->uuid }}" data-product-uuid="{{ $product->uuid }}">{{ $product->name }}</h4>
                                     <p class="text-center mb-5">{{ $product->caption }}</p>
-                                    <div class="text-center">
+                                    <div class="text-center" data-bs-toggle="modal" data-product-time="{{ $product->time }}" data-bs-target="#buyModal{{ $product->uuid }}" data-product-uuid="{{ $product->uuid }}">
                                         <div class="d-flex justify-content-center">
                                             <sup class="h6 pricing-currency mt-2 mb-0 me-1 text-body fw-normal">R$</sup>
                                             <h1 class="mb-0 text-primary">{{ $product->value }}</h1>
                                             <sub class="h6 pricing-duration mt-auto mb-1 text-body fw-normal">/{{ $product->timeLabel() }}</sub>
                                         </div>
                                     </div>
-                                    <div class="ps-6 my-5 pt-4 text-center">
+                                    <div class="ps-6 my-5 pt-4">
                                         {!! $product->description !!}
                                     </div>
                                     <button type="button" class="btn btn-outline-success d-grid w-100" @disabled($product->hasInvoice()) data-bs-toggle="modal" data-product-time="{{ $product->time }}" data-bs-target="#buyModal{{ $product->uuid }}" data-product-uuid="{{ $product->uuid }}">Escolher Plano</button>
