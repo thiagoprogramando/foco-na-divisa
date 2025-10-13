@@ -185,6 +185,10 @@
                     @endforeach
                 </div>
             </div>
+
+            <div class="card-footer d-flex justify-content-center">
+                {{ $tickets->links() }}
+            </div>
         </div>
     </div>
 

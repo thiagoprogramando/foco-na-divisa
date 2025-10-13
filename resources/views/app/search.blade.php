@@ -92,6 +92,10 @@
                             </form>
                         </div>
                     @endforeach
+
+                    <div class="text-center mt-3">
+                        {{ $questions->withQueryString()->links() }}
+                    </div>
                 </div>
             </div>
         </div>
