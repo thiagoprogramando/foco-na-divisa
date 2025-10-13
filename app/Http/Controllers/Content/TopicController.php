@@ -8,14 +8,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TopicController extends Controller {
-    
-    public function index(Request $request) {
-        
-    }
-
-    public function show($id) {
-       
-    }
 
     public function store(Request $request) {
 
@@ -25,11 +17,14 @@ class TopicController extends Controller {
             'status'       => 'required|string',
             'order'        => 'nullable|integer',
             'tags'         => 'nullable|string',
+            'content_id'   => 'required|integer|exists:contents,id',
+            'group_id'     => 'nullable|integer|exists:topic_groups,id',
         ]);
 
         $topic = new Topic();
         $topic->created_by    = Auth::user()->id;
         $topic->content_id    = $request->input('content_id');
+        $topic->group_id      = $request->input('group_id');
         $topic->title         = $request->input('title');
         $topic->description   = $request->input('description');
         $topic->status        = $request->input('status');
@@ -64,6 +59,10 @@ class TopicController extends Controller {
 
         if (!empty($request->input('status'))) {
             $topic->status = $request->input('status');
+        }
+
+        if (!empty($request->input('group_id'))) {
+            $topic->group_id = $request->input('group_id');
         }
         
         if ($topic->save()) {

@@ -72,13 +72,6 @@
                                         <i class="ri-search-line ri-22px scaleX-n1-rtl"></i>
                                     </a>
                                 </li>
-                                
-                                {{-- <li class="nav-item">
-                                    <a title="Sua licença expira em {{ Auth::user()->daysToPlanExpiration() }} dias" class="nav-link btn rounded-pill btn-icon text-nowrap d-inline-flex position-relative me-4" href="javascript:void(0);">
-                                        <span class="ri-hourglass-2-fill ri-22px text-secondary"></span>
-                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary text-white badge-notifications">{{ Auth::user()->daysToPlanExpiration() }}</span>
-                                    </a>
-                                </li> --}}
 
                                 {{-- <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-4 me-xl-1">
                                     <a class="nav-link btn btn-text-secondary rounded-pill btn-icon dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
@@ -294,30 +287,6 @@
                                             </ul>
                                         </li>
                                     @endif
-
-                                    {{-- <li class="menu-item">
-                                        <a href="javascript:void(0)" class="menu-link menu-toggle">
-                                            <i class="menu-icon tf-icons ri-bookmark-fill"></i>
-                                            <div data-i18n="Produtos & Planos">Produtos & Planos</div>
-                                        </a>
-                                        <ul class="menu-sub">
-                                            <li class="menu-item">
-                                                <a href="" class="menu-link">
-                                                    <div data-i18n="Planos">Planos</div>
-                                                </a>
-                                            </li>
-                                            <li class="menu-item">
-                                                <a href="" class="menu-link">
-                                                    <div data-i18n="Produtos">Produtos</div>
-                                                </a>
-                                            </li>
-                                            <li class="menu-item">
-                                                <a href="" class="menu-link">
-                                                    <div data-i18n="Simulados">Simulados</div>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li> --}}
                                 </ul>
                             </div>
                         </aside>
@@ -394,7 +363,7 @@
                     title: 'Erro!',
                     text: '{{ session('error') }}',
                     icon: 'error',
-                    timer: 2000
+                    timer: 5000
                 })
             @endif
 
@@ -403,7 +372,7 @@
                     title: 'Atenção!',
                     text: '{{ session('infor') }}',
                     icon: 'info',
-                    timer: 2000
+                    timer: 5000
                 })
             @endif
             
@@ -412,7 +381,7 @@
                     title: 'Sucesso!',
                     text: '{{ session('success') }}',
                     icon: 'success',
-                    timer: 2000
+                    timer: 5000
                 })
             @endif
 

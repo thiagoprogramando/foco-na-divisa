@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Content;
 
 use App\Http\Controllers\Controller;
 use App\Models\Content;
+use App\Models\Group;
 use App\Models\Topic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -46,21 +47,41 @@ class ContentController extends Controller {
         }
 
         $query = Topic::where('content_id', $content->id);
-        if (!empty($request->input('title'))) {
+        if ($request->filled('title')) {
             $query->where('title', 'like', '%' . $request->input('title') . '%');
         }
 
-        if (!empty($request->input('order'))) {
+        if ($request->filled('order')) {
             $query->where('order', $request->input('order'));
         }
 
-        if (!empty($request->input('status'))) {
+        if ($request->filled('status')) {
             $query->where('status', $request->input('status'));
         }
 
+        $topicsQuery = Topic::query()
+            ->leftJoin('topic_groups as g', 'topics.group_id', '=', 'g.id')
+            ->select('topics.*')
+            ->where('topics.content_id', $content->id)
+            ->when($request->filled('title'), fn($q) => $q->where('topics.title', 'like', '%' . $request->title . '%'))
+            ->when($request->filled('order'), fn($q) => $q->where('topics.order', $request->order))
+            ->when($request->filled('status'), fn($q) => $q->where('topics.status', $request->status))
+            ->orderBy('g.order', 'asc')
+            ->orderBy('topics.order', 'asc');
+
+        $topicsWithoutGroupQuery = (clone $topicsQuery)->whereNull('group_id');
+
+        $groupsQuery = Group::where('content_id', $content->id)
+            ->when($request->filled('title_group'), fn($q) => $q->where('title', 'like', '%' . $request->title_group . '%'))
+            ->when($request->filled('order_group'), fn($q) => $q->where('order', $request->order_group))
+            ->orderBy('order', 'asc')
+            ->orderBy('title', 'asc');
+
         return view('app.Content.view-content', [
-            'content' => $content,
-            'topics'  => $query->orderBy('order', 'desc')->paginate(30),
+            'content'       => $content,
+            'topics'        => $topicsQuery->paginate(50),
+            'topicsNoGroup' => $topicsWithoutGroupQuery->paginate(50),
+            'groups'        => $groupsQuery->paginate(50),
         ]);
     }
 

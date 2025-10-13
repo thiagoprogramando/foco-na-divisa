@@ -2,19 +2,9 @@
 @section('content')
 
     <div class="col-12 col-sm-12 col-md-5 col-lg-5">
-        <div class="card h-100">
+        <div class="card">
             <div class="card-header d-flex align-items-center justify-content-between">
                 <h5 class="card-title m-0 me-2">Dados do Conteúdo</h5>
-                <div class="dropdown">
-                    <button class="btn btn-text-secondary rounded-pill text-muted border-0 p-1 waves-effect waves-light" type="button" id="upgradePlanCard" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="ri-more-2-line ri-20px"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="upgradePlanCard">
-                        <a class="dropdown-item waves-effect" href="javascript:void(0);">Last 28 Days</a>
-                        <a class="dropdown-item waves-effect" href="javascript:void(0);">Last Month</a>
-                        <a class="dropdown-item waves-effect" href="javascript:void(0);">Last Year</a>
-                    </div>
-                </div>
             </div>
             <div class="card-body">
                 <form action="{{ route('updated-content', ['id' => $content->id]) }}" method="POST" enctype="multipart/form-data">
@@ -30,8 +20,8 @@
                     <div class="row">
                         <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
                             <div class="form-floating form-floating-outline">
-                                <input type="number" name="order" id="order" class="form-control" placeholder="Posição (Ordem 1 ou 2)" value="{{ $content->order }}"/>
-                                <label for="order">Posição (Ordem 1 ou 2)</label>
+                                <input type="number" name="order" id="order" class="form-control" placeholder="Posição (1,2,3...)" value="{{ $content->order }}"/>
+                                <label for="order">Posição (1,2,3...)</label>
                             </div>
                         </div>
                         <div class="col-6 col-sm-12 col-md-6 col-lg-6 mb-2">
@@ -66,6 +56,96 @@
                 </form>
             </div>
         </div>
+
+        <div class="card mt-3">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <h5 class="card-title m-0 me-2">Grupos</h5>
+                <div class="dropdown">
+                    <button class="btn btn-text-secondary rounded-pill text-muted border-0 p-1 waves-effect waves-light" type="button" id="upgradePlanCard" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="ri-more-2-line ri-20px"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="upgradePlanCard">
+                        <a class="dropdown-item waves-effect" data-bs-toggle="modal" data-bs-target="#createdGroupModal">Criar Grupo</a>
+                        <a class="dropdown-item waves-effect" data-bs-toggle="modal" data-bs-target="#filterModal">Filtrar Grupos</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive text-nowrap">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Opções</th>
+                                <th>Detalhes</th>
+                                <th class="text-center">Ordem</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                            @foreach ($groups as $group)
+                                <tr>
+                                    <td class="text-center">
+                                        <form action="{{ route('deleted-group', ['uuid' => $group->uuid]) }}" method="POST" class="demo-inline-spacing delete">
+                                            @csrf
+                                            <input type="hidden" name="id" value="{{ $group->id }}">
+                                            <button type="submit" class="btn btn-icon btn-outline-danger waves-effect" title="Deletar">
+                                                <span class="tf-icons ri-delete-bin-line ri-22px"></span>
+                                            </button>
+                                            <button type="button" class="btn btn-icon btn-outline-success waves-effect" data-bs-toggle="modal" data-bs-target="#updatedGroupModal{{ $group->id }}" title="Editar">
+                                                <span class="tf-icons ri-eye-line ri-22px"></span>
+                                            </button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <span class="fw-medium" title="{{ $group->title }}">{{ Str::limit($group->title, 50) }}</span>
+                                    </td>
+                                    <td class="text-center">
+                                        {{ $group->order }}
+                                    </td>
+                                </tr>
+
+                                <div class="modal fade" id="updatedGroupModal{{ $group->id }}" tabindex="-1" aria-hidden="true">
+                                    <form action="{{ route('updated-group', ['uuid' => $group->uuid]) }}" method="POST">
+                                        @csrf
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title" id="exampleModalLabel1">Dados do Tópico</h4>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row">
+                                                        <div class="col-12 col-sm-12 col-md-8 col-lg-8 mb-2">
+                                                            <div class="form-floating form-floating-outline">
+                                                                <input type="text" name="title" id="title" class="form-control" placeholder="Título" value="{{ $group->title }}"/>
+                                                                <label for="title">Título</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-12 col-sm-12 col-md-4 col-lg-4 mb-2">
+                                                            <div class="form-floating form-floating-outline">
+                                                                <input type="number" name="order" id="order" class="form-control" placeholder="Posição (1,2,3...)" value="{{ $group->order }}"/>
+                                                                <label for="order">Posição (1,2,3...)</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer btn-group">
+                                                    <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal"> Fechar </button>
+                                                    <button type="submit" class="btn btn-success">Enviar</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            @endforeach
+                        </tbody>
+                    </table>
+
+                    <div class="text-center">
+                        {{ $groups->links() }}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="col-12 col-sm-12 col-md-7 col-lg-7">
@@ -87,10 +167,11 @@
                     <table class="table">
                         <thead>
                             <tr>
+                                <th class="text-center">Opções</th>
                                 <th>Detalhes</th>
                                 <th class="text-center">Questões</th>
+                                <th class="text-center">Grupo</th>
                                 <th class="text-center">Ordem</th>
-                                <th class="text-center">Opções</th>
                             </tr>
                         </thead>
                         <tbody class="table-border-bottom-0">
@@ -112,12 +193,15 @@
                                         </form>
                                     </td>
                                     <td>
-                                        <span class="fw-medium" title="{{ $topic->title }}">{{ Str::limit($topic->title, 50) }}...</span>
+                                        <span class="fw-medium" title="{{ $topic->title }}">{{ Str::limit($topic->title, 30) }}</span>
                                         <br>
-                                        <span class="badge bg-label-info m-1">{{ \Illuminate\Support\Str::limit($topic->description, 100) }}</span>
+                                        <span class="badge bg-label-info m-1">{{ Str::limit($topic->description, 30) }}</span>
                                     </td>
                                     <td class="text-center">
                                         {{ $topic->questions->count() }}
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="fw-medium">{{ $topic->group->title ?? '---' }}</span>
                                     </td>
                                     <td class="text-center">
                                         <span class="fw-medium">{{ $topic->order }}</span>
@@ -146,8 +230,8 @@
                                                     <div class="row">
                                                         <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
                                                             <div class="form-floating form-floating-outline">
-                                                                <input type="number" name="order" id="order" class="form-control" placeholder="Posição (Ordem 1 ou 2)" value="{{ $topic->order }}"/>
-                                                                <label for="order">Posição (Ordem 1 ou 2)</label>
+                                                                <input type="number" name="order" id="order" class="form-control" placeholder="Posição (1,2,3...)" value="{{ $topic->order }}"/>
+                                                                <label for="order">Posição (1,2,3...)</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-6 col-sm-12 col-md-6 col-lg-6 mb-2">
@@ -157,6 +241,16 @@
                                                                     <option value="inactive" @selected($topic->status == 'inactive')>Inativo</option>
                                                                 </select>
                                                                 <label for="status">Status</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6 col-sm-12 col-md-12 col-lg-12 mb-2">
+                                                            <div class="form-floating form-floating-outline">
+                                                                <select name="group_id" id="group_id" class="form-select">
+                                                                    @foreach ($groups as $group)
+                                                                        <option value="{{ $group->id }}" @selected($topic->group_id == $group->id)>{{ $group->title }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                                <label for="group_id">Grupo</label>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -216,8 +310,8 @@
                         <div class="row">
                             <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
                                 <div class="form-floating form-floating-outline">
-                                    <input type="number" name="order" id="order" class="form-control" placeholder="Posição (Ordem 1 ou 2)"/>
-                                    <label for="order">Posição (Ordem 1 ou 2)</label>
+                                    <input type="number" name="order" id="order" class="form-control" placeholder="Posição (1,2,3...)"/>
+                                    <label for="order">Posição (1,2,3...)</label>
                                 </div>
                             </div>
                             <div class="col-6 col-sm-12 col-md-6 col-lg-6 mb-2">
@@ -229,6 +323,16 @@
                                         </select>
                                     </div>
                                     <label for="status">Status</label>
+                                </div>
+                            </div>
+                            <div class="col-6 col-sm-12 col-md-12 col-lg-12 mb-2">
+                                <div class="form-floating form-floating-outline">
+                                    <select name="group_id" id="group_id" class="form-select">
+                                        @foreach ($groups as $group)
+                                            <option value="{{ $group->id }}" @selected($topic->group_id == $group->id)>{{ $group->title }}</option>
+                                        @endforeach
+                                    </select>
+                                    <label for="group_id">Grupo</label>
                                 </div>
                             </div>
                         </div>
@@ -276,8 +380,8 @@
                         <div class="row">
                             <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
                                 <div class="form-floating form-floating-outline">
-                                    <input type="number" name="order" id="order" class="form-control" placeholder="Posição (Ordem 1 ou 2)"/>
-                                    <label for="order">Posição (Ordem 1 ou 2)</label>
+                                    <input type="number" name="order" id="order" class="form-control" placeholder="Posição (1,2,3...)"/>
+                                    <label for="order">Posição (1,2,3...)</label>
                                 </div>
                             </div>
                             <div class="col-6 col-sm-12 col-md-6 col-lg-6 mb-2">
@@ -296,6 +400,54 @@
                     <div class="modal-footer btn-group">
                         <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal"> Fechar </button>
                         <button type="submit" class="btn btn-success">Filtrar</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal fade" id="createdGroupModal" tabindex="-1" aria-hidden="true">
+        <form action="{{ route('created-group') }}" method="POST">
+            @csrf
+            <input type="hidden" name="content_id" value="{{ $content->id }}">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="exampleModalLabel1">Dados do Grupo</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-8 col-lg-8 mb-2">
+                                <div class="form-floating form-floating-outline">
+                                    <input type="text" name="title" id="title" class="form-control" placeholder="Título" required/>
+                                    <label for="title">Título</label>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4 mb-2">
+                                <div class="form-floating form-floating-outline">
+                                    <input type="number" name="order" id="order" class="form-control" placeholder="Posição (1,2,3...)"/>
+                                    <label for="order">Posição (1,2,3...)</label>
+                                </div>
+                            </div>
+
+                            <div class="col-6 col-sm-12 col-md-12 col-lg-12 mb-2">
+                                <div class="form-floating form-floating-outline">
+                                    <div class="select2-primary">
+                                        <select name="topic_id[]" id="topic_id" class="select2 form-select" multiple>
+                                            @foreach ($topicsNoGroup as $topic)
+                                                <option value="{{ $topic->id }}">{{ $topic->title }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <label for="topic_id">Tópicos</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer btn-group">
+                        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal"> Fechar </button>
+                        <button type="submit" class="btn btn-success">Enviar</button>
                     </div>
                 </div>
             </div>

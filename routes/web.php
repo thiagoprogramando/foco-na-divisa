@@ -6,6 +6,7 @@ use App\Http\Controllers\Access\ForgoutController;
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\Content\BoardController;
 use App\Http\Controllers\Content\ContentController;
+use App\Http\Controllers\Content\GroupController;
 use App\Http\Controllers\Content\QuestionCommentController;
 use App\Http\Controllers\Content\QuestionController;
 use App\Http\Controllers\Content\TopicController;
@@ -92,6 +93,10 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/created-topic', [TopicController::class, 'store'])->name('created-topic');
         Route::post('/updated-topic/{id}', [TopicController::class, 'update'])->name('updated-topic');
         Route::post('/deleted-topic/{id}', [TopicController::class, 'destroy'])->name('deleted-topic');
+
+        Route::post('/created-group', [GroupController::class, 'store'])->name('created-group');
+        Route::post('/updated-group/{uuid}', [GroupController::class, 'update'])->name('updated-group');
+        Route::post('/deleted-group/{uuid}', [GroupController::class, 'destroy'])->name('deleted-group');
 
         Route::get('/boards', [BoardController::class, 'index'])->name('boards');
         Route::post('/created-board', [BoardController::class, 'store'])->name('created-board');
