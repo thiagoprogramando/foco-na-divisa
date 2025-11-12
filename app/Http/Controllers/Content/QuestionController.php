@@ -118,7 +118,7 @@ class QuestionController extends Controller {
             'correct'           => 'required|array|size:1',
             'alternative_id'    => 'nullable|array',
         ], [
-            'title.required'        => 'É necessário informar um texto para a questão.',
+            'title.required'      => 'É necessário informar um texto para a questão.',
             'alternative.required'  => 'Informe pelo menos duas alternativas.',
             'correct.required'      => 'Selecione uma alternativa correta.',
             'correct.size'          => 'Selecione exatamente uma alternativa correta.',

@@ -1,6 +1,10 @@
 @extends('app.layout')
 @section('content')
 
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/quill/typography.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/quill/katex.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/quill/editor.css') }}"/>
+
     <div class="col-12 col-sm-12 col-md-12 col-lg-12">  
         <div class="card demo-inline-spacing">
             <div class="card-header">
@@ -49,9 +53,10 @@
                         </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="form-floating form-floating-outline mb-2">
-                            <textarea class="form-control h-px-100 editor" name="title" id="question" placeholder="Ex: Qual é o único número primo par?" required>{{ $question->title }}</textarea>
+                        <div class="full-editor">
+                            {!! $question->title !!}
                         </div>
+                        <textarea name="title" id="title" hidden></textarea>
                     </div>
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-3 mb-3">
                         <small class="text-light fw-medium">Alternativas</small>
@@ -86,9 +91,10 @@
                         </div>
                     </div>
                     <div class="col-12">
-                        <div class="form-floating form-floating-outline mb-2">
-                            <textarea class="form-control h-px-100 editor" name="resolution" id="resolution" placeholder="Ex: O número dois é o único PAR primo que existe...">{{ $question->resolution }}</textarea>
+                        <div class="resolution">
+                            {!! $question->resolution !!}
                         </div>
+                        <textarea name="resolution" id="resolution" hidden></textarea>
                     </div>
                     <div class="col-12 btn-group">
                         <a href="{{ route('questions', ['topic' => $question->topic_id]) }}" class="btn btn-outline-danger"> Cancelar </a>
@@ -99,7 +105,69 @@
         </div>
     </div>
 
-    <script src="https://cdn.tiny.cloud/1/tgezwiu6jalnw1mma8qnoanlxhumuabgmtavb8vap7357t22/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="{{ asset('assets/vendor/libs/quill/katex.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/quill/quill.js') }}"></script>
     <script src="{{ asset('assets/js/question.js') }}"></script>
-    <script src="{{ asset('assets/js/tinymce.js') }}"></script>
+    <script>
+        const fullToolbar = [
+            [
+            { font: [] },
+            { size: [] }
+            ],
+            ['bold', 'italic', 'underline', 'strike'],
+            [
+            { color: [] },
+            { background: [] }
+            ],
+            [
+            { script: 'super' },
+            { script: 'sub' }
+            ],
+            [
+            { header: '1' },
+            { header: '2' },
+            'blockquote',
+            'code-block'
+            ],
+            [
+            { list: 'ordered' },
+            { list: 'bullet' },
+            { indent: '-1' },
+            { indent: '+1' }
+            ],
+            [{ direction: 'rtl' }],
+            ['link', 'image', 'video', 'formula'],
+            ['clean']
+        ];
+
+        const editor = new Quill('.full-editor', {
+            bounds: '.full-editor',
+            placeholder: 'Digite o conteúdo do contrato...',
+            modules: {
+            formula: true,
+            toolbar: fullToolbar
+            },
+            theme: 'snow'
+        });
+
+        const resolution = new Quill('.resolution', {
+            bounds: '.resolution',
+            placeholder: 'Digite o conteúdo do contrato...',
+            modules: {
+            formula: true,
+            toolbar: fullToolbar
+            },
+            theme: 'snow'
+        });
+
+        const create = document.getElementById('question-form');
+        create.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const title = editor.root.innerHTML.trim();
+            document.getElementById('title').value = title;
+            const resolutionContent = resolution.root.innerHTML.trim();
+            document.getElementById('resolution').value = resolutionContent;
+            create.submit();
+        });
+    </script>
 @endsection
