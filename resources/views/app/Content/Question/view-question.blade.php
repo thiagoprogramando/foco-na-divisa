@@ -121,67 +121,57 @@
 
     <script src="{{ asset('assets/vendor/libs/quill/katex.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/quill/quill.js') }}"></script>
-    <script src="{{ asset('assets/js/question.js') }}"></script>
     <script>
         const fullToolbar = [
             [
-            { font: [] },
-            { size: [] }
+                { font: [] },
+                { size: [] }
             ],
             ['bold', 'italic', 'underline', 'strike'],
             [
-            { color: [] },
-            { background: [] }
+                { color: [] },
+                { background: [] }
             ],
             [
-            { script: 'super' },
-            { script: 'sub' }
+                { script: 'super' },
+                { script: 'sub' }
             ],
             [
-            { header: '1' },
-            { header: '2' },
-            'blockquote',
-            'code-block'
+                { header: '1' },
+                { header: '2' },
+                'blockquote',
+                'code-block'
             ],
             [
-            { list: 'ordered' },
-            { list: 'bullet' },
-            { indent: '-1' },
-            { indent: '+1' }
+                { list: 'ordered' },
+                { list: 'bullet' },
+                { indent: '-1' },
+                { indent: '+1' }
             ],
             [{ direction: 'rtl' }],
             ['link', 'image', 'video', 'formula'],
             ['clean']
         ];
 
-        const editor = new Quill('.full-editor', {
+        window.editor = new Quill('.full-editor', {
             bounds: '.full-editor',
             placeholder: 'Digite o conteúdo do contrato...',
             modules: {
-            formula: true,
-            toolbar: fullToolbar
+                formula: true,
+                toolbar: fullToolbar
             },
             theme: 'snow'
         });
 
-        const resolution = new Quill('.resolution', {
+        window.resolution = new Quill('.resolution', {
             bounds: '.resolution',
             placeholder: 'Digite o conteúdo do contrato...',
             modules: {
-            formula: true,
-            toolbar: fullToolbar
+                formula: true,
+                toolbar: fullToolbar
             },
             theme: 'snow'
         });
-
-        const create = document.getElementById('question-form');
-        create.addEventListener('submit', function (event) {
-            event.preventDefault();
-            const title = editor.root.innerHTML.trim();
-            document.getElementById('title').value = title;
-            const resolutionContent = resolution.root.innerHTML.trim();
-            document.getElementById('resolution').value = resolutionContent;
-            create.submit();
-        });
     </script>
+    <script src="{{ asset('assets/js/question.js') }}"></script>
 @endsection
