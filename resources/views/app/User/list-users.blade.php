@@ -124,7 +124,7 @@
                                             <span class="badge badge-dot bg-info me-1"></span>
                                             <small>{{ $user->email }}</small>
                                         </div>
-                                        <small class="text-muted ms-1" title="">Plano Ativo do User</small>
+                                        <small class="text-muted ms-1" title="">{{ $user->planLabel() == 'Escolha um plano' ? 'N/A' : $user->planLabel() }}</small>
                                     </div>
                                 </div>
                                 <form action="{{ route('deleted-user', ['uuid' => $user->uuid]) }}" method="POST" class="add-btn delete">

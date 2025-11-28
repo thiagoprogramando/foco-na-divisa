@@ -32,7 +32,7 @@
                                     <div class="ps-6 my-5 pt-4">
                                         {!! $product->description !!}
                                     </div>
-                                    <button type="button" class="btn btn-outline-success d-grid w-100" @disabled($product->hasInvoice()) data-bs-toggle="modal" data-product-time="{{ $product->time }}" data-bs-target="#buyModal{{ $product->uuid }}" data-product-uuid="{{ $product->uuid }}">Escolher Plano</button>
+                                    <button type="button" class="btn btn-outline-success d-grid w-100" data-bs-toggle="modal" data-product-time="{{ $product->time }}" data-bs-target="#buyModal{{ $product->uuid }}" data-product-uuid="{{ $product->uuid }}">Escolher Plano</button>
                                 </div>
                             </div>
                         </div>

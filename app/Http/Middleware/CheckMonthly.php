@@ -4,10 +4,13 @@ namespace App\Http\Middleware;
 
 use App\Http\Controllers\Gateway\AssasController;
 use App\Models\Invoice;
+
 use Closure;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+
 use Symfony\Component\HttpFoundation\Response;
 use Carbon\Carbon;
 
@@ -50,38 +53,7 @@ class CheckMonthly {
         }
 
         if ($invoice->due_date < now()->toDateString() && $invoice->payment_status == 1) {
-
-            $assasController = new AssasController();
-
-            $customer = $assasController->createdCustomer($user->name, $user->cpfcnpj, $user->phone, $user->email);
-            if ($customer === false) {
-                return redirect()->route('plans')->with('error', 'Verfique seus dados e tente novamente!');   
-            }
-
-            $product = $invoice->product;
-            $dueDate = $product->calculateDueDate();
-
-            $charge = $assasController->createdCharge($customer, 'UNDEFINED', $product->value, 'Compra do Produto: ' . $product->name, $dueDate);
-            if ($charge === false) {
-                return redirect()->route('plans')->with('error', 'Erro ao gerar a cobrança, tente novamente!');   
-            }
-
-            $newInvoice                  = new Invoice();
-            $newInvoice->uuid            = Str::uuid();
-            $newInvoice->user_id         = $user->id;
-            $newInvoice->product_id      = $product->id;
-            $newInvoice->payment_status  = 0;
-            $newInvoice->value           = $product->value;
-            $newInvoice->due_date        = $dueDate;
-            $newInvoice->payment_splits  = $charge['paymentSplits'] ?? null;
-            $newInvoice->payment_token   = $charge['id'];
-            $newInvoice->payment_url     = $charge['invoiceUrl'];
-
-            if ($newInvoice->save()) {
-                return redirect($charge['invoiceUrl']);
-            }
-
-            return redirect()->route('invoices')->with('infor', 'Sua assinatura precisa ser renovada. Geramos uma nova fatura.');
+            return redirect()->route('plans')->with('infor', 'Sua assinatura expirou. Renove seu plano para continuar!');
         }
 
         return $next($request);
