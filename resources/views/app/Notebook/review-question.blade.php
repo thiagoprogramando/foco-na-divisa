@@ -30,20 +30,18 @@
 
                 <div class="row">
                     <div class="col-12 d-flex justify-content-center flex-wrap gap-4">
-                        <div class="btn-toolbar demo-inline-spacing gap-2">
-                            <div class="btn-group" role="group" aria-label="First group">
-                                <a href="javascript:window.history.back()" class="btn btn-lg btn-outline-warning" title="Voltar"> <i class="tf-icons ri-arrow-left-line"></i></a>
-                                <a href="{{ route('review-question', ['question' => $question->id, 'charts' => true]) }}" class="btn btn-lg btn-outline-info" title="Estátisticas da Questão"> <i class="tf-icons ri-pie-chart-line"></i></a>
-                                <a href="{{ route('notebook', ['id' => $notebook->id]) }}" title="Editar Caderno" class="btn btn-lg btn-outline-secondary"> <i class="tf-icons ri-filter-3-line"></i> </a>
-                                <button type="button" class="btn btn-lg btn-outline-danger" title="Alertar Problema" data-bs-toggle="modal" data-bs-target="#createdTicketModal"> <i class="tf-icons ri-alarm-warning-line"></i></button>
-                                <button type="button" class="btn btn-lg btn-outline-info" title="Comentários do Professor" data-bs-toggle="collapse" href="#collapseTeacher" role="button" aria-expanded="false" aria-controls="collapseTeacher">
-                                    <i class="tf-icons ri-chat-quote-line"></i>
-                                </button>
-                                <button type="button" class="btn btn-lg btn-outline-success" title="Comentários da Questão" data-bs-toggle="collapse" href="#collapseComments" role="button" aria-expanded="false" aria-controls="collapseComments">
-                                    <i class="tf-icons ri-chat-1-line"></i>
-                                </button>
-                                <a href="{{ route('favorited-question', ['id' => $question->question->id]) }}" class="btn btn-lg btn-outline-secondary" title="Favoritar"> <i class="tf-icons {{ $question->question->isFavorited() ? 'ri-heart-fill text-danger' : 'ri-heart-line' }}"></i> </a>
-                            </div>
+                        <div class="btn-toolbar demo-inline-spacing gap-2"> 
+                            <a href="javascript:window.history.back()" class="btn btn-lg btn-outline-warning" title="Voltar"> <i class="tf-icons ri-arrow-left-line"></i></a>
+                            <a href="{{ route('review-question', ['question' => $question->id, 'charts' => true]) }}" class="btn btn-lg btn-outline-info" title="Estátisticas da Questão"> <i class="tf-icons ri-pie-chart-line"></i></a>
+                            <a href="{{ route('notebook', ['id' => $notebook->id]) }}" title="Editar Caderno" class="btn btn-lg btn-outline-secondary"> <i class="tf-icons ri-filter-3-line"></i> </a>
+                            <button type="button" class="btn btn-lg btn-outline-danger" title="Alertar Problema" data-bs-toggle="modal" data-bs-target="#createdTicketModal"> <i class="tf-icons ri-alarm-warning-line"></i></button>
+                            <button type="button" class="btn btn-lg btn-outline-info" title="Comentários do Professor" data-bs-toggle="collapse" href="#collapseTeacher" role="button" aria-expanded="false" aria-controls="collapseTeacher">
+                                <i class="tf-icons ri-chat-quote-line"></i>
+                            </button>
+                            <button type="button" class="btn btn-lg btn-outline-success" title="Comentários da Questão" data-bs-toggle="collapse" href="#collapseComments" role="button" aria-expanded="false" aria-controls="collapseComments">
+                                <i class="tf-icons ri-chat-1-line"></i>
+                            </button>
+                            <a href="{{ route('favorited-question', ['id' => $question->question->id]) }}" class="btn btn-lg btn-outline-secondary" title="Favoritar"> <i class="tf-icons {{ $question->question->isFavorited() ? 'ri-heart-fill text-danger' : 'ri-heart-line' }}"></i> </a>
                         </div>
                     </div>
 

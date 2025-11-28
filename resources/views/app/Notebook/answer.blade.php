@@ -31,7 +31,7 @@
                 <div class="row">
                     <div class="col-12 d-flex justify-content-center flex-wrap gap-4">
                         <div class="btn-toolbar demo-inline-spacing gap-2">
-                            <div class="btn-group" role="group" aria-label="First group">
+                            
                                 <a href="{{ route('review-question', ['question' => $question->id, 'charts' => true]) }}" class="btn btn-lg btn-outline-info" title="Estátisticas"> <i class="tf-icons ri-pie-chart-line"></i></a>
                                 <a href="{{ route('notebook', ['id' => $notebook->id]) }}" title="Editar Caderno" class="btn btn-lg btn-outline-secondary"> <i class="tf-icons ri-filter-3-line"></i> </a>
                                 <button type="button" class="btn btn-lg btn-outline-danger" title="Alertar Problema" data-bs-toggle="modal" data-bs-target="#createdTicketModal"> <i class="tf-icons ri-alarm-warning-line"></i></button>
@@ -42,7 +42,7 @@
                                     <i class="tf-icons ri-chat-1-line"></i>
                                 </button>
                                 <a href="{{ route('favorited-question', ['id' => $questions->first()->question->id]) }}" class="btn btn-lg btn-outline-secondary" title="Favoritar"> <i class="tf-icons {{ $questions->first()->question->isFavorited() ? 'ri-heart-fill text-danger' : 'ri-heart-line' }}"></i> </a>
-                            </div>
+                            
                         </div>
                     </div>
 
