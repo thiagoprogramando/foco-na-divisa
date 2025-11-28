@@ -11,8 +11,8 @@
             <button type="button" onclick="submitDelete()" class="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium bg-danger text-white border-danger">
                 Excluir
             </button>
-            <button type="button" onclick="submitAnswer()" class="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium bg-success text-white border-success">
-                Responder
+            <button type="button" onclick="submitAnswer()" class="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium bg-success text-white border-success {{ $paginator->hasMorePages() ? ' ' : 'confirm' }}">
+                {{ $paginator->hasMorePages() ? 'Responder' : 'Finalizar' }}
             </button>
         @endif
 

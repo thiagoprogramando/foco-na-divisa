@@ -238,6 +238,13 @@
                                         </a>
                                     </li>
 
+                                    <li class="menu-item">
+                                        <a href="{{ route('simulateds') }}" class="menu-link">
+                                            <i class="menu-icon tf-icons ri-book-read-fill"></i>
+                                            <div data-i18n="Simulados">Simulados</div>
+                                        </a>
+                                    </li>
+
                                     @if (Auth::user()->role === 'admin')
                                         <li class="menu-item">
                                             <a href="javascript:void(0)" class="menu-link menu-toggle">

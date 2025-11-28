@@ -17,6 +17,8 @@ use App\Http\Controllers\Notebook\NotebookController;
 use App\Http\Controllers\Product\PlanController;
 use App\Http\Controllers\Product\ProductController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\Simulated\AnswerController as SimulatedAnswerController;
+use App\Http\Controllers\Simulated\SimulatedController;
 use App\Http\Controllers\Ticket\TicketController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
@@ -49,6 +51,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('buy-product/{product}', [BuyController::class, 'store'])->name('buy-product');
 
     Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices');
+
+    Route::get('/simulateds', [SimulatedController::class, 'index'])->name('simulateds');
+    Route::get('/simulated/{uuid}', [SimulatedController::class, 'show'])->name('simulated');
+    Route::get('/answer-simulated/{uuid}', [SimulatedAnswerController::class, 'show'])->name('answer-simulated');
+    Route::post('answer-simulated-question', [SimulatedAnswerController::class, 'update'])->name('answer-simulated-question');
+    Route::post('/buy-simulated/{uuid}', [SimulatedController::class, 'buy'])->name('buy-simulated');
 
     Route::middleware(['checkMonthly'])->group(function () {    
 
@@ -113,6 +121,9 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/created-question/{topic}', [QuestionController::class, 'store'])->name('created-question');
         Route::post('/updated-question/{id}', [QuestionController::class, 'update'])->name('updated-question');
         Route::post('/deleted-question/{id}', [QuestionController::class, 'destroy'])->name('deleted-question');
+
+        Route::post('/created-simulated', [SimulatedController::class, 'store'])->name('created-simulated');
+        Route::post('/updated-simulated/{uuid}', [SimulatedController::class, 'update'])->name('updated-simulated');
     });
 
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');

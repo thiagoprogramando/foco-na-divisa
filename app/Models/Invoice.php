@@ -13,6 +13,7 @@ class Invoice extends Model {
         'uuid',
         'user_id',
         'product_id',
+        'simulated_id',
         'value',
         'due_date',
         'payment_status',
@@ -27,6 +28,10 @@ class Invoice extends Model {
 
     public function product() {
         return $this->belongsTo(Product::class, 'product_id');
+    }
+
+    public function simulated() {
+        return $this->belongsTo(Simulated::class, 'simulated_id');
     }
 
     public function statusLabel() {

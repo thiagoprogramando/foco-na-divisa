@@ -25,8 +25,16 @@ class Question extends Model {
         return $this->belongsTo(Board::class);
     }
 
+    public function simulated() {
+        return $this->belongsTo(Simulated::class);
+    }
+
     public function alternatives() {
         return $this->hasMany(QuestionAlternative::class);
+    }
+
+    public function correctAlternative() {
+        return $this->hasOne(QuestionAlternative::class)->where('is_correct', true);
     }
 
     public function notebookQuestions() {

@@ -78,7 +78,7 @@ function maskPerformance(input) {
 
 
 function consultAddress() {
-    var postal_code = $('[name="postal_code"]').val();
+    var postal_code = $('[name="address_postal_code"]').val();
 
     postal_code = postal_code.replace(/\D/g, '');
     if (/^\d{8}$/.test(postal_code)) {

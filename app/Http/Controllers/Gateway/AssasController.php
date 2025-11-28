@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Gateway;
 
 use App\Http\Controllers\Controller;
 use App\Models\Invoice;
+use App\Models\Simulated;
+use App\Models\SimulatedQuestion;
+use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -113,10 +116,14 @@ class AssasController extends Controller {
             $invoice = Invoice::where('payment_token', $token)->whereIn('payment_status', [0, 2])->first();
             if ($invoice) {
 
+                if ($invoice->simulated_id) {
+                    $this->generateSimulatedForUser($invoice->user, $invoice->simulated);
+                }
+
                 $invoice->payment_status = 1;
                 if ($invoice->save()) {
                     
-                    Invoice::where('user_id', $invoice->user_id)->where('reference', $invoice->reference)->where('id', '!=', $invoice->id)->whereIn('payment_status', [0, 2])->delete();
+                    Invoice::where('user_id', $invoice->user_id)->where('id', '!=', $invoice->id)->whereIn('payment_status', [0, 2])->delete();
                     return response()->json(['message' => 'Fatura Aprovada!'], 200);
                 } else {
                     return response()->json(['message' => 'Falha ao tentar Aprovar Fatura!'], 400);
@@ -169,4 +176,27 @@ class AssasController extends Controller {
         
         return response()->json(['message' => 'Nenhum Evento disponível!'], 200);
     }
+
+    private function generateSimulatedForUser($user, $simulated) {
+
+        $questions = $simulated->questions;
+        $position  = 1;
+
+        if (count($questions) <= 0) {
+            return false;
+        }
+
+        foreach ($questions as $q) {
+            SimulatedQuestion::create([
+                'user_id'           => $user->id,
+                'simulated_id'      => $simulated->id,
+                'question_id'       => $q->id,
+                'question_position' => $position++,
+                'answer_result'     => 0,
+            ]);
+        }
+
+        return true;
+    }
+
 }

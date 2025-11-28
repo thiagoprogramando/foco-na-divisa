@@ -94,7 +94,7 @@
                             <div class="d-flex align-items-center">
                                 <div class="d-flex align-items-center">
                                     <div class="me-2">
-                                        <h6 class="mb-1">{{ $invoice->product->name }} - R$ {{ number_format($invoice->value, 2, ',', '.') }}</h6>
+                                        <h6 class="mb-1">{{ $invoice->product->name ?? $invoice->simulated->title }} - R$ {{ number_format($invoice->value, 2, ',', '.') }}</h6>
                                         <small>{{ \Carbon\Carbon::parse($invoice->due_date)->format('d/m/Y') }}</small> | <small><a href="{{ $invoice->payment_status !== 2 ? $invoice->payment_url : '#invoices' }}" target="_blank" rel="noopener noreferrer">Acessar</a></small>
                                     </div>
                                 </div>

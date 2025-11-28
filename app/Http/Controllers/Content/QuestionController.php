@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Board;
 use App\Models\Favorite;
 use App\Models\Question;
+use App\Models\Simulated;
 use App\Models\Topic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -43,13 +44,15 @@ class QuestionController extends Controller {
             return redirect()->back()->with('infor', 'Não foi possível encontrar a Questão, verifique os dados e tente novamente!');
         }
         
-        $boards = Board::orderBy('name', 'asc')->get();
-        $topics = Topic::orderBy('title', 'asc')->get();
+        $boards     = Board::orderBy('name', 'asc')->get();
+        $topics     = Topic::orderBy('title', 'asc')->get();
+        $simulateds = Simulated::orderBy('title', 'asc')->get();
 
         return view('app.Content.Question.view-question', [
-            'question'  => $question,
-             'boards'   => $boards,
-            'topics'    => $topics,
+            'question'      => $question,
+            'boards'        => $boards,
+            'topics'        => $topics,
+            'simulateds'    => $simulateds,
         ]);
     }
 
@@ -60,11 +63,13 @@ class QuestionController extends Controller {
             return redirect()->back()->with('infor', 'Não foi possível encontrar o Tópico, verifique os dados e tente novamente!');
         }
 
-        $boards = Board::orderBy('name', 'asc')->get();
+        $boards     = Board::orderBy('name', 'asc')->get();
+        $simulateds = Simulated::orderBy('title', 'asc')->get();
         
         return view('app.Content.Question.create-question', [
-            'topic'  => $topic,
-            'boards' => $boards,
+            'topic'         => $topic,
+            'boards'        => $boards,
+            'simulateds'    => $simulateds,
         ]);
     }
 
@@ -87,14 +92,22 @@ class QuestionController extends Controller {
         }
 
         $question = new Question();
-        $question->title        = $request->title;
         $question->topic_id     = $topic;
         $question->board_id     = $request->board_id;
+        
+        $question->title        = $request->title;
         $question->resolution   = $request->resolution;
+
+        if (empty($request->simulated_id)) {
+            $question->simulated_id = null;
+        } else {
+            $question->simulated_id = $request->simulated_id;
+        }
+        
         if ($question->save()) {
 
             foreach ($request->alternative as $index => $text) {
-                $label      = chr(65 + $index); // A, B, C, ...
+                $label      = chr(65 + $index);
                 $isCorrect  = in_array($index, $request->correct) ? 1 : 0;
 
                 $question->alternatives()->create([
@@ -129,9 +142,10 @@ class QuestionController extends Controller {
             return redirect()->back()->with('error', 'Questão não encontrada!');
         }
 
-        $question->title        = $request->title;
+        $question->simulated_id = $request->simulated_id;
         $question->board_id     = $request->board_id;
         $question->topic_id     = $request->topic_id;
+        $question->title        = $request->title;
         $question->resolution   = $request->resolution;
         if ($question->save()) {
 
