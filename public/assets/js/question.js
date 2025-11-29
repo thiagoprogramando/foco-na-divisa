@@ -1,13 +1,6 @@
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
     let altIndex  = document.querySelectorAll('#alternatives-wrapper .alternative-row').length;
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const btn = document.getElementById('add-alternative');
-        for (let i = 0; i < 4; i++) {
-            btn.click();
-        }
-    });
-
     document.getElementById('add-alternative').addEventListener('click', function () {
 
         const wrapper = document.getElementById('alternatives-wrapper');

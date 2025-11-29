@@ -101,6 +101,7 @@
     <script src="{{ asset('assets/vendor/libs/quill/quill.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+
             const btn = document.getElementById('add-alternative');
             for (let i = 0; i < 4; i++) {
                 btn.click();
