@@ -57,6 +57,10 @@
             return;
         }
 
+        const resolutionHTML = window.resolution.root.innerHTML.trim();
+        const resolutionText = window.resolution.getText().trim();
+        document.getElementById('resolution').value = resolutionHTML;
+
         const alternatives  = document.querySelectorAll('input[name="alternative[]"]');
         const corrects      = document.querySelectorAll('.correct-switch:checked');
 

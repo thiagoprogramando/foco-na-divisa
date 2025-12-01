@@ -79,7 +79,6 @@ class QuestionController extends Controller {
             'title'         => 'required|string',
             'board_id'      => 'required|exists:boards,id',
             'alternative'   => 'required|array|min:2',
-            'alternative.*' => 'required|string',
             'correct'       => 'required',
         ], [
             'title.required'    => 'É necessário informar um texto para a questão.',
