@@ -75,8 +75,6 @@ class QuestionController extends Controller {
 
     public function store(Request $request, $topic) {
 
-        return $request;
-
          $request->validate([
             'title'         => 'required|string',
             'board_id'      => 'required|exists:boards,id',
