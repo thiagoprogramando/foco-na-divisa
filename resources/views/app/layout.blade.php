@@ -238,12 +238,12 @@
                                         </a>
                                     </li>
 
-                                    {{-- <li class="menu-item">
+                                    <li class="menu-item">
                                         <a href="{{ route('simulateds') }}" class="menu-link">
                                             <i class="menu-icon tf-icons ri-book-read-fill"></i>
                                             <div data-i18n="Simulados">Simulados</div>
                                         </a>
-                                    </li> --}}
+                                    </li>
 
                                     @if (Auth::user()->role === 'admin')
                                         <li class="menu-item">

@@ -31,7 +31,7 @@ class SimulatedController extends Controller {
         ]);
     }
 
-    public function show ($uuid) {
+    public function review ($uuid) {
 
         $simulated = Simulated::where('uuid', $uuid)->first();
         if (!$simulated) {
@@ -75,10 +75,57 @@ class SimulatedController extends Controller {
                     return $item;
                 });
 
-        return view('app.Simulated.show', [
+        return view('app.Simulated.review', [
             'simulated' => $simulated,
             'charts'    => $charts,
             'ranking'   => $ranking,
+        ]);
+    }
+
+    public function show ($uuid) {
+
+        $simulated = Simulated::where('uuid', $uuid)->first();
+        if (!$simulated) {
+            return redirect()->back()->with('infor', 'Simulado não encontrado!');
+        }
+
+        $successCount = SimulatedQuestion::where('simulated_id', $simulated->id)
+            ->where('answer_result', 1)
+            ->count();
+
+        $errorCount = SimulatedQuestion::where('simulated_id', $simulated->id)
+            ->where('answer_result', 2)
+            ->count();
+
+        $total = $successCount + $errorCount;
+
+        $percentSuccess = $total > 0 ? round(($successCount / $total) * 100, 2) : 0;
+        $percentError   = $total > 0 ? round(($errorCount / $total) * 100, 2) : 0;
+
+        $charts = [
+            'general' => [
+                'success'         => $successCount,
+                'error'           => $errorCount,
+                'percent_success' => $percentSuccess,
+                'percent_error'   => $percentError,
+            ],
+        ];
+
+        $ranking = SimulatedQuestion::select(
+                'user_id',
+                DB::raw("SUM(CASE WHEN answer_result = 1 THEN 1 ELSE 0 END) as total_points"),
+                DB::raw("SUM(CASE WHEN answer_result <> 0 THEN 1 ELSE 0 END) as total_answered")
+                )->where('simulated_id', $simulated->id)->groupBy('user_id')->orderByDesc('total_points')
+                ->with(['user:id,name,address_state'])->get()->values()
+                ->map(function ($item, $index) {
+                    $item->position = $index + 1;
+                    return $item;
+                });
+
+        return view('app.Simulated.show', [
+            'simulated' => $simulated,
+            'ranking'   => $ranking,
+            'charts'    => $charts,
         ]);
     }
 

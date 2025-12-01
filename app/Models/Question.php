@@ -41,6 +41,10 @@ class Question extends Model {
         return $this->hasMany(NotebookQuestion::class);
     }
 
+    public function simulatedQuestions() {
+        return $this->hasMany(SimulatedQuestion::class);
+    }
+
     public function favorites() {
         return $this->hasMany(Favorite::class);
     }

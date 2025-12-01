@@ -4,7 +4,6 @@
 <div class="col-12 col-sm-12 col-md-12 col-lg-12">
     <div class="card mb-3">
 
-        {{-- HEADER --}}
         <div class="card-header">
             <div class="d-flex justify-content-between">
                 <h5 class="mb-1">Simulado: {{ $simulated->title }}</h5>
@@ -22,7 +21,6 @@
                 </div>
             </div>
 
-            {{-- SUBTÍTULO --}}
             <div class="card-subtitle">
                  @foreach($questions as $question)
                     <div class="me-2">Questão {{ $question->question_position.' de '.$simulated->questions->count() }}</div>
@@ -34,18 +32,15 @@
             </div>
         </div>
 
-        {{-- BODY --}}
         <div class="card-body">
             <div class="row">
 
-                {{-- QUESTÃO --}}
                 <div class="col-12">
                     <div class="divider">
                         <div class="divider-text">Questão</div>
                     </div>
                 </div>
 
-                {{-- FORM DE RESPOSTA --}}
                 <form id="answerForm" method="POST" class="col-12 col-sm-12 col-md-12 col-lg-12 row">
                     @csrf
                     @foreach($questions as $question)

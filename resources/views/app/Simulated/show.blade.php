@@ -6,21 +6,69 @@
             <div class="card-header">
                 <h5 class="mb-1">Simulado: {{ $simulated->title }}</h5>
                 <div class="card-subtitle">
-                    <div class="me-2">Questões Resolvidas {{ $simulated->questions->whereNotNull('resolved_at')->count() }}</div>
-                    <small><b>{{ $simulated->countQuestionsByStatus(1) }}</b> Resolvidas</small> <small class="text-success"><b>{{ $simulated->countQuestionsByStatus(1, 1) }}</b> Acertos</small> <small class="text-danger"><b>{{ $simulated->countQuestionsByStatus(1, 2) }}</b> Erros</small>
+                    <div class="me-2">Compras: {{ $simulated->invoices->where('payment_status', 1)->count() }}</div>
                     <hr>
                 </div>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-12 col-sm-12 col-md-5 col-lg-5 mb-5">
-                        <div class="d-flex justify-content-start flex-wrap gap-4">
-                            <div class="btn-toolbar demo-inline-spacing gap-2">
-                                <div class="btn-group" role="group" aria-label="First group">
-                                    <a href="javascript:window.history.back()" class="btn btn-sm btn-outline-warning" title="Voltar"> <i class="tf-icons ri-arrow-left-line"></i> Voltar</a>
+                        <h5 class="text-center">Dados</h5>
+                        <form action="{{ route('updated-simulated', ['uuid' => $simulated->uuid]) }}" method="POST" class="row border g-3 p-3">
+                            @csrf
+                            <div class="col-12">
+                                <div class="form-floating form-floating-outline mb-2">
+                                    <input type="text" name="title" id="title" class="form-control" placeholder="Título" value="{{ $simulated->title }}"/>
+                                    <label for="title">Título</label>
                                 </div>
                             </div>
-                        </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
+                                <div class="form-floating form-floating-outline">
+                                    <input type="date" name="date_start" id="date_start" class="form-control" placeholder="Data de início" value="{{ $simulated->date_start }}"/>
+                                    <label for="date_start">Data de início</label>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
+                                <div class="form-floating form-floating-outline">
+                                    <input type="date" name="date_end" id="date_end" class="form-control" placeholder="Data de término" value="{{ $simulated->date_end }}"/>
+                                    <label for="date_end">Data de término</label>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
+                                <div class="form-floating form-floating-outline">
+                                    <div class="select2-primary">
+                                        <select name="status" id="status" class="select2 form-select">
+                                            <option value="active" @selected($simulated->status == 'active')>Ativo</option>
+                                            <option value="draft" @selected($simulated->status == 'draft')>Rascunho</option>
+                                            <option value="completed" @selected($simulated->status == 'completed')>Concluído</option>
+                                        </select>
+                                    </div>
+                                    <label for="status">Status</label>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
+                                <div class="form-floating form-floating-outline">
+                                    <input type="text" name="value" id="value" class="form-control money" oninput="maskValue(this)" placeholder="Valor (Mín R$ 5,00)" value="{{ $simulated->value }}"/>
+                                    <label for="value">Valor (Mín R$ 5,00)</label>
+                                </div>
+                            </div>
+                            <div class="col-12 text-center">
+                                <div class="form-floating form-floating-outline mb-2">
+                                    <textarea class="form-control h-px-100" name="description" id="description" placeholder="Descrição">{{ $simulated->description }}</textarea>
+                                    <label for="description">Descrição</label>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="cover_image" class="form-label">Imagem de Capa</label>
+                                    <input class="form-control" type="file" name="cover_image" id="cover_image" accept="image/*">
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 offset-md-3 col-lg-6 offset-lg-3 mb-2">
+                                <div class="btn-group">
+                                    <a href="{{ route('simulateds') }}" class="btn btn-outline-danger">Fechar</a>
+                                    <button type="submit" class="btn btn-success">Atualizar</button>
+                                </div>
+                            </div>
+                        </form>
 
                         <div class="text-center">
                             <h5>Gráfico</h5>
@@ -30,40 +78,36 @@
                         <div style="width: 250px; height: 250px; margin: 0 auto;">
                             <canvas id="generalChart"></canvas>
                         </div>
-                        @if ($simulated->date_end < now())
-                            <div class="text-center mt-5">
-                                <h5>Ranking</h5>
-                                <div class="alert alert-success" role="alert">
-                                    <a href="{{ route('simulated', ['uuid' => $simulated->uuid]) }}#{{ Auth::user()->uuid }}">Veja sua posição no ranking geral</a>
-                                </div>
-                            </div>
-                            <div class="table-responsive text-nowrap">
-                                <table class="table border-bottom">
-                                    <thead>
-                                        <tr>
-                                            <th class="bg-transparent border-bottom text-center">POSIÇÃO</th>
-                                            <th class="bg-transparent border-bottom">CANDIDATO</th>
-                                            <th class="bg-transparent border-bottom text-center">PONTUAÇÃO</th>
+
+                        <div class="text-center mt-5">
+                            <h5>Ranking</h5>
+                        </div>
+                        <div class="table-responsive text-nowrap">
+                            <table class="table border-bottom">
+                                <thead>
+                                    <tr>
+                                        <th class="bg-transparent border-bottom text-center">POSIÇÃO</th>
+                                        <th class="bg-transparent border-bottom">CANDIDATO</th>
+                                        <th class="bg-transparent border-bottom text-center">PONTUAÇÃO</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-border-bottom-0">
+                                    @foreach ($ranking as $position)
+                                        <tr id="{{ $position->user->uuid }}">
+                                            <td class="text-center">
+                                            {{ $position->position }}
+                                            </td>
+                                            <td>
+                                                {{ $position->user->name }} @isset($position->user->address_state) / {{ $position->user->address_state }} @endisset
+                                            </td>
+                                            <td class="text-success fw-medium text-center">
+                                                {{ $position->total_points }}
+                                            </td>
                                         </tr>
-                                    </thead>
-                                    <tbody class="table-border-bottom-0">
-                                        @foreach ($ranking as $position)
-                                            <tr id="{{ $position->user->uuid }}">
-                                                <td class="text-center">
-                                                {{ $position->position }}
-                                                </td>
-                                                <td>
-                                                    {{ $position->user->name }} @isset($position->user->address_state) / {{ $position->user->address_state }} @endisset
-                                                </td>
-                                                <td class="text-success fw-medium text-center">
-                                                    {{ $position->total_points }}
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        @endif
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <div class="col-12 col-sm-12 col-md-7 col-lg-7">
@@ -72,24 +116,23 @@
                                 <thead>
                                     <tr>
                                         <th class="bg-transparent border-bottom">QUESTÃO</th>
-                                        <th class="bg-transparent border-bottom text-center">SELEÇÃO</th>
-                                        <th class="bg-transparent border-bottom text-center">GABARITO</th>
+                                        <th class="bg-transparent border-bottom text-center">RESPOSTAS</th>
+                                        <th class="bg-transparent border-bottom text-center">ACERTOS X ERROS</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-border-bottom-0">
-                                    @foreach ($simulated->simulatedAnswers->where('user_id', Auth::user()->id) as $question)
+                                    @foreach ($simulated->questions as $question)
                                         <tr>
                                             <td>
                                                 <a data-bs-toggle="modal" data-bs-target="#detailsModal{{ $question->id }}">
-                                                    {{ \Illuminate\Support\Str::limit(preg_replace('/[^A-Za-z0-9 ]/', '', strip_tags($question->question->title)), 50) }} <br>
-                                                    <div class="badge bg-label-{{ $question->labelResult()['color'] }} rounded-pill">{{ $question->labelResult()['message'] }}</div>
+                                                    {{ \Illuminate\Support\Str::limit(preg_replace('/[^A-Za-z0-9 ]/', '', strip_tags($question->title)), 50) }} <br>
                                                 </a>
                                             </td>
                                             <td class="text-center">
-                                                {{ $question->answer->label ?? ' ' }}
+                                                {{ $question->simulatedQuestions->count() ?? 0 }}
                                             </td>
-                                            <td class="text-success fw-medium text-center">
-                                                {{ $question->question->correctAlternative()->first()->label }}
+                                            <td class="fw-medium text-center">
+                                                <span class="text-success">{{ $question->simulatedQuestions->where('answer_result', 1)->count() ?? 0 }}</span> X <span class="text-danger">{{ $question->simulatedQuestions->where('answer_result', 2)->count() ?? 0 }}</span>
                                             </td>
                                         </tr>
 
@@ -101,8 +144,8 @@
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        {!! $question->question->title !!}
-                                                        @foreach ($question->question->alternatives as $alternative)
+                                                        {!! $question->title !!}
+                                                        @foreach ($question->alternatives as $alternative)
                                                             <div class="form-check mt-4 alternative-item">
                                                                 <input class="form-check-input" type="checkbox" name="answer_id" value="{{ $alternative->id }}" id="answer_id{{ $alternative->id }}" @checked($alternative->is_correct) disabled>
                                                                 <div class="alt-content">
@@ -115,7 +158,8 @@
                                                         @endforeach
                                                     </div>
                                                     <div class="modal-footer btn-group">
-                                                        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal"> Fechar </button>
+                                                        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Fechar</button>
+                                                        <a href="{{ route('question', ['id' => $question->id]) }}" target="_blank" class="btn btn-outline-warning">Editar Questão</a>
                                                     </div>
                                                 </div>
                                             </div>

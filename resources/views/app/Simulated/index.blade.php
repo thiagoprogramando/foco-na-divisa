@@ -143,92 +143,14 @@
                                 </div>
                             </div>
                             @if ($simulated->hasInvoice(Auth::id(), 1))
-                                <a href="{{ route('simulated', ['uuid' => $simulated->uuid]) }}" class="btn btn-primary w-100 mb-2">ACESSAR SIMULADO</a>
+                                <a href="{{ route('review-simulated', ['uuid' => $simulated->uuid]) }}" class="btn btn-primary w-100 mb-2">ACESSAR SIMULADO</a>
                             @elseif ($simulated->date_end < now())
                                 <button type="button" class="btn btn-dark w-100 mb-2">INDISPONÍVEL</button>
                             @else
                                 <button data-bs-toggle="modal" data-bs-target="#buyModal{{ $simulated->uuid }}" class="btn btn-success w-100 mb-2">COMPRAR</button>
                             @endif
-                            
                             @if (Auth::user()->role === 'admin')
-                                <a data-bs-toggle="modal" data-bs-target="#updatedModal{{ $simulated->uuid }}" class="btn btn-warning w-100">EDITAR</a>
-
-                                <div class="modal fade" id="updatedModal{{ $simulated->uuid }}" tabindex="-1" aria-hidden="true">
-                                    <form action="{{ route('updated-simulated', ['uuid' => $simulated->uuid]) }}" method="POST" enctype="multipart/form-data">
-                                        @csrf
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title" id="exampleModalLabel1">Dados do Simulado</h4>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <div class="form-floating form-floating-outline mb-2">
-                                                                <input type="text" name="title" id="title" class="form-control" placeholder="Título" value="{{ $simulated->title }}"/>
-                                                                <label for="title">Título</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
-                                                            <div class="form-floating form-floating-outline">
-                                                                <input type="date" name="date_start" id="date_start" class="form-control" placeholder="Data de início" value="{{ $simulated->date_start }}"/>
-                                                                <label for="date_start">Data de início</label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
-                                                            <div class="form-floating form-floating-outline">
-                                                                <input type="date" name="date_end" id="date_end" class="form-control" placeholder="Data de término" value="{{ $simulated->date_end }}"/>
-                                                                <label for="date_end">Data de término</label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
-                                                            <div class="form-floating form-floating-outline">
-                                                                <div class="select2-primary">
-                                                                    <select name="status" id="status" class="select2 form-select">
-                                                                        <option value="active" @selected($simulated->status == 'active')>Ativo</option>
-                                                                        <option value="draft" @selected($simulated->status == 'draft')>Rascunho</option>
-                                                                        <option value="completed" @selected($simulated->status == 'completed')>Concluído</option>
-                                                                    </select>
-                                                                </div>
-                                                                <label for="status">Status</label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-2">
-                                                            <div class="form-floating form-floating-outline">
-                                                                <input type="text" name="value" id="value" class="form-control money" oninput="maskValue(this)" placeholder="Valor (Mín R$ 5,00)" value="{{ $simulated->value }}"/>
-                                                                <label for="value">Valor (Mín R$ 5,00)</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-12 text-center">
-                                                            <a class="me-1" data-bs-toggle="collapse" href="#collapseNotes" role="button" aria-expanded="false" aria-controls="collapseNotes"> Extras </a>
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <div class="collapse" id="collapseNotes">
-                                                                <div class="form-floating form-floating-outline mb-2">
-                                                                    <textarea class="form-control h-px-100" name="description" id="description" placeholder="Descrição">{{ $simulated->description }}</textarea>
-                                                                    <label for="description">Descrição</label>
-                                                                </div>
-                                                                <div class="mb-4">
-                                                                    <label for="cover_image" class="form-label">Imagem de Capa</label>
-                                                                    <input class="form-control" type="file" name="cover_image" id="cover_image" accept="image/*">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer btn-group">
-                                                    <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal"> Fechar </button>
-                                                    <button type="submit" class="btn btn-success">Enviar</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
+                                <a href="{{ route('simulated', ['uuid' => $simulated->uuid]) }}" class="btn btn-warning w-100">EDITAR</a>
                             @endif
 
                             <div class="modal fade" id="buyModal{{ $simulated->uuid }}" data-simulated-uuid="{{ $simulated->uuid }}" tabindex="-1" aria-hidden="true">
