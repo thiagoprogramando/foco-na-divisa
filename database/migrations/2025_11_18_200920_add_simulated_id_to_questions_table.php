@@ -9,12 +9,12 @@ return new class extends Migration {
     public function up(): void {
         Schema::table('questions', function (Blueprint $table) {
             $table->foreignId('simulated_id')->nullable()->after('board_id')->constrained('simulateds')->nullOnDelete();
+            $table->unsignedSmallInteger('simulated_question_position')->default(0)->after('simulated_id');
         });
     }
 
     public function down(): void {
-        Schema::table('questions', function (Blueprint $table) {
-            
-        });
+        Schema::dropIfExists('simulated_id');
+        Schema::dropIfExists('simulated_question_position');
     }
 };

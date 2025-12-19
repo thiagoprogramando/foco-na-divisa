@@ -13,6 +13,8 @@ class Question extends Model {
     protected $fillable = [
         'topic_id',
         'board_id',
+        'simulated_id',
+        'simulated_question_position',
         'title',
         'resolution',
     ];

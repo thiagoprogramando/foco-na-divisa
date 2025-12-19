@@ -26,7 +26,7 @@
             <div class="card-body">
                 <form action="{{ route('created-question', ['topic' => $topic->id]) }}" method="POST" class="row" id="question-form">
                     @csrf
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
                         <div class="form-floating form-floating-outline mb-2">
                             <div class="select2-primary">
                                 <select name="simulated_id" id="simulated_id" class="select2 form-select" required>
@@ -37,6 +37,12 @@
                                 </select>
                             </div>
                             <label for="simulated_id">Simulado</label>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-2 col-lg-2">
+                        <div class="form-floating form-floating-outline mb-2">
+                            <input type="number" class="form-control" name="simulated_question_position" id="simulated_question_position" placeholder="Ex: 1">
+                            <label for="simulated_question_position">Ordem</label>
                         </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6">

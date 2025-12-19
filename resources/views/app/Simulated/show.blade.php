@@ -116,17 +116,21 @@
                                 <thead>
                                     <tr>
                                         <th class="bg-transparent border-bottom">QUESTÃO</th>
+                                        <th class="bg-transparent border-bottom">ORDEM</th>
                                         <th class="bg-transparent border-bottom text-center">RESPOSTAS</th>
                                         <th class="bg-transparent border-bottom text-center">ACERTOS X ERROS</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-border-bottom-0">
-                                    @foreach ($simulated->questions as $question)
+                                    @foreach ($simulated->questions->sortBy('simulated_question_position') as $question)
                                         <tr>
                                             <td>
                                                 <a data-bs-toggle="modal" data-bs-target="#detailsModal{{ $question->id }}">
-                                                    {{ \Illuminate\Support\Str::limit(preg_replace('/[^A-Za-z0-9 ]/', '', strip_tags($question->title)), 50) }} <br>
+                                                    {{ \Illuminate\Support\Str::limit(preg_replace('/[^A-Za-z0-9 ]/', '', strip_tags($question->title)), 40) }} <br>
                                                 </a>
+                                            </td>
+                                            <td class="text-center">
+                                                {{ $question->simulated_question_position }}
                                             </td>
                                             <td class="text-center">
                                                 {{ $question->simulatedQuestions->count() ?? 0 }}
@@ -140,7 +144,7 @@
                                             <div class="modal-dialog modal-fullscreen" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h4 class="modal-title" id="exampleModalLabel1">Dados do Conteúdo</h4>
+                                                        <h4 class="modal-title" id="exampleModalLabel1">Dados da Questão</h4>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">

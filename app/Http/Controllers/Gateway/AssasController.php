@@ -186,7 +186,7 @@ class AssasController extends Controller {
             return false;
         }
 
-        foreach ($questions as $q) {
+        foreach ($questions->sortBy('simulated_question_position') as $q) {
             SimulatedQuestion::create([
                 'user_id'           => $user->id,
                 'simulated_id'      => $simulated->id,

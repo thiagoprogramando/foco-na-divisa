@@ -96,6 +96,7 @@ class QuestionController extends Controller {
         
         $question->title        = $request->title;
         $question->resolution   = $request->resolution;
+        $question->simulated_question_position   = $request->simulated_question_position;
 
         if (empty($request->simulated_id)) {
             $question->simulated_id = null;
@@ -146,6 +147,7 @@ class QuestionController extends Controller {
         $question->topic_id     = $request->topic_id;
         $question->title        = $request->title;
         $question->resolution   = $request->resolution;
+        $question->simulated_question_position   = $request->simulated_question_position;
         if ($question->save()) {
 
             $alternatives = $request->alternative;
