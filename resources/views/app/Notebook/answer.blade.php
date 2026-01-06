@@ -1,6 +1,10 @@
 @extends('app.layout')
 @section('content')
 
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/quill/typography.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/quill/katex.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/quill/editor.css') }}"/>
+
     <div class="col-12 col-sm-12 col-md-12 col-lg-12">
         <div class="card mb-3">
             <div class="card-header">
@@ -53,12 +57,16 @@
 
                     <div class="collapse mt-2 mb-3" id="collapseComments">
                         <div class="row p-4 border">
-                            <form action="{{ route('created-comment') }}" method="POST" class="col-12 col-sm-12 col-md-6 col-lg-6">
+                            <form action="{{ route('created-comment') }}" method="POST" class="col-12 col-sm-12 col-md-6 col-lg-6" id="form">
                                 @csrf
                                 <input type="hidden" name="question_id" value="{{ $questions->first()->question->id }}">
                                 <div class="form-floating-outline mb-2">
-                                    <textarea class="form-control h-px-100 editor-simple" name="comment" id="comment" placeholder="Deixe seu comentário:"></textarea>
+                                    <div class="full-editor">
+                                        <h6>Deixe seu comentário:</h6>
+                                    </div>
+                                    <textarea name="comment" id="comment" hidden></textarea>
                                 </div>
+
                                 <div class="d-flex justify-content-end">
                                     <button type="submit" class="btn btn-outline-dark">Comentar</button>
                                 </div>
@@ -167,6 +175,8 @@
         </div>      
     </div>
 
+    <script src="{{ asset('assets/vendor/libs/quill/katex.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/quill/quill.js') }}"></script>
     <script>
         function submitAnswer() {
             const form = document.getElementById('answerForm');
@@ -215,8 +225,57 @@
                     input.disabled = !input.disabled;
                 });
             });
+
+            const fullToolbar = [
+                [
+                    { font: [] },
+                    { size: [] }
+                ],
+                ['bold', 'italic', 'underline', 'strike'],
+                    [
+                    { color: [] },
+                    { background: [] }
+                ],
+                [
+                    { script: 'super' },
+                    { script: 'sub' }
+                ],
+                [
+                    { header: '1' },
+                    { header: '2' },
+                    'blockquote',
+                    'code-block'
+                ],
+                [
+                    { list: 'ordered' },
+                    { list: 'bullet' },
+                    { indent: '-1' },
+                    { indent: '+1' }
+                ],
+                ['clean']
+            ];
+
+            window.editor = new Quill('.full-editor', {
+                bounds: '.full-editor',
+                placeholder: 'Digite o conteúdo do contrato...',
+                modules: {
+                formula: true,
+                toolbar: fullToolbar
+                },
+                theme: 'snow'
+            });
+        });
+
+        document.getElementById('form').addEventListener('submit', function (e) {
+            const commentHTML = window.editor.root.innerHTML.trim();
+            const commentText = window.editor.getText().trim();
+            document.getElementById('comment').value = commentHTML;
+
+            if (commentText === '') {
+                e.preventDefault();
+                Swal.fire({ icon: 'warning', title: 'Comentário obrigatório!', text: 'É necessário informar um comentário!', confirmButtonText: 'Ok', customClass: { confirmButton: 'btn btn-warning' }, buttonsStyling: false });
+                return
+            }
         });
     </script>
-    <script src="https://cdn.tiny.cloud/1/tgezwiu6jalnw1mma8qnoanlxhumuabgmtavb8vap7357t22/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
-    <script src="{{ asset('assets/js/tinymce.js') }}"></script>
 @endsection
