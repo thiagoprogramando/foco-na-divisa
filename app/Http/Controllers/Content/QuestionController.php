@@ -90,20 +90,13 @@ class QuestionController extends Controller {
             return back()->withErrors(['correct' => 'Apenas uma alternativa pode ser marcada como correta!'])->withInput();
         }
 
-        $question = new Question();
-        $question->topic_id     = $topic;
-        $question->board_id     = $request->board_id;
-        
-        $question->title        = $request->title;
-        $question->resolution   = $request->resolution;
-        $question->simulated_question_position   = $request->simulated_question_position;
-
-        if (empty($request->simulated_id)) {
-            $question->simulated_id = null;
-        } else {
-            $question->simulated_id = $request->simulated_id;
-        }
-        
+        $question           = new Question();
+        $question->topic_id = $topic;
+        $question->board_id = $request->board_id;
+        $question->title                         = $request->title;
+        $question->resolution                    = $request->resolution;
+        $question->simulated_id                  = $request->simulated_id ?? null;
+        $question->simulated_question_position   = $request->simulated_question_position ?? 0;
         if ($question->save()) {
 
             foreach ($request->alternative as $index => $text) {
