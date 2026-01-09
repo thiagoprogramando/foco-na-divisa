@@ -13,27 +13,45 @@ use Illuminate\Support\Facades\Auth;
 
 class QuestionController extends Controller {
     
-    public function index(Request $request, $topic) {
+    public function index(Request $request) {
 
-        $topic = Topic::find($topic);
-        if (!$topic) {
-            return redirect()->back()->with('infor', 'Não foi possível encontrar o Tópico, verifique os dados e tente novamente!');
+        $query = Question::query();
+
+        $topic = null;
+        if ($request->filled('topic')) {
+            
+            $topic = Topic::find($request->topic);
+            if (!$topic) {
+                return back()->with('info', 'Não foi possível encontrar o Tópico, verifique os dados e tente novamente!');
+            }
+
+            $query->where('topic_id', $topic->id);
         }
-       
-        $query = Question::where('topic_id', $topic->id)->orderBy('title', 'asc');
 
-        if (!empty($request->input('title'))) {
-            $query->where('title', 'like', '%' . $request->input('title') . '%');
+        $simulated = null;
+        if ($request->filled('simulated')) {
+            
+            $simulated = Simulated::find($request->simulated);
+            if (!$simulated) {
+                return back()->with('info', 'Não foi possível encontrar o Simulado, verifique os dados e tente novamente!');
+            }
+
+            $query->where('simulated_id', $simulated->id);
         }
 
-        if (!empty($request->input('board_id'))) {
-            $query->where('board_id', $request->input('board_id'));
+        if ($request->filled('title')) {
+            $query->where('title', 'like', '%' . $request->title . '%');
+        }
+
+        if ($request->filled('board_id')) {
+            $query->where('board_id', $request->board_id);
         }
 
         return view('app.Content.Question.list-questions', [
-            'questions' => $query->paginate(30),
-            'topic'     => $topic,
-            'boards'    => Board::orderBy('name', 'asc')->get(),
+            'questions'  => $query->orderBy('title')->paginate(30),
+            'topic'      => $topic,
+            'simulated'  => $simulated,
+            'boards'     => Board::orderBy('name')->get(),
         ]);
     }
 
@@ -56,26 +74,42 @@ class QuestionController extends Controller {
         ]);
     }
 
-    public function createForm($topic) {
+    public function createForm(Request $request) {
 
-        $topic = Topic::find($topic);
-        if (!$topic) {
-            return redirect()->back()->with('infor', 'Não foi possível encontrar o Tópico, verifique os dados e tente novamente!');
+        $topic = null;
+        if ($request->filled('topic')) {
+            
+            $topic = Topic::find($request->topic);
+            if (!$topic) {
+                return back()->with('info', 'Não foi possível encontrar o Tópico, verifique os dados e tente novamente!');
+            }
         }
 
-        $boards     = Board::orderBy('name', 'asc')->get();
-        $simulateds = Simulated::orderBy('title', 'asc')->get();
-        
+        $simulated = null;
+        $nextOrder = 0;
+        if ($request->filled('simulated')) {
+            
+            $simulated = Simulated::find($request->simulated);
+            if (!$simulated) {
+                return back()->with('info', 'Não foi possível encontrar o Simulado, verifique os dados e tente novamente!');
+            }
+
+            $lastOrder = Question::where('simulated_id', $simulated->id)->max('simulated_question_position');
+            $nextOrder = $lastOrder + 1;
+        }
+
         return view('app.Content.Question.create-question', [
-            'topic'         => $topic,
-            'boards'        => $boards,
-            'simulateds'    => $simulateds,
+            'topic'             => $topic,
+            'boards'            => Board::orderBy('name')->get(),
+            'simulateds'        => Simulated::orderBy('title')->get(),
+            'simulatedSelect'   => $simulated,
+            'nextOrder'         => $nextOrder,
         ]);
     }
 
-    public function store(Request $request, $topic) {
+    public function store(Request $request) {
 
-         $request->validate([
+        $request->validate([
             'title'         => 'required|string',
             'board_id'      => 'required|exists:boards,id',
             'alternative'   => 'required|array|min:2',
@@ -91,11 +125,11 @@ class QuestionController extends Controller {
         }
 
         $question           = new Question();
-        $question->topic_id = $topic;
+        $question->topic_id = $request->topic_id;
         $question->board_id = $request->board_id;
         $question->title                         = $request->title;
         $question->resolution                    = $request->resolution;
-        $question->simulated_id                  = $request->simulated_id ?? null;
+        $question->simulated_id                  = $request->simulated_id;
         $question->simulated_question_position   = $request->simulated_question_position ?? 0;
         if ($question->save()) {
 
@@ -110,7 +144,7 @@ class QuestionController extends Controller {
                 ]);
             }
 
-            return redirect()->back()->with('success', 'Questão criada com sucesso! Você pode continuar criando novas questões.');
+            return redirect()->route('create-question', ['topic' => $request->topic_id, 'simulated' => $request->simulated_id])->with('success', 'Questão criada com sucesso! Você pode continuar criando novas questões.');
         }
 
         return redirect()->back()->with('error', 'Falha ao criar a questão, tente novamente!');

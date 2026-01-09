@@ -20,19 +20,22 @@
                     </div>
                 </div>
                 <div class="d-flex align-items-center card-subtitle">
-                    <div class="me-2">Será associada ao Tópico {{ $topic->title }}.</div>
+                    <div class="me-2">
+                        {{ $topic ? 'Será associada ao Tópico '.$topic->title : 'Associada ao Simulado '.$simulatedSelect->title }}
+                    </div>
                 </div>
             </div>
             <div class="card-body">
-                <form action="{{ route('created-question', ['topic' => $topic->id]) }}" method="POST" class="row" id="question-form">
+                <form action="{{ route('created-question') }}" method="POST" class="row" id="question-form">
                     @csrf
+                    <input type="hidden" name="topic_id" value="{{ $topic ? $topic->id : '' }}">
                     <div class="col-12 col-sm-12 col-md-4 col-lg-4">
                         <div class="form-floating form-floating-outline mb-2">
                             <div class="select2-primary">
                                 <select name="simulated_id" id="simulated_id" class="select2 form-select" required>
                                     <option value="  " selected>Opções Disponíveis</option>
                                     @foreach ($simulateds as $simulated)
-                                        <option value="{{ $simulated->id }}">{{ $simulated->title }}</option>
+                                        <option value="{{ $simulated->id }}" @selected($simulatedSelect->id = $simulated->id)>{{ $simulated->title }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -41,8 +44,8 @@
                     </div>
                     <div class="col-12 col-sm-12 col-md-2 col-lg-2">
                         <div class="form-floating form-floating-outline mb-2">
-                            <input type="number" class="form-control" name="simulated_question_position" id="simulated_question_position" placeholder="Ex: 1">
-                            <label for="simulated_question_position">Ordem</label>
+                            <input type="number" class="form-control" name="simulated_question_position" id="simulated_question_position" placeholder="Ex: 1" value="{{ $nextOrder }}">
+                            <label for="simulated_question_position">Ordem (Simulado)</label>
                         </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6">
@@ -95,7 +98,15 @@
                         <textarea name="resolution" id="resolution" hidden></textarea>
                     </div>
                     <div class="col-6 offset-3 btn-group mt-3">
-                        <a href="{{ route('questions', ['topic' => $topic->id]) }}" class="btn btn-outline-danger"> Cancelar </a>
+                        @if ($topic)
+                            <a href="{{ route('questions', ['topic' => $topic->id]) }}" class="btn btn-outline-danger">
+                                Cancelar
+                            </a>
+                        @else
+                            <a onclick="window.history.back()" class="btn btn-outline-danger">
+                                Cancelar
+                            </a>
+                        @endif
                         <button type="submit" class="btn btn-success">Enviar</button>
                     </div>
                 </form>

@@ -5,27 +5,24 @@
     <div class="card mb-3">
 
         <div class="card-header">
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-center">
                 <h5 class="mb-1">Simulado: {{ $simulated->title }}</h5>
-
-                <div class="dropdown">
-                    <button class="btn btn-text-secondary rounded-pill text-muted border-0 p-1 waves-effect waves-light"
-                            type="button" data-bs-toggle="dropdown">
-                        <i class="ri-more-2-line ri-20px"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-end">
-                        <button type="button" class="dropdown-item waves-effect" onclick="location.reload(true)">
-                            Atualizar
-                        </button>
-                    </div>
-                </div>
             </div>
 
             <div class="card-subtitle">
                  @foreach($questions as $question)
+
+                    <div class="d-flex justify-content-center">
+                        @if ($question->question_position == 1) 
+                            @if ($simulated->image)
+                                <img class="img-fluid w-25" width="" src="{{ asset('storage/'.$simulated->image) }}" alt="{{ $simulated->title }}">
+                            @endif
+                        @endif
+                    </div>
+                    {!! $simulated->description !!}
+
                     <div class="me-2">Questão {{ $question->question_position.' de '.$simulated->questions->count() }}</div>
                     <small>
-                        <b>Conteúdo/Tópico:</b> {{ $question->question->topic->content->title }} | {{ $question->question->topic->title }}<br>
                         <b>Banca:</b> {{ $question->question->board->code.' '.$question->question->board->name.' - '.$question->question->board->state .'/'.$question->question->board->city }} <br>
                     </small>
                 @endforeach

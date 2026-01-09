@@ -14,7 +14,7 @@
         </div>
 
         <div class="modal fade" id="filterModal" tabindex="-1" aria-hidden="true">
-            <form action="{{ route('questions', ['topic' => $topic]) }}" method="GET">
+            <form action="{{ route('questions') }}" method="GET">
                 @csrf
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">

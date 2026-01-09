@@ -1,6 +1,10 @@
 @extends('app.layout')
 @section('content')
 
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/quill/typography.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/quill/katex.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/quill/editor.css') }}"/>
+
     <div class="col-12 col-sm-12 col-md-12 col-lg-12">
         @if (Auth::user()->role === 'admin')
             <div class="kanban-add-new-board mb-3">
@@ -11,9 +15,9 @@
             </div>
 
             <div class="modal fade" id="createdModal" tabindex="-1" aria-hidden="true">
-                <form action="{{ route('created-simulated') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('created-simulated') }}" method="POST" enctype="multipart/form-data" id="form">
                     @csrf
-                    <div class="modal-dialog" role="document">
+                    <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h4 class="modal-title" id="exampleModalLabel1">Dados do Simulado</h4>
@@ -67,8 +71,10 @@
                                     <div class="col-12">
                                         <div class="collapse" id="collapseNotes">
                                             <div class="form-floating form-floating-outline mb-2">
-                                                <textarea class="form-control h-px-100" name="description" id="description" placeholder="Descrição"></textarea>
-                                                <label for="description">Descrição</label>
+                                                <div class="full-editor">
+                                                    <h6>Descrição</h6>
+                                                </div>
+                                                <textarea name="description" id="description" hidden></textarea>
                                             </div>
                                             <div class="mb-4">
                                                 <label for="cover_image" class="form-label">Imagem de Capa</label>
@@ -100,7 +106,6 @@
             </div>
         </div>   
         
-        
         <div class="row">
             @foreach ($simulateds as $simulated)
                 <div class="col-12 col-xxl-4 col-md-6">
@@ -110,9 +115,6 @@
                                 <img class="img-fluid" src="{{ $simulated->image ? asset('storage/'.$simulated->image) : asset('assets/img/illustrations/faq-illustration.png') }}" alt="Boy card image">
                             </div>
                             <h5 class="mb-1">{{ $simulated->title }}</h5>
-                            <p class="mb-6">
-                                {{ $simulated->description }}
-                            </p>
                             <h4>
                                 <span class="badge bg-label-warning">
                                     R$ {{ number_format($simulated->value, 2, ',', '.') }}
@@ -198,6 +200,8 @@
             
     </div>
 
+    <script src="{{ asset('assets/vendor/libs/quill/katex.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/quill/quill.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('div.modal[id^="buyModal"]').forEach(function(modalEl) {
@@ -242,6 +246,50 @@
                     modalEl.addEventListener('hidden.bs.modal', onHidden);
                 });
             });
+
+            const fullToolbar = [
+                [
+                    { font: [] },
+                    { size: [] }
+                ],
+                ['bold', 'italic', 'underline', 'strike'],
+                    [
+                    { color: [] },
+                    { background: [] }
+                ],
+                [
+                    { script: 'super' },
+                    { script: 'sub' }
+                ],
+                [
+                    { header: '1' },
+                    { header: '2' },
+                    'blockquote',
+                    'code-block'
+                ],
+                [
+                    { list: 'ordered' },
+                    { list: 'bullet' },
+                    { indent: '-1' },
+                    { indent: '+1' }
+                ],
+                [{ direction: 'rtl' }],
+                ['clean']
+            ];
+
+            window.editor = new Quill('.full-editor', {
+                bounds: '.full-editor',
+                placeholder: 'Digite a descrição...',
+                modules: {
+                formula: true,
+                toolbar: fullToolbar
+                },
+                theme: 'snow'
+            });
+        });
+
+        document.getElementById('form').addEventListener('submit', function (e) {
+            document.getElementById('description').value = window.editor.root.innerHTML.trim();
         });
     </script>
 @endsection

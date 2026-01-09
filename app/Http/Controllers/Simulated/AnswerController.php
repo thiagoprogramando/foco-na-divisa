@@ -65,13 +65,12 @@ class AnswerController extends Controller {
             return redirect()->back()->with('infor', 'Você precisa selecionar uma alternativa.');
         }
         
-        $isCorrect = $question->alternatives()->where('id', $answer_id)->where('is_correct', true)->exists();
-
-        $simulatedQuestion->answer_id      = $answer_id;
-        $simulatedQuestion->answer_result  = $isCorrect ? 1 : 2;
-        // $simulatedQuestion->resolved_at = now();
+        $isCorrect                          = $question->alternatives()->where('id', $answer_id)->where('is_correct', true)->exists();
+        $simulatedQuestion->answer_id       = $answer_id;
+        $simulatedQuestion->answer_result   = $isCorrect ? 1 : 2;
+        $simulatedQuestion->resolved_at     = now();
         if ($simulatedQuestion->save()) {
-            return redirect()->route('simulated', ['uuid' => $simulatedQuestion->simulated->uuid])->with('success', 'Resposta salva com sucesso!');
+            return redirect()->route('answer-simulated', ['uuid' => $simulatedQuestion->simulated->uuid])->with('success', 'Resposta salva com sucesso!');
         }
 
         return redirect()->back()->with('infor', 'Erro ao salvar a resposta. Tente novamente!');

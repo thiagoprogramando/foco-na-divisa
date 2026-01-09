@@ -50,10 +50,21 @@
                                         @foreach ($ranking as $position)
                                             <tr id="{{ $position->user->uuid }}">
                                                 <td class="text-center">
-                                                {{ $position->position }}
+                                                    {{ $position->position }}
                                                 </td>
                                                 <td>
-                                                    {{ $position->user->name }} @isset($position->user->address_state) / {{ $position->user->address_state }} @endisset
+                                                    @if (Auth::user()->id == $position->user->id)
+                                                        {{ $position->user->name }} @isset($position->user->address_state) / {{ $position->user->address_state }} @endisset
+                                                    @else
+                                                        @php
+                                                            $name       = $position->user->name;
+                                                            $nameParts  = explode(' ', $name);
+                                                            $firstName  = $nameParts[0] ?? '';
+                                                            $lastName   = $nameParts[count($nameParts) - 1] ?? '';
+                                                            $maskedName = mb_substr($firstName, 0, 2) . '***' . mb_substr($lastName, -2);
+                                                        @endphp
+                                                        {{ $maskedName }} @isset($position->user->address_state) / {{ $position->user->address_state }} @endisset
+                                                    @endif
                                                 </td>
                                                 <td class="text-success fw-medium text-center">
                                                     {{ $position->total_points }}

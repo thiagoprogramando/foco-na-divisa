@@ -1,6 +1,10 @@
 @extends('app.layout')
 @section('content')
 
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/quill/typography.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/quill/katex.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/quill/editor.css') }}"/>
+
     <div class="col-12 col-sm-12 col-md-12 col-lg-12">
         <div class="card mb-3">
             <div class="card-header">
@@ -14,7 +18,7 @@
                 <div class="row">
                     <div class="col-12 col-sm-12 col-md-5 col-lg-5 mb-5">
                         <h5 class="text-center">Dados</h5>
-                        <form action="{{ route('updated-simulated', ['uuid' => $simulated->uuid]) }}" method="POST" class="row border g-3 p-3">
+                        <form action="{{ route('updated-simulated', ['uuid' => $simulated->uuid]) }}" method="POST" class="row border g-3 p-3" id="form">
                             @csrf
                             <div class="col-12">
                                 <div class="form-floating form-floating-outline mb-2">
@@ -52,10 +56,12 @@
                                     <label for="value">Valor (Mín R$ 5,00)</label>
                                 </div>
                             </div>
-                            <div class="col-12 text-center">
+                            <div class="col-12">
                                 <div class="form-floating form-floating-outline mb-2">
-                                    <textarea class="form-control h-px-100" name="description" id="description" placeholder="Descrição">{{ $simulated->description }}</textarea>
-                                    <label for="description">Descrição</label>
+                                    <div class="full-editor">
+                                        {!! $simulated->description !!}
+                                    </div>
+                                    <textarea name="description" id="description" hidden></textarea>
                                 </div>
                                 <div class="mb-4">
                                     <label for="cover_image" class="form-label">Imagem de Capa</label>
@@ -111,6 +117,11 @@
                     </div>
 
                     <div class="col-12 col-sm-12 col-md-7 col-lg-7">
+
+                        <div class="bnt-group">
+                            <a href="{{ route('create-question', ['topic_id' => null, 'simulated' => $simulated->id]) }}" target="_blank" class="btn btn-outline-dark mb-3"><i class="ri-add-line"></i> Adicionar Questão</a>
+                        </div>
+                        
                         <div class="table-responsive text-nowrap">
                             <table class="table border-bottom">
                                 <thead>
@@ -119,6 +130,7 @@
                                         <th class="bg-transparent border-bottom">ORDEM</th>
                                         <th class="bg-transparent border-bottom text-center">RESPOSTAS</th>
                                         <th class="bg-transparent border-bottom text-center">ACERTOS X ERROS</th>
+                                        <th class="bg-transparent border-bottom text-center">OPÇÕES</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-border-bottom-0">
@@ -137,6 +149,9 @@
                                             </td>
                                             <td class="fw-medium text-center">
                                                 <span class="text-success">{{ $question->simulatedQuestions->where('answer_result', 1)->count() ?? 0 }}</span> X <span class="text-danger">{{ $question->simulatedQuestions->where('answer_result', 2)->count() ?? 0 }}</span>
+                                            </td>
+                                            <td class="fw-medium text-center">
+                                                <a href="{{ route('question', ['id' => $question->id]) }}"><span class="text-success">Ver</span></a>
                                             </td>
                                         </tr>
 
@@ -179,6 +194,8 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ asset('assets/vendor/libs/quill/katex.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/quill/quill.js') }}"></script>
     <script>
         
         const generalCtx = document.getElementById('generalChart').getContext('2d');
@@ -208,6 +225,52 @@
                     }
                 }
             }
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const fullToolbar = [
+                [
+                    { font: [] },
+                    { size: [] }
+                ],
+                ['bold', 'italic', 'underline', 'strike'],
+                    [
+                    { color: [] },
+                    { background: [] }
+                ],
+                [
+                    { script: 'super' },
+                    { script: 'sub' }
+                ],
+                [
+                    { header: '1' },
+                    { header: '2' },
+                    'blockquote',
+                    'code-block'
+                ],
+                [
+                    { list: 'ordered' },
+                    { list: 'bullet' },
+                    { indent: '-1' },
+                    { indent: '+1' }
+                ],
+                [{ direction: 'rtl' }],
+                ['clean']
+            ];
+
+            window.editor = new Quill('.full-editor', {
+                bounds: '.full-editor',
+                placeholder: 'Digite a descrição...',
+                modules: {
+                formula: true,
+                toolbar: fullToolbar
+                },
+                theme: 'snow'
+            });
+        });
+
+        document.getElementById('form').addEventListener('submit', function (e) {
+            document.getElementById('description').value = window.editor.root.innerHTML.trim();
         });
     </script>
 @endsection

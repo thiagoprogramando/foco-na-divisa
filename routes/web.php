@@ -116,10 +116,10 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/created-user/{role}', [UserController::class, 'store'])->name('created-user');
         Route::post('/deleted-user/{uuid}', [UserController::class, 'destroy'])->name('deleted-user');
 
-        Route::get('/questions/{topic}', [QuestionController::class, 'index'])->name('questions');
+        Route::get('/questions', [QuestionController::class, 'index'])->name('questions');
         Route::get('/question/{id}', [QuestionController::class, 'show'])->name('question');
-        Route::get('/create-question/{topic}', [QuestionController::class, 'createForm'])->name('create-question');
-        Route::post('/created-question/{topic}', [QuestionController::class, 'store'])->name('created-question');
+        Route::get('/create-question', [QuestionController::class, 'createForm'])->name('create-question');
+        Route::post('/created-question', [QuestionController::class, 'store'])->name('created-question');
         Route::post('/updated-question/{id}', [QuestionController::class, 'update'])->name('updated-question');
         Route::post('/deleted-question/{id}', [QuestionController::class, 'destroy'])->name('deleted-question');
 
